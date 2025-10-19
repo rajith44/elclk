@@ -51,6 +51,7 @@ $_['text_marketplace']         = 'Place de Marché';
 $_['text_menu']                = 'Gestionnaire de Menus';
 $_['text_modification']        = 'Modification';
 $_['text_navigation']          = 'Navigation';
+$_['text_newsletter']          = 'Newsletter';
 $_['text_online']              = 'Qui est en Ligne';
 $_['text_option']              = 'Options';
 $_['text_order']               = 'Commandes';

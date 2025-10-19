@@ -450,15 +450,23 @@ class ColumnLeft extends \Opencart\System\Engine\Controller {
 				];
 			}
 
-			if ($this->user->hasPermission('access', 'marketing/contact')) {
-				$marketing[] = [
-					'name'     => $this->language->get('text_contact'),
-					'href'     => $this->url->link('marketing/contact', 'user_token=' . $this->session->data['user_token']),
-					'children' => []
-				];
-			}
+		if ($this->user->hasPermission('access', 'marketing/contact')) {
+			$marketing[] = [
+				'name'     => $this->language->get('text_contact'),
+				'href'     => $this->url->link('marketing/contact', 'user_token=' . $this->session->data['user_token']),
+				'children' => []
+			];
+		}
 
-			if ($marketing) {
+		if ($this->user->hasPermission('access', 'marketing/newsletter')) {
+			$marketing[] = [
+				'name'     => $this->language->get('text_newsletter'),
+				'href'     => $this->url->link('marketing/newsletter', 'user_token=' . $this->session->data['user_token']),
+				'children' => []
+			];
+		}
+
+		if ($marketing) {
 				$data['menus'][] = [
 					'id'       => 'menu-marketing',
 					'icon'     => 'fas fa-share-alt',

@@ -1,0 +1,54 @@
+<form id="form-newsletter" method="post" data-oc-toggle="ajax" data-oc-load="{{ action }}" data-oc-target="#newsletter">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <td class="text-center" style="width: 1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', $(this).prop('checked'));"/></td>
+          <td class="text-start"><a href="{{ sort_name }}" {% if sort == 'name' %} class="{% if order == 'ASC' %}asc{% else %}desc{% endif %}"{% endif %}>{{ column_name }}</a></td>
+          <td class="text-start"><a href="{{ sort_subject }}" {% if sort == 'subject' %} class="{% if order == 'ASC' %}asc{% else %}desc{% endif %}"{% endif %}>{{ column_subject }}</a></td>
+          <td class="text-center">{{ column_status }}</td>
+          <td class="text-start"><a href="{{ sort_date_added }}" {% if sort == 'date_added' %} class="{% if order == 'ASC' %}asc{% else %}desc{% endif %}"{% endif %}>{{ column_date_added }}</a></td>
+          <td class="text-end">{{ column_action }}</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% if newsletters %}
+          {% for newsletter in newsletters %}
+            <tr>
+              <td class="text-center"><input type="checkbox" name="selected[]" value="{{ newsletter.newsletter_id }}"/></td>
+              <td class="text-start">{{ newsletter.name }}</td>
+              <td class="text-start">{{ newsletter.subject }}</td>
+              <td class="text-center">
+                {% if newsletter.status == 'draft' %}
+                  <span class="badge bg-secondary">{{ text_draft }}</span>
+                {% elseif newsletter.status == 'ready' %}
+                  <span class="badge bg-info">Ready</span>
+                {% elseif newsletter.status == 'sent' %}
+                  <span class="badge bg-success">{{ text_sent_status }}</span>
+                {% else %}
+                  <span class="badge bg-warning">{{ newsletter.status }}</span>
+                {% endif %}
+              </td>
+              <td class="text-start">{{ newsletter.date_added }}</td>
+              <td class="text-end">
+                <a href="{{ newsletter.edit }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-pencil"></i></a>
+                {# {% if newsletter.status != 'sent' %}  #}
+                  <button type="button" onclick="sendNewsletter('{{ newsletter.send|raw }}');" data-bs-toggle="tooltip" title="{{ button_send }}" class="btn btn-success btn-sm"><i class="fa-solid fa-paper-plane"></i> Send</button>
+                 {# {% endif %}  #}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td class="text-center" colspan="6">{{ text_no_results }}</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 text-start">{{ pagination }}</div>
+    <div class="col-sm-6 text-end">{{ results }}</div>
+  </div>
+</form>
+

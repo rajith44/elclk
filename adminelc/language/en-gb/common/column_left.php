@@ -51,6 +51,7 @@ $_['text_marketplace']         = 'Marketplace';
 $_['text_menu']                = 'Menu Manager';
 $_['text_modification']        = 'Modification';
 $_['text_navigation']          = 'Navigation';
+$_['text_newsletter']          = 'Newsletter';
 $_['text_online']              = 'Who\'s Online';
 $_['text_option']              = 'Options';
 $_['text_order']               = 'Orders';
