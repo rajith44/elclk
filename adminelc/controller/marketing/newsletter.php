@@ -579,6 +579,7 @@ class Newsletter extends \Opencart\System\Engine\Controller {
 			}
 		}
 
+
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
@@ -648,7 +649,7 @@ class Newsletter extends \Opencart\System\Engine\Controller {
 					}
 					$products_html .= '</div>';
 					
-					$products_html .= '<a href="' . $product_url . '" style="display: inline-block; padding: 12px 30px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: 600; font-size: 14px;">View Product</a>';
+					$products_html .= '<a href="' . $product_url . '" style="display: inline-block; padding: 12px 30px; background-color: rgba(252, 108, 133, 1); color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: 600; font-size: 14px;">View Product</a>';
 					$products_html .= '</td>';
 					$products_html .= '</tr>';
 				}
@@ -669,7 +670,7 @@ class Newsletter extends \Opencart\System\Engine\Controller {
 		$message .= '<table cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f4f4; padding: 20px 0;">' . "\n";
 		$message .= '<tr><td align="center">' . "\n";
 		$message .= '<table cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">' . "\n";
-		$message .= '<tr><td style="padding: 40px 30px; background: linear-gradient(147deg, #FADADD 0%, #fc6c85 74%);">' . "\n";
+		$message .= '<tr><td style="padding: 40px 30px; background: linear-gradient(90deg,rgba(252, 108, 133, 1) 0%, rgba(250, 218, 221, 1) 100%);;">' . "\n";
 		$message .= '<h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; text-align: center;">' . htmlspecialchars($newsletter_info['subject']) . '</h1>' . "\n";
 		$message .= '</td></tr>' . "\n";
 		$message .= '<tr><td style="padding: 30px;">' . "\n";
