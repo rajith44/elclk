@@ -2,17 +2,20 @@
   <p>{{ text_login }}</p>
   <fieldset>
     <legend>{{ heading_title }}</legend>
-    <div class="row">
-      {% if config_checkout_guest %}
-        <div class="col mb-3 required">
-          <div class="form-check radio form-check-inline">
-            <input type="radio" name="account" value="1" id="input-register" class="form-check-input"{% if account %} checked{% endif %}/> <label for="input-register" class="form-check-label">{{ text_register }}</label>
-          </div>
+    <div class="row align-items-center">
+      <div class="col mb-3 required">
+        <div class="form-check radio form-check-inline">
+          <input type="radio" name="account" value="1" id="input-register" class="form-check-input"{% if account %} checked{% endif %}/> <label for="input-register" class="form-check-label">{{ text_register }}</label>
+        </div>
+        {% if config_checkout_guest %}
           <div class="form-check radio form-check-inline">
             <input type="radio" name="account" value="0" id="input-guest" class="form-check-input"{% if not account %} checked{% endif %}/> <label for="input-guest" class="form-check-label">{{ text_guest }}</label>
           </div>
+        {% endif %}
+        <div class="form-check radio form-check-inline">
+          <input type="radio" name="account" value="login" id="input-returning" class="form-check-input"/> <label for="input-returning" class="form-check-label">{{ text_returning_customer }}</label>
         </div>
-      {% endif %}
+      </div>
       <div class="form-group col mb-3{% if customer_groups|length <= 1 %} d-none{% endif %}">
         <label class="form-label">{{ entry_customer_group }}</label>
         <select name="customer_group_id" id="input-customer-group" class="form-select">
@@ -22,7 +25,30 @@
         </select>
       </div>
     </div>
-    <div class="row row-cols-1 row-cols-md-2">
+    <div id="returning-customer" class="border rounded p-3 mb-4 d-none returning-customer-section">
+      <div class="row row-cols-1 row-cols-md-2">
+        <div class="form-group col mb-3" style="margin-bottom: 15px !important;"> 
+          <label for="input-login-email" class="form-label">{{ entry_email }}</label>
+          <input type="email" id="input-login-email" class="form-control" autocomplete="email"/>
+        </div>
+        <div class="col mb-3">
+            <div class="form-group">
+              <label for="input-login-password" class="form-label">{{ entry_password }}</label>
+              <input type="password" id="input-login-password" class="form-control mb-2" autocomplete="current-password"/>
+            </div>
+            <div class="text-end">
+              <a href="{{ forgotten }}" class="small">{{ text_forgotten }}</a>
+            </div>
+        </div>
+      </div>
+      <div id="returning-alert"></div>
+      <div class="text-end">
+        <button type="button" id="button-returning-login" class="btn btn-primary">{{ button_login }}</button>
+      </div>
+    </div>
+
+    <div id="register-section">
+    <div class="row row-cols-1 row-cols-md-2 mt-2">
       <div class="form-group col mb-3 required">
         <label for="input-firstname" class="form-label">{{ entry_firstname }}</label> <input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control"/>
         <div id="error-firstname" class="invalid-feedback"></div>
@@ -478,24 +504,40 @@
       </div>
     </div>
   </div>
+
 </form>
 <script type="text/javascript"><!--
 // Account
-$('input[name=\'account\']').on('click', function () {
-    if ($(this).val() == 1) {
+function toggleAccountOptions() {
+    var selected = $('input[name=\'account\']:checked').val();
+
+    if (selected == '1') {
         $('#password').removeClass('d-none');
     } else {
         // If guest hide password field
         $('#password').addClass('d-none');
     }
 
-    if ($(this).val() == 1) {
+    if (selected == '1') {
         $('#agree').removeClass('d-none');
     } else {
         // If guest hide register agree field
         $('#agree').addClass('d-none');
     }
-});
+
+    if (selected == 'login') {
+        $('#register-section').addClass('d-none');
+        $('#returning-customer').removeClass('d-none');
+        $('#button-register').prop('disabled', true).addClass('d-none');
+    } else {
+        $('#register-section').removeClass('d-none');
+        $('#returning-customer').addClass('d-none');
+        $('#button-register').prop('disabled', false).removeClass('d-none');
+    }
+}
+
+$('input[name=\'account\']').on('change', toggleAccountOptions);
+toggleAccountOptions();
 
 $('input[name=\'account\']:checked').trigger('click');
 
@@ -610,6 +652,46 @@ $('#form-register').on('submit', function (e) {
     });
 });
 
+$('#button-returning-login').on('click', function () {
+    var element = this;
+
+    chain.attach(function () {
+        return $.ajax({
+            url: '{{ login_action|replace({'&amp;':'&'}) }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                email: $('#input-login-email').val(),
+                password: $('#input-login-password').val(),
+                redirect: '{{ login_redirect|replace({'&amp;':'&'}) }}'
+            },
+            beforeSend: function () {
+                $(element).prop('disabled', true).addClass('loading');
+            },
+            complete: function () {
+                $(element).prop('disabled', false).removeClass('loading');
+            },
+            success: function (json) {
+                $('#returning-alert').empty();
+
+                if (json['error'] && json['error']['warning']) {
+                    $('#returning-alert').html('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error']['warning'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                    return;
+                }
+
+                if (json['redirect']) {
+                    location = json['redirect'];
+                } else if (json['success']) {
+                    $('#returning-alert').html('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    });
+});
+
 $('select[name$=\'_country_id\']').on('change', function () {
     var element = this;
     var type = $(this).attr('name').slice(0, -11);
@@ -658,3 +740,16 @@ $('select[name$=\'_country_id\']').on('change', function () {
 
 $('select[name$=\'_country_id\']').trigger('change');
 //--></script>
+
+<style>
+  .returning-customer-section{
+    background-color: #eaeaea;
+    padding: 17px;
+    margin-top: 19px;
+    border-radius: 15px;
+  }
+
+  .mt-2{
+    margin-top: 20px;
+  }
+</style>

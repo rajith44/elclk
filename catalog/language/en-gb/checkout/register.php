@@ -7,6 +7,9 @@ $_['text_login']               = 'If you already have an account with us, please
 $_['text_register']            = 'Register Account';
 $_['text_guest']               = 'Guest Checkout';
 $_['text_payment_address']     = 'Payment Address';
+$_['text_returning_customer']  = 'Returning Customer';
+$_['text_returning_customer_description'] = 'If you already have an account with us, please log in below.';
+$_['text_forgotten']           = 'Forgotten Password?';
 $_['text_shipping_address']    = 'Shipping Address';
 $_['text_your_password']       = 'Your Password';
 $_['text_agree']               = 'I have read and agree to the <a href="%s" class="modal-link"><b>%s</b></a>';
