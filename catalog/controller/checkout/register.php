@@ -374,9 +374,9 @@ class Register extends \Opencart\System\Engine\Controller {
 					$json['error']['shipping_address_1'] = $this->language->get('error_address_1');
 				}
 
-				if (!oc_validate_length($post_info['shipping_city'], 2, 128)) {
-					$json['error']['shipping_city'] = $this->language->get('error_city');
-				}
+				// if (!oc_validate_length($post_info['shipping_city'], 2, 128)) {
+				// 	$json['error']['shipping_city'] = $this->language->get('error_city');
+				// }
 
 				// Country
 				$this->load->model('localisation/country');
