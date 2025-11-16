@@ -1,0 +1,154 @@
+{{ header }}
+<div id="content" class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      {% if testmode %}
+        <div class="alert alert-warning">{{ text_testmode }}</div>
+      {% endif %}
+
+      {% if has_recurring_exception_trial %}
+        <div class="alert alert-danger">{{ text_recurring_exception_trial }}</div>
+      {% endif %}
+      {% if has_recurring_exception_unsupported_freq %}
+        <div class="alert alert-danger">{{ text_recurring_exception_unsupported_freq }}</div>
+      {% endif %}
+      {% if has_recurring_exception_unmatching_rec %}
+        <div class="alert alert-warning">{{ text_recurring_exception_unmatching_rec }}</div>
+      {% endif %}
+
+      {% if not has_recurring_exceptions %}
+        {% if is_onsite_checkout_enabled %}
+          <div class="text-center my-4">
+            <div id="ph-loader" class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <button id="ph-button" type="button" class="btn btn-primary d-none">{{ button_confirm }}</button>
+          </div>
+          <script>
+          (function() {
+            const loader = document.getElementById('ph-loader');
+            const button = document.getElementById('ph-button');
+
+            const script = document.createElement('script');
+            script.addEventListener('load', function () {
+              loader.classList.add('d-none');
+              button.classList.remove('d-none');
+            });
+            script.src = 'https://www.payhere.lk/lib/payhere.js';
+            document.body.appendChild(script);
+
+            button.addEventListener('click', function () {
+              const payment = {
+                sandbox: "{{ sandbox ? 'true' : 'false' }}",
+                merchant_id: "{{ merchant_id }}",
+                return_url: "{{ return_url }}",
+                cancel_url: "{{ cancel_url }}",
+                notify_url: "{{ status_url }}",
+                first_name: "{{ firstname }}",
+                last_name: "{{ lastname }}",
+                email: "{{ email }}",
+                phone: "{{ phone }}",
+                address: "{{ address|escape('js') }}",
+                address1: "{{ address1|escape('js') }}",
+                address2: "{{ address2|escape('js') }}",
+                zip: "{{ postal_code }}",
+                city: "{{ city }}",
+                state: "{{ state }}",
+                country: "{{ country }}",
+                order_id: "{{ order_id }}",
+                items: "{{ items_text|escape('js') }}",
+                currency: "{{ currency }}",
+                amount: "{{ amount }}",
+                hash: "{{ hash }}"
+              };
+
+              {% if has_recurring_products %}
+                payment.recurrence = "{{ recurring_recurrence }}";
+                payment.duration = "{{ recurring_duration }}";
+                payment.startup_fee = "{{ recurring_startup }}";
+                payment.items = "OpenCart Order #{{ order_id }}";
+                payment.item_name_1 = "OpenCart Order";
+                payment.item_number_1 = "{{ order_id }}";
+                payment.amount_1 = "{{ amount + recurring_startup }}";
+                payment.quantity_1 = "1";
+                payment.custom_1 = "{{ custom_1 }}";
+              {% endif %}
+
+              payhere.onCompleted = function () {
+                window.location = "{{ return_url }}";
+              };
+
+              payhere.onError = function (error) {
+                alert("PayHere: " + error);
+              };
+
+              payhere.startPayment(payment);
+            });
+          })();
+          </script>
+        {% else %}
+          <form action="{{ action }}" method="post" class="card shadow-sm">
+            <div class="card-body">
+              <p class="mb-4 text-muted text-center">{{ text_total }}</p>
+              <input type="hidden" name="merchant_id" value="{{ merchant_id }}"/>
+              <input type="hidden" name="return_url" value="{{ return_url }}"/>
+              <input type="hidden" name="cancel_url" value="{{ cancel_url }}"/>
+              <input type="hidden" name="notify_url" value="{{ status_url }}"/>
+              <input type="hidden" name="language" value="{{ language }}"/>
+              <input type="hidden" name="first_name" value="{{ firstname }}"/>
+              <input type="hidden" name="last_name" value="{{ lastname }}"/>
+              <input type="hidden" name="email" value="{{ email }}"/>
+              <input type="hidden" name="phone" value="{{ phone_number }}"/>
+              <input type="hidden" name="address" value="{{ address }}"/>
+              <input type="hidden" name="address1" value="{{ address1 }}"/>
+              <input type="hidden" name="address2" value="{{ address2 }}"/>
+              <input type="hidden" name="zip" value="{{ postal_code }}"/>
+              <input type="hidden" name="city" value="{{ city }}"/>
+              <input type="hidden" name="state" value="{{ state }}"/>
+              <input type="hidden" name="country" value="{{ country }}"/>
+              <input type="hidden" name="order_id" value="{{ order_id }}"/>
+              <input type="hidden" name="currency" value="{{ currency }}"/>
+              <input type="hidden" name="amount" value="{{ amount }}"/>
+              <input type="hidden" name="hash" value="{{ hash }}"/>
+              {% if has_recurring_products %}
+                <input type="hidden" name="recurrence" value="{{ recurring_recurrence }}"/>
+                <input type="hidden" name="duration" value="{{ recurring_duration }}"/>
+                <input type="hidden" name="startup_fee" value="{{ recurring_startup }}"/>
+                <input type="hidden" name="items" value="OpenCart Order #{{ order_id }}"/>
+                <input type="hidden" name="item_name_1" value="OpenCart Order"/>
+                <input type="hidden" name="item_number_1" value="{{ order_id }}"/>
+                <input type="hidden" name="amount_1" value="{{ amount + recurring_startup }}"/>
+                <input type="hidden" name="quantity_1" value="1"/>
+                <input type="hidden" name="custom_1" value="{{ custom_1 }}"/>
+              {% else %}
+                <input type="hidden" name="items" value="{{ items_text }}"/>
+                {% set i = 1 %}
+                {% for product in products %}
+                  <input type="hidden" name="item_name_{{ i }}" value="{{ product.name }}"/>
+                  <input type="hidden" name="item_number_{{ i }}" value="{{ product.model }}"/>
+                  <input type="hidden" name="amount_{{ i }}" value="{{ product.price }}"/>
+                  <input type="hidden" name="quantity_{{ i }}" value="{{ product.quantity }}"/>
+                  <input type="hidden" name="weight_{{ i }}" value="{{ product.weight }}"/>
+                  {% set i = i + 1 %}
+                {% endfor %}
+              {% endif %}
+              {% if discount_amount_cart %}
+                <input type="hidden" name="discount_amount_cart" value="{{ discount_amount_cart }}"/>
+              {% endif %}
+              <input type="hidden" name="site_title" value="{{ description }}"/>
+              <input type="hidden" name="logo_url" value="{{ logo }}"/>
+              <input type="hidden" name="platform" value="{{ platform }}"/>
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">{{ button_confirm }}</button>
+              </div>
+            </div>
+          </form>
+        {% endif %}
+      {% else %}
+        <a href="{{ cancel_url }}" class="btn btn-secondary mt-4">{{ button_back }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{{ footer }}
+
