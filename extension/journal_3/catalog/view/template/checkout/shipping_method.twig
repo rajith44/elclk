@@ -18,7 +18,7 @@
         {% endif %}
       {% endfor %}
     </div>
-    <div class="mt-2">
+    <div class="mt-2" style="display: none;">
       <button type="button" id="button-shipping-method" class="btn btn-light"><i class="fa-solid fa-rotate fa fa-refresh"></i> {{ button_choose }}</button>
     </div>
   </fieldset>
@@ -127,13 +127,13 @@ $(document).on('change', 'input[name="shipping_method"]', function () {
 //--></script>
 {% else %}
 <fieldset>
-  <legend>{{ heading_title }}</legend>
-  <div class="input-group">
+  <legend style="line-height: 0;">{{ heading_title }}</legend>
+  <div class="input-group" style="display: none;">
     <span class="input-group-text"><i class="fa fa-truck"></i></span><input type="text" name="shipping_method" value="{{ shipping_method }}" placeholder="{{ entry_shipping_method }}" id="input-shipping-method" class="form-control" readonly/>
     <button type="button" id="button-shipping-method" class="btn btn-primary">{{ button_choose }}</button>
   </div>
   <input type="hidden" name="code" value="{{ code }}" id="input-shipping-code"/>
-  <div id="error-shipping-method" class="invalid-feedback"></div>
+  <div id="error-shipping-method" class="invalid-feedback" style="display: none;">></div>
 </fieldset>
 <div id="shipping-methods-inline"></div>
 <script type="text/javascript"><!--
@@ -165,7 +165,7 @@ $('#button-shipping-method').on('click', function() {
                     var html = '<p>{{ text_shipping }}</p>';
 
                     for (i in json['shipping_methods']) {
-                        html += '<p><strong>' + json['shipping_methods'][i]['name'] + '</strong></p>';
+                        html += '<p style="margin-top: 15px;"><strong>' + json['shipping_methods'][i]['name'] + '</strong></p>';
 
                         if (!json['shipping_methods'][i]['error']) {
                             for (j in json['shipping_methods'][i]['quote']) {

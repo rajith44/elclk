@@ -486,23 +486,6 @@
       </fieldset>
     </div>
     <div class="form-group col mb-3 required">{{ captcha }}</div>
-    <div class="form-group col mb-3">
-      <div class="form-check checkbox">
-        <input type="checkbox" name="newsletter" value="1" id="input-newsletter" class="form-check-input"/>
-        <label for="input-newsletter" class="form-check-label">{{ entry_newsletter }}</label>
-      </div>
-      {% if text_agree %}
-        <div id="agree" class="form-check checkbox">
-          <input type="checkbox" name="agree" value="1" id="input-register-agree" class="form-check-input"/>
-          <label for="input-register-agree" class="form-check-label">{{ text_agree }}</label>
-        </div>
-      {% endif %}
-      <div class="buttons">
-        <div class="pull-right">
-          <button type="submit" id="button-register" class="btn btn-primary">{{ button_continue }}</button>
-        </div>
-      </div>
-    </div>
   </div>
 
 </form>
@@ -518,21 +501,12 @@ function toggleAccountOptions() {
         $('#password').addClass('d-none');
     }
 
-    if (selected == '1') {
-        $('#agree').removeClass('d-none');
-    } else {
-        // If guest hide register agree field
-        $('#agree').addClass('d-none');
-    }
-
     if (selected == 'login') {
         $('#register-section').addClass('d-none');
         $('#returning-customer').removeClass('d-none');
-        $('#button-register').prop('disabled', true).addClass('d-none');
     } else {
         $('#register-section').removeClass('d-none');
         $('#returning-customer').addClass('d-none');
-        $('#button-register').prop('disabled', false).removeClass('d-none');
     }
 }
 
@@ -586,10 +560,21 @@ $('#input-address-match').on('change', function () {
     }
 });
 
-$('#form-register').on('submit', function (e) {
-    e.preventDefault();
-
-    var element = this;
+// Function to submit register form
+function submitRegisterForm() {
+    var formValid = true;
+    
+    // Basic validation - check required fields
+    $('#form-register .required input[type="text"], #form-register .required input[type="email"], #form-register .required input[type="password"], #form-register .required select').each(function() {
+        if (!$(this).val() || $(this).val().trim() === '') {
+            formValid = false;
+            return false;
+        }
+    });
+    
+    if (!formValid) {
+        return; // Don't submit if form is not valid
+    }
 
     chain.attach(function () {
         return $.ajax({
@@ -599,10 +584,10 @@ $('#form-register').on('submit', function (e) {
             data: $('#form-register').serialize(),
             contentType: 'application/x-www-form-urlencoded',
             beforeSend: function () {
-                $(element).prop('disabled', true).addClass('loading');
+                // Show loading indicator if needed
             },
             complete: function () {
-                $(element).prop('disabled', false).removeClass('loading');
+                // Hide loading indicator if needed
             },
             success: function (json) {
                 $('#form-register').find('.is-invalid').removeClass('is-invalid');
@@ -635,14 +620,10 @@ $('#form-register').on('submit', function (e) {
                         $('#input-customer-group').prop('disabled', true);
                         $('#input-password').prop('disabled', true);
                         $('#input-captcha').prop('disabled', true);
-                        $('#input-register-agree').prop('disabled', true);
                     }
 
-                  {% if shipping_required %}
-                    $('#button-shipping-method').trigger('click');
-                  {% else %}
-                    $('#button-payment-method').trigger('click');
-                  {% endif %}
+                    // Auto-load shipping and payment methods
+                    loadShippingAndPaymentMethods();
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -650,6 +631,102 @@ $('#form-register').on('submit', function (e) {
             }
         });
     });
+}
+
+// Function to load shipping and payment methods
+function loadShippingAndPaymentMethods() {
+    {% if shipping_required %}
+        // Load shipping methods first
+        setTimeout(function() {
+            if ($('#button-shipping-method').length) {
+                $('#button-shipping-method').trigger('click');
+            } else {
+                // If button doesn't exist, load directly via AJAX
+                chain.attach(function () {
+                    return $.ajax({
+                        url: 'index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}getMethods&language={{ language }}',
+                        dataType: 'json',
+                        success: function (json) {
+                            if (json['redirect']) {
+                                location = json['redirect'];
+                                return;
+                            }
+                            if (json['error']) {
+                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                            }
+                            if (json['shipping_methods']) {
+                                // Reload shipping method section to show methods
+                                $('#checkout-shipping-method').load('index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}', function() {
+                                    // After shipping methods load, wait a bit then load payment methods
+                                    setTimeout(function() {
+                                        loadPaymentMethods();
+                                    }, 500);
+                                });
+                            } else {
+                                // No shipping methods, try payment methods anyway
+                                setTimeout(function() {
+                                    loadPaymentMethods();
+                                }, 500);
+                            }
+                        },
+                        error: function() {
+                            // On error, still try to load payment methods
+                            setTimeout(function() {
+                                loadPaymentMethods();
+                            }, 500);
+                        }
+                    });
+                });
+            }
+        }, 500);
+    {% else %}
+        // No shipping required, load payment methods directly
+        setTimeout(function() {
+            loadPaymentMethods();
+        }, 500);
+    {% endif %}
+}
+
+// Function to load payment methods
+function loadPaymentMethods() {
+    setTimeout(function() {
+        if ($('#button-payment-method').length) {
+            $('#button-payment-method').trigger('click');
+        } else {
+            chain.attach(function () {
+                return $.ajax({
+                    url: 'index.php?route=checkout/payment_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}getMethods&language={{ language }}',
+                    dataType: 'json',
+                    success: function (json) {
+                        if (json['redirect']) {
+                            location = json['redirect'];
+                            return;
+                        }
+                        if (json['error']) {
+                            $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                        }
+                        if (json['payment_methods']) {
+                            // Reload payment method section to show methods
+                            $('#checkout-payment-method').load('index.php?route=checkout/payment_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}', function() {
+                                // Reload confirm section after payment methods load
+                                setTimeout(function() {
+                                    $('#checkout-confirm').load('index.php?route=checkout/confirm{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}confirm&language={{ language }}');
+                                }, 300);
+                            });
+                        }
+                    },
+                    error: function() {
+                        console.log('Error loading payment methods');
+                    }
+                });
+            });
+        }
+    }, 300);
+}
+
+// Prevent form submission on enter key
+$('#form-register').on('submit', function (e) {
+    e.preventDefault();
 });
 
 $('#button-returning-login').on('click', function () {
@@ -739,6 +816,128 @@ $('select[name$=\'_country_id\']').on('change', function () {
 });
 
 $('select[name$=\'_country_id\']').trigger('change');
+
+// City change handlers - trigger form submission and reload shipping methods
+var cityChangeTimeout = null;
+var shippingCityChangeTimeout = null;
+
+function handleCityChange() {
+    // Clear any existing timeout
+    if (cityChangeTimeout) {
+        clearTimeout(cityChangeTimeout);
+    }
+    
+    // Debounce the city change - wait 800ms after user stops typing
+    cityChangeTimeout = setTimeout(function() {
+        // Check if required fields are filled before submitting
+        var paymentCity = $('#input-payment-city').val() && $('#input-payment-city').val().trim() !== '';
+        var paymentCountry = $('#input-payment-country').val() && $('#input-payment-country').val() !== '';
+        var paymentZone = $('#input-payment-zone').val() && $('#input-payment-zone').val() !== '';
+        
+        if (paymentCity && paymentCountry && paymentZone) {
+            // Submit register form to save address
+            submitRegisterForm();
+        }
+    }, 800);
+}
+
+function handleShippingCityChange() {
+    // Clear any existing timeout
+    if (shippingCityChangeTimeout) {
+        clearTimeout(shippingCityChangeTimeout);
+    }
+    
+    // Debounce the shipping city change
+    shippingCityChangeTimeout = setTimeout(function() {
+        // Check if required shipping fields are filled
+        var shippingCity = $('#input-shipping-city').val() && $('#input-shipping-city').val().trim() !== '';
+        var shippingCountry = $('#input-shipping-country').val() && $('#input-shipping-country').val() !== '';
+        var shippingZone = $('#input-shipping-zone').val() && $('#input-shipping-zone').val() !== '';
+        
+        if (shippingCity && shippingCountry && shippingZone) {
+            // Submit register form first
+            submitRegisterForm();
+            
+            // Then reload shipping methods
+            {% if shipping_required %}
+            setTimeout(function() {
+                if ($('#button-shipping-method').length) {
+                    $('#button-shipping-method').trigger('click');
+                } else {
+                    // Reload shipping method section
+                    $('#checkout-shipping-method').load('index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}');
+                }
+            }, 1500);
+            {% endif %}
+        }
+    }, 800);
+}
+
+// Payment city change - handle both input and change events
+$('#input-payment-city').on('input change blur', function() {
+    handleCityChange();
+});
+
+// Shipping city change - handle both input and change events
+$('#input-shipping-city').on('input change blur', function() {
+    handleCityChange(); // Also submit form
+    handleShippingCityChange(); // And reload shipping methods
+});
+
+// Auto-load shipping and payment methods on page load
+$(document).ready(function() {
+    // Function to check and load methods
+    function checkAndLoadMethods() {
+        // Check if form has enough data to load methods
+        var hasPaymentCity = $('#input-payment-city').val() && $('#input-payment-city').val().trim() !== '';
+        var hasPaymentCountry = $('#input-payment-country').val() && $('#input-payment-country').val() !== '';
+        var hasPaymentZone = $('#input-payment-zone').val() && $('#input-payment-zone').val() !== '';
+        var hasPaymentAddress1 = $('#input-payment-address-1').val() && $('#input-payment-address-1').val().trim() !== '';
+        var hasPaymentPostcode = $('#input-payment-postcode').val() && $('#input-payment-postcode').val().trim() !== '';
+        
+        {% if shipping_required %}
+        var hasShippingCity = $('#input-shipping-city').val() && $('#input-shipping-city').val().trim() !== '';
+        var hasShippingCountry = $('#input-shipping-country').val() && $('#input-shipping-country').val() !== '';
+        var hasShippingZone = $('#input-shipping-zone').val() && $('#input-shipping-zone').val() !== '';
+        var hasShippingAddress1 = $('#input-shipping-address-1').val() && $('#input-shipping-address-1').val().trim() !== '';
+        var hasShippingPostcode = $('#input-shipping-postcode').val() && $('#input-shipping-postcode').val().trim() !== '';
+        
+        // Check if shipping address is complete
+        var shippingComplete = hasShippingCity && hasShippingCountry && hasShippingZone && hasShippingAddress1 && hasShippingPostcode;
+        // Check if payment address is complete
+        var paymentComplete = hasPaymentCity && hasPaymentCountry && hasPaymentZone && hasPaymentAddress1 && hasPaymentPostcode;
+        
+        if (shippingComplete) {
+            // Shipping address complete - submit form and load methods
+            submitRegisterForm();
+        } else if (paymentComplete) {
+            // Payment address complete - submit form and try to load methods
+            submitRegisterForm();
+        }
+        {% else %}
+        // No shipping required, just need payment address
+        var paymentComplete = hasPaymentCity && hasPaymentCountry && hasPaymentZone && hasPaymentAddress1 && hasPaymentPostcode;
+        
+        if (paymentComplete) {
+            submitRegisterForm();
+        }
+        {% endif %}
+    }
+    
+    // Try immediately after a short delay
+    setTimeout(checkAndLoadMethods, 500);
+    
+    // Try again after page fully loads
+    setTimeout(checkAndLoadMethods, 1500);
+    
+    // Try once more after all scripts load
+    setTimeout(checkAndLoadMethods, 2500);
+    
+    // Also try when country/zone selects are populated (they load dynamically)
+    $(document).on('DOMNodeInserted', function() {
+        setTimeout(checkAndLoadMethods, 100);
+    });
+});
 //--></script>
 
 <style>

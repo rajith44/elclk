@@ -45,6 +45,78 @@
     </tfoot>
   </table>
 </div>
+<div class="mb-3" id="checkout-newsletter-agree">
+  <div class="form-check checkbox mb-2">
+    <input type="checkbox" name="newsletter" value="1" id="input-newsletter-confirm" class="form-check-input"/>
+    <label for="input-newsletter-confirm" class="form-check-label" id="label-newsletter-confirm">I wish to subscribe to the newsletter</label>
+  </div>
+  <div class="form-check checkbox mb-2" id="agree-wrapper-confirm">
+    <input type="checkbox" name="agree" value="1" id="input-register-agree-confirm" class="form-check-input"/>
+    <label for="input-register-agree-confirm" class="form-check-label" id="label-agree-confirm">I have read and agree to the Privacy Policy</label>
+  </div>
+</div>
+<script type="text/javascript"><!--
+// Load newsletter and agree text from existing sections or via AJAX
+function loadCheckboxTexts() {
+    // Try to get newsletter text from register section
+    var newsletterLabel = $('#checkout-register #input-newsletter').next('label');
+    if (newsletterLabel.length && newsletterLabel.text().trim()) {
+        $('#label-newsletter-confirm').text(newsletterLabel.text());
+    }
+    
+    // Try to get agree text from payment method section (multiple selectors)
+    var agreeLabel = null;
+    
+    // Try different selectors
+    agreeLabel = $('#checkout-payment-method #input-checkout-agree').closest('.form-check, .form-switch').find('label').first();
+    if (!agreeLabel.length || !agreeLabel.html() || !agreeLabel.html().trim()) {
+        agreeLabel = $('#checkout-payment-method #input-agree').closest('.form-check, .form-switch').find('label').first();
+    }
+    if (!agreeLabel.length || !agreeLabel.html() || !agreeLabel.html().trim()) {
+        agreeLabel = $('#checkout-payment-method label[for="input-checkout-agree"], #checkout-payment-method label[for="input-agree"]').first();
+    }
+    
+    if (agreeLabel.length && agreeLabel.html() && agreeLabel.html().trim()) {
+        $('#label-agree-confirm').html(agreeLabel.html());
+        updateConfirmButton();
+    } else {
+        // Load from payment_method controller if not found
+        chain.attach(function() {
+            return $.ajax({
+                url: 'index.php?route=checkout/payment_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}',
+                dataType: 'html',
+                success: function(html) {
+                    var $temp = $('<div>').html(html);
+                    var agreeText = null;
+                    
+                    // Try multiple selectors
+                    agreeText = $temp.find('#input-checkout-agree').closest('.form-check, .form-switch').find('label').first().html();
+                    if (!agreeText || !agreeText.trim()) {
+                        agreeText = $temp.find('#input-agree').closest('.form-check, .form-switch').find('label').first().html();
+                    }
+                    if (!agreeText || !agreeText.trim()) {
+                        agreeText = $temp.find('label[for="input-checkout-agree"], label[for="input-agree"]').first().html();
+                    }
+                    
+                    if (agreeText && agreeText.trim()) {
+                        $('#label-agree-confirm').html(agreeText);
+                        updateConfirmButton();
+                    }
+                }
+            });
+        });
+    }
+}
+
+$(document).ready(function() {
+    // Try immediately
+    loadCheckboxTexts();
+    
+    // Try again after a delay in case sections load dynamically
+    setTimeout(loadCheckboxTexts, 500);
+    setTimeout(loadCheckboxTexts, 1500);
+});
+//--></script>
 <div id="checkout-payment">
   {% if payment %}
     {{ payment }}
@@ -52,3 +124,92 @@
     <div class="text-end"><button type="button" id="button-confirm" class="btn btn-primary" disabled>{{ button_confirm }}</button></div>
   {% endif %}
 </div>
+<script type="text/javascript"><!--
+// Newsletter handler - saves to session
+$(document).on('change', '#input-newsletter-confirm', function () {
+    var element = this;
+
+    chain.attach(function () {
+        return $.ajax({
+            url: 'index.php?route=checkout/register{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}save&language={{ language }}',
+            type: 'post',
+            data: {
+                newsletter: $(element).is(':checked') ? '1' : '0'
+            },
+            dataType: 'json',
+            contentType: 'application/x-www-form-urlencoded',
+            beforeSend: function () {
+                $(element).prop('disabled', true);
+            },
+            complete: function () {
+                $(element).prop('disabled', false);
+            },
+            success: function (json) {
+                if (json['redirect']) {
+                    location = json['redirect'];
+                }
+
+                if (json['error']) {
+                    $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    });
+});
+
+// Privacy Agree handler - updates confirm section and enables/disables confirm button
+function updateConfirmButton() {
+    if ($('#input-register-agree-confirm').length && $('#input-register-agree-confirm').is(':checked')) {
+        $('#button-confirm').prop('disabled', false);
+    } else if ($('#input-register-agree-confirm').length) {
+        $('#button-confirm').prop('disabled', true);
+    } else {
+        $('#button-confirm').prop('disabled', false);
+    }
+}
+
+$(document).on('change', '#input-register-agree-confirm', function () {
+    var element = this;
+    updateConfirmButton();
+
+    chain.attach(function () {
+        return $.ajax({
+            url: 'index.php?route=checkout/payment_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}agree&language={{ language }}',
+            type: 'post',
+            data: {
+                agree: $(element).is(':checked') ? '1' : '0'
+            },
+            dataType: 'json',
+            contentType: 'application/x-www-form-urlencoded',
+            beforeSend: function () {
+                $(element).prop('disabled', true);
+            },
+            complete: function () {
+                $(element).prop('disabled', false);
+            },
+            success: function (json) {
+                if (json['redirect']) {
+                    location = json['redirect'];
+                }
+
+                if (json['error']) {
+                    $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                }
+
+                if (json['success']) {
+                    $('#checkout-confirm').load('index.php?route=checkout/confirm{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}confirm&language={{ language }}');
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    });
+});
+
+// Initialize confirm button state on page load
+updateConfirmButton();
+//--></script>
