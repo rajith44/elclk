@@ -560,20 +560,268 @@ $('#input-address-match').on('change', function () {
     }
 });
 
-// Function to submit register form
-function submitRegisterForm() {
-    var formValid = true;
+// Comprehensive validation function for all checkout fields
+function validateAllCheckoutFields() {
+    var errors = [];
+    var hasErrors = false;
     
-    // Basic validation - check required fields
-    $('#form-register .required input[type="text"], #form-register .required input[type="email"], #form-register .required input[type="password"], #form-register .required select').each(function() {
-        if (!$(this).val() || $(this).val().trim() === '') {
-            formValid = false;
-            return false;
+    // Clear previous error messages
+    $('#form-register .invalid-feedback').html('').removeClass('d-block');
+    $('#form-register .form-control, #form-register .form-select').removeClass('is-invalid');
+    $('#form-register .has-error').removeClass('has-error');
+    
+    // Check account type
+    var accountType = $('input[name="account"]:checked').val();
+    var isRegister = (accountType == '1' || accountType == 1);
+    var isGuest = (accountType == '0' || accountType == 0);
+    
+    if (!accountType || accountType == 'login') {
+        errors.push('Please select an account type');
+        hasErrors = true;
+    }
+    
+    // Validate required account fields (for both register and guest)
+    if (isRegister || isGuest) {
+        // Firstname
+        var firstname = $('#input-firstname').val();
+        if (!firstname || firstname.trim().length < 1 || firstname.trim().length > 32) {
+            $('#input-firstname').addClass('is-invalid');
+            $('#error-firstname').html('First name must be between 1 and 32 characters!').addClass('d-block');
+            $('#input-firstname').closest('.required').addClass('has-error');
+            errors.push('First name is required');
+            hasErrors = true;
+        }
+        
+        // Lastname
+        var lastname = $('#input-lastname').val();
+        if (!lastname || lastname.trim().length < 1 || lastname.trim().length > 32) {
+            $('#input-lastname').addClass('is-invalid');
+            $('#error-lastname').html('Last name must be between 1 and 32 characters!').addClass('d-block');
+            $('#input-lastname').closest('.required').addClass('has-error');
+            errors.push('Last name is required');
+            hasErrors = true;
+        }
+        
+        // Email
+        var email = $('#input-email').val();
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email.trim())) {
+            $('#input-email').addClass('is-invalid');
+            $('#error-email').html('E-Mail Address does not appear to be valid!').addClass('d-block');
+            $('#input-email').closest('.required').addClass('has-error');
+            errors.push('Valid email is required');
+            hasErrors = true;
+        }
+        
+        // Telephone (if required)
+        if ($('#input-telephone').closest('.required').length || $('#input-telephone').closest('.form-group').hasClass('required')) {
+            var telephone = $('#input-telephone').val();
+            if (!telephone || telephone.trim().length < 3 || telephone.trim().length > 32) {
+                $('#input-telephone').addClass('is-invalid');
+                $('#error-telephone').html('Telephone must be between 3 and 32 characters!').addClass('d-block');
+                $('#input-telephone').closest('.required, .form-group').addClass('has-error');
+                errors.push('Telephone is required');
+                hasErrors = true;
+            }
+        }
+    }
+    
+    // Validate payment address fields (if payment address section exists)
+    if ($('#input-payment-address-1').length) {
+        // Address 1
+        var paymentAddress1 = $('#input-payment-address-1').val();
+        if ($('#input-payment-address-1').closest('.required').length || $('#input-payment-address-1').closest('.form-group').hasClass('required')) {
+            if (!paymentAddress1 || paymentAddress1.trim().length < 3 || paymentAddress1.trim().length > 128) {
+                $('#input-payment-address-1').addClass('is-invalid');
+                $('#error-payment-address-1').html('Address must be between 3 and 128 characters!').addClass('d-block');
+                $('#input-payment-address-1').closest('.required, .form-group').addClass('has-error');
+                errors.push('Payment address is required');
+                hasErrors = true;
+            }
+        }
+        
+        // City
+        var paymentCity = $('#input-payment-city').val();
+        if ($('#input-payment-city').closest('.required').length || $('#input-payment-city').closest('.form-group').hasClass('required')) {
+            if (!paymentCity || paymentCity.trim().length < 2 || paymentCity.trim().length > 128) {
+                $('#input-payment-city').addClass('is-invalid');
+                $('#error-payment-city').html('City must be between 2 and 128 characters!').addClass('d-block');
+                $('#input-payment-city').closest('.required, .form-group').addClass('has-error');
+                errors.push('Payment city is required');
+                hasErrors = true;
+            }
+        }
+        
+        // Country
+        var paymentCountry = $('#input-payment-country').val();
+        if ($('#input-payment-country').closest('.required').length || $('#input-payment-country').closest('.form-group').hasClass('required')) {
+            if (!paymentCountry || paymentCountry == '' || paymentCountry == '0') {
+                $('#input-payment-country').addClass('is-invalid');
+                $('#error-payment-country').html('Please select a country!').addClass('d-block');
+                $('#input-payment-country').closest('.required, .form-group').addClass('has-error');
+                errors.push('Payment country is required');
+                hasErrors = true;
+            }
+        }
+        
+        // Zone
+        var paymentZone = $('#input-payment-zone').val();
+        if ($('#input-payment-zone').closest('.required').length || $('#input-payment-zone').closest('.form-group').hasClass('required')) {
+            if (!paymentZone || paymentZone == '' || paymentZone == '0') {
+                $('#input-payment-zone').addClass('is-invalid');
+                $('#error-payment-zone').html('Please select a region / state!').addClass('d-block');
+                $('#input-payment-zone').closest('.required, .form-group').addClass('has-error');
+                errors.push('Payment zone is required');
+                hasErrors = true;
+            }
+        }
+        
+        // Postcode (if required)
+        if ($('#input-payment-postcode').closest('.required').length || $('#input-payment-postcode').closest('.form-group').hasClass('required')) {
+            var paymentPostcode = $('#input-payment-postcode').val();
+            if (!paymentPostcode || paymentPostcode.trim().length < 2 || paymentPostcode.trim().length > 10) {
+                $('#input-payment-postcode').addClass('is-invalid');
+                $('#error-payment-postcode').html('Postcode must be between 2 and 10 characters!').addClass('d-block');
+                $('#input-payment-postcode').closest('.required, .form-group').addClass('has-error');
+                errors.push('Payment postcode is required');
+                hasErrors = true;
+            }
+        }
+    }
+    
+    // Validate shipping address fields (if shipping is required and address match is not checked)
+    var addressMatch = $('#input-address-match').is(':checked');
+    if (!$('#input-address-match').length || !addressMatch) {
+        if ($('#input-shipping-address-1').length) {
+            // Shipping Address 1
+            var shippingAddress1 = $('#input-shipping-address-1').val();
+            if ($('#input-shipping-address-1').closest('.required').length || $('#input-shipping-address-1').closest('.form-group').hasClass('required')) {
+                if (!shippingAddress1 || shippingAddress1.trim().length < 3 || shippingAddress1.trim().length > 128) {
+                    $('#input-shipping-address-1').addClass('is-invalid');
+                    $('#error-shipping-address-1').html('Address must be between 3 and 128 characters!').addClass('d-block');
+                    $('#input-shipping-address-1').closest('.required, .form-group').addClass('has-error');
+                    errors.push('Shipping address is required');
+                    hasErrors = true;
+                }
+            }
+            
+            // Shipping City
+            var shippingCity = $('#input-shipping-city').val();
+            if ($('#input-shipping-city').closest('.required').length || $('#input-shipping-city').closest('.form-group').hasClass('required')) {
+                if (!shippingCity || shippingCity.trim().length < 2 || shippingCity.trim().length > 128) {
+                    $('#input-shipping-city').addClass('is-invalid');
+                    $('#error-shipping-city').html('City must be between 2 and 128 characters!').addClass('d-block');
+                    $('#input-shipping-city').closest('.required, .form-group').addClass('has-error');
+                    errors.push('Shipping city is required');
+                    hasErrors = true;
+                }
+            }
+            
+            // Shipping Country
+            var shippingCountry = $('#input-shipping-country').val();
+            if ($('#input-shipping-country').closest('.required').length || $('#input-shipping-country').closest('.form-group').hasClass('required')) {
+                if (!shippingCountry || shippingCountry == '' || shippingCountry == '0') {
+                    $('#input-shipping-country').addClass('is-invalid');
+                    $('#error-shipping-country').html('Please select a country!').addClass('d-block');
+                    $('#input-shipping-country').closest('.required, .form-group').addClass('has-error');
+                    errors.push('Shipping country is required');
+                    hasErrors = true;
+                }
+            }
+            
+            // Shipping Zone
+            var shippingZone = $('#input-shipping-zone').val();
+            if ($('#input-shipping-zone').closest('.required').length || $('#input-shipping-zone').closest('.form-group').hasClass('required')) {
+                if (!shippingZone || shippingZone == '' || shippingZone == '0') {
+                    $('#input-shipping-zone').addClass('is-invalid');
+                    $('#error-shipping-zone').html('Please select a region / state!').addClass('d-block');
+                    $('#input-shipping-zone').closest('.required, .form-group').addClass('has-error');
+                    errors.push('Shipping zone is required');
+                    hasErrors = true;
+                }
+            }
+            
+            // Shipping Postcode (if required)
+            if ($('#input-shipping-postcode').closest('.required').length || $('#input-shipping-postcode').closest('.form-group').hasClass('required')) {
+                var shippingPostcode = $('#input-shipping-postcode').val();
+                if (!shippingPostcode || shippingPostcode.trim().length < 2 || shippingPostcode.trim().length > 10) {
+                    $('#input-shipping-postcode').addClass('is-invalid');
+                    $('#error-shipping-postcode').html('Postcode must be between 2 and 10 characters!').addClass('d-block');
+                    $('#input-shipping-postcode').closest('.required, .form-group').addClass('has-error');
+                    errors.push('Shipping postcode is required');
+                    hasErrors = true;
+                }
+            }
+        }
+    }
+    
+    // Validate required custom fields
+    $('#form-register .custom-field.required').each(function() {
+        var $field = $(this);
+        var $input = $field.find('input[type="radio"]:checked, input[type="checkbox"]:checked, select, input[type="text"], input[type="hidden"], textarea').first();
+        var fieldValue = $input.val();
+        
+        // For checkboxes, check if any is checked
+        if ($field.find('input[type="checkbox"]').length) {
+            fieldValue = $field.find('input[type="checkbox"]:checked').length > 0 ? 'checked' : '';
+        }
+        
+        // For radio buttons, check if any is checked
+        if ($field.find('input[type="radio"]').length) {
+            fieldValue = $field.find('input[type="radio"]:checked').length > 0 ? $field.find('input[type="radio"]:checked').val() : '';
+        }
+        
+        if (!fieldValue || fieldValue === '' || (Array.isArray(fieldValue) && fieldValue.length === 0)) {
+            $input.addClass('is-invalid');
+            var errorDiv = $field.find('.invalid-feedback').first();
+            if (errorDiv.length) {
+                errorDiv.html('This field is required!').addClass('d-block');
+            }
+            $field.addClass('has-error');
+            errors.push('Custom field is required');
+            hasErrors = true;
         }
     });
     
-    if (!formValid) {
-        return; // Don't submit if form is not valid
+    // Validate password if account type is register
+    if (isRegister) {
+        var password = $('#input-password').val();
+        if ($('#input-password').length && ($('#input-password').closest('.required').length || $('#input-password').closest('.form-group').hasClass('required'))) {
+            if (!password || password.length < 4) {
+                $('#input-password').addClass('is-invalid');
+                $('#error-password').html('Password must be at least 4 characters!').addClass('d-block');
+                $('#input-password').closest('.required, .form-group').addClass('has-error');
+                errors.push('Password is required');
+                hasErrors = true;
+            }
+        }
+    }
+    
+    // Show error alert if there are errors
+    if (hasErrors) {
+        var errorMessage = 'Please fill in all required fields:<br/>' + errors.slice(0, 5).join('<br/>');
+        if (errors.length > 5) {
+            errorMessage += '<br/>... and ' + (errors.length - 5) + ' more error(s)';
+        }
+        $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + errorMessage + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+        
+        // Scroll to first error
+        var firstError = $('#form-register .is-invalid').first();
+        if (firstError.length) {
+            $('html, body').animate({
+                scrollTop: firstError.offset().top - 100
+            }, 500);
+        }
+    }
+    
+    return !hasErrors;
+}
+
+// Function to submit register form
+function submitRegisterForm() {
+    // Validate all required fields before submission
+    if (!validateAllCheckoutFields()) {
+        return false; // Don't submit if validation fails
     }
 
     chain.attach(function () {
@@ -882,6 +1130,67 @@ $('#input-payment-city').on('input change blur', function() {
 $('#input-shipping-city').on('input change blur', function() {
     handleCityChange(); // Also submit form
     handleShippingCityChange(); // And reload shipping methods
+});
+
+// Shipping zone change - reload shipping methods when zone changes
+$('#input-shipping-zone').on('change', function() {
+    var shippingZone = $(this).val();
+    
+    // Validate shipping zone is selected
+    if (!shippingZone || shippingZone == '' || shippingZone == '0') {
+        // Zone not selected, show error
+        $('#input-shipping-zone').addClass('is-invalid');
+        $('#error-shipping-zone').html('Please select a region / state!').addClass('d-block');
+        return;
+    }
+    
+    // Clear error if zone is selected
+    $('#input-shipping-zone').removeClass('is-invalid');
+    $('#error-shipping-zone').removeClass('d-block');
+    
+    // Check if all required shipping fields are filled
+    var shippingCity = $('#input-shipping-city').val() && $('#input-shipping-city').val().trim() !== '';
+    var shippingCountry = $('#input-shipping-country').val() && $('#input-shipping-country').val() !== '';
+    var shippingAddress1 = $('#input-shipping-address-1').val() && $('#input-shipping-address-1').val().trim() !== '';
+    
+    // If all required fields are filled, submit form and reload shipping methods
+    if (shippingCity && shippingCountry && shippingZone && shippingAddress1) {
+        // Submit register form first to save address
+        submitRegisterForm();
+        
+        // Then reload shipping methods
+        {% if shipping_required %}
+        setTimeout(function() {
+            if ($('#button-shipping-method').length) {
+                $('#button-shipping-method').trigger('click');
+            } else {
+                // Reload shipping method section directly
+                chain.attach(function () {
+                    return $.ajax({
+                        url: 'index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}getMethods&language={{ language }}',
+                        dataType: 'json',
+                        success: function (json) {
+                            if (json['redirect']) {
+                                location = json['redirect'];
+                                return;
+                            }
+                            if (json['error']) {
+                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                            }
+                            if (json['shipping_methods']) {
+                                // Reload shipping method section to show methods
+                                $('#checkout-shipping-method').load('index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}');
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        }
+                    });
+                });
+            }
+        }, 1000);
+        {% endif %}
+    }
 });
 
 // Auto-load shipping and payment methods on page load
