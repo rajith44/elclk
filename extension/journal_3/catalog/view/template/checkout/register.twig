@@ -2,20 +2,17 @@
   <p>{{ text_login }}</p>
   <fieldset>
     <legend>{{ heading_title }}</legend>
-    <div class="row align-items-center">
-      <div class="col mb-3 required">
-        <div class="form-check radio form-check-inline">
-          <input type="radio" name="account" value="1" id="input-register" class="form-check-input"{% if account %} checked{% endif %}/> <label for="input-register" class="form-check-label">{{ text_register }}</label>
-        </div>
-        {% if config_checkout_guest %}
+    <div class="row">
+      {% if config_checkout_guest %}
+        <div class="col mb-3 required">
+          <div class="form-check radio form-check-inline">
+            <input type="radio" name="account" value="1" id="input-register" class="form-check-input"{% if account %} checked{% endif %}/> <label for="input-register" class="form-check-label">{{ text_register }}</label>
+          </div>
           <div class="form-check radio form-check-inline">
             <input type="radio" name="account" value="0" id="input-guest" class="form-check-input"{% if not account %} checked{% endif %}/> <label for="input-guest" class="form-check-label">{{ text_guest }}</label>
           </div>
-        {% endif %}
-        <div class="form-check radio form-check-inline">
-          <input type="radio" name="account" value="login" id="input-returning" class="form-check-input"/> <label for="input-returning" class="form-check-label">{{ text_returning_customer }}</label>
         </div>
-      </div>
+      {% endif %}
       <div class="form-group col mb-3{% if customer_groups|length <= 1 %} d-none{% endif %}">
         <label class="form-label">{{ entry_customer_group }}</label>
         <select name="customer_group_id" id="input-customer-group" class="form-select">
@@ -25,30 +22,7 @@
         </select>
       </div>
     </div>
-    <div id="returning-customer" class="border rounded p-3 mb-4 d-none returning-customer-section">
-      <div class="row row-cols-1 row-cols-md-2">
-        <div class="form-group col mb-3" style="margin-bottom: 15px !important;"> 
-          <label for="input-login-email" class="form-label">{{ entry_email }}</label>
-          <input type="email" id="input-login-email" class="form-control" autocomplete="email"/>
-        </div>
-        <div class="col mb-3">
-            <div class="form-group">
-              <label for="input-login-password" class="form-label">{{ entry_password }}</label>
-              <input type="password" id="input-login-password" class="form-control mb-2" autocomplete="current-password"/>
-            </div>
-            <div class="text-end">
-              <a href="{{ forgotten }}" class="small">{{ text_forgotten }}</a>
-            </div>
-        </div>
-      </div>
-      <div id="returning-alert"></div>
-      <div class="text-end">
-        <button type="button" id="button-returning-login" class="btn btn-primary">{{ button_login }}</button>
-      </div>
-    </div>
-
-    <div id="register-section">
-    <div class="row row-cols-1 row-cols-md-2 mt-2">
+    <div class="row row-cols-1 row-cols-md-2">
       <div class="form-group col mb-3 required">
         <label for="input-firstname" class="form-label">{{ entry_firstname }}</label> <input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control"/>
         <div id="error-firstname" class="invalid-feedback"></div>
@@ -353,11 +327,10 @@
       <div class="form-group col mb-3">
         <label for="input-shipping-address-2" class="form-label">{{ entry_address_2 }}</label> <input type="text" name="shipping_address_2" value="{{ shipping_address_2 }}" placeholder="{{ entry_address_2 }}" id="input-shipping-address-2" class="form-control"/>
       </div>
-      {# <div class="form-group col mb-3 required">
-        <label for="input-shipping-city" class="form-label">{{ entry_city }}</label> 
-        <input type="text" name="shipping_city" value="{{ shipping_city }}" placeholder="{{ entry_city }}" id="input-shipping-city" class="form-control"/>
+      <div class="form-group col mb-3 required">
+        <label for="input-shipping-city" class="form-label">{{ entry_city }}</label> <input type="text" name="shipping_city" value="{{ shipping_city }}" placeholder="{{ entry_city }}" id="input-shipping-city" class="form-control"/>
         <div id="error-shipping-city" class="invalid-feedback"></div>
-      </div> #}
+      </div>
       <div class="form-group col mb-3 required">
         <label for="input-shipping-postcode" class="form-label">{{ entry_postcode }}</label> <input type="text" name="shipping_postcode" value="{{ shipping_postcode }}" placeholder="{{ entry_postcode }}" id="input-shipping-postcode" class="form-control"/>
         <div id="error-shipping-postcode" class="invalid-feedback"></div>
@@ -372,8 +345,7 @@
         <div id="error-shipping-country" class="invalid-feedback"></div>
       </div>
       <div class="form-group col mb-3 required">
-        <label for="input-shipping-zone" class="form-label">{{ entry_zone }}</label> 
-        <select name="shipping_zone_id" id="input-shipping-zone" class="form-select" data-oc-value="{{ shipping_zone_id }}"></select>
+        <label for="input-shipping-zone" class="form-label">{{ entry_zone }}</label> <select name="shipping_zone_id" id="input-shipping-zone" class="form-select" data-oc-value="{{ shipping_zone_id }}"></select>
         <div id="error-shipping-zone" class="invalid-feedback"></div>
       </div>
       {% for custom_field in custom_fields %}
@@ -486,32 +458,42 @@
       </fieldset>
     </div>
     <div class="form-group col mb-3 required">{{ captcha }}</div>
+    <div class="form-group col mb-3">
+      <div class="form-check checkbox">
+        <input type="checkbox" name="newsletter" value="1" id="input-newsletter" class="form-check-input"/>
+        <label for="input-newsletter" class="form-check-label">{{ entry_newsletter }}</label>
+      </div>
+      {% if text_agree %}
+        <div id="agree" class="form-check checkbox">
+          <input type="checkbox" name="agree" value="1" id="input-register-agree" class="form-check-input"/>
+          <label for="input-register-agree" class="form-check-label">{{ text_agree }}</label>
+        </div>
+      {% endif %}
+      <div class="buttons">
+        <div class="pull-right">
+          <button type="submit" id="button-register" class="btn btn-primary">{{ button_continue }}</button>
+        </div>
+      </div>
+    </div>
   </div>
-
 </form>
 <script type="text/javascript"><!--
 // Account
-function toggleAccountOptions() {
-    var selected = $('input[name=\'account\']:checked').val();
-
-    if (selected == '1') {
+$('input[name=\'account\']').on('click', function () {
+    if ($(this).val() == 1) {
         $('#password').removeClass('d-none');
     } else {
         // If guest hide password field
         $('#password').addClass('d-none');
     }
 
-    if (selected == 'login') {
-        $('#register-section').addClass('d-none');
-        $('#returning-customer').removeClass('d-none');
+    if ($(this).val() == 1) {
+        $('#agree').removeClass('d-none');
     } else {
-        $('#register-section').removeClass('d-none');
-        $('#returning-customer').addClass('d-none');
+        // If guest hide register agree field
+        $('#agree').addClass('d-none');
     }
-}
-
-$('input[name=\'account\']').on('change', toggleAccountOptions);
-toggleAccountOptions();
+});
 
 $('input[name=\'account\']:checked').trigger('click');
 
@@ -560,269 +542,10 @@ $('#input-address-match').on('change', function () {
     }
 });
 
-// Comprehensive validation function for all checkout fields
-function validateAllCheckoutFields() {
-    var errors = [];
-    var hasErrors = false;
-    
-    // Clear previous error messages
-    $('#form-register .invalid-feedback').html('').removeClass('d-block');
-    $('#form-register .form-control, #form-register .form-select').removeClass('is-invalid');
-    $('#form-register .has-error').removeClass('has-error');
-    
-    // Check account type
-    var accountType = $('input[name="account"]:checked').val();
-    var isRegister = (accountType == '1' || accountType == 1);
-    var isGuest = (accountType == '0' || accountType == 0);
-    
-    if (!accountType || accountType == 'login') {
-        errors.push('Please select an account type');
-        hasErrors = true;
-    }
-    
-    // Validate required account fields (for both register and guest)
-    if (isRegister || isGuest) {
-        // Firstname
-        var firstname = $('#input-firstname').val();
-        if (!firstname || firstname.trim().length < 1 || firstname.trim().length > 32) {
-            $('#input-firstname').addClass('is-invalid');
-            $('#error-firstname').html('First name must be between 1 and 32 characters!').addClass('d-block');
-            $('#input-firstname').closest('.required').addClass('has-error');
-            errors.push('First name is required');
-            hasErrors = true;
-        }
-        
-        // Lastname
-        var lastname = $('#input-lastname').val();
-        if (!lastname || lastname.trim().length < 1 || lastname.trim().length > 32) {
-            $('#input-lastname').addClass('is-invalid');
-            $('#error-lastname').html('Last name must be between 1 and 32 characters!').addClass('d-block');
-            $('#input-lastname').closest('.required').addClass('has-error');
-            errors.push('Last name is required');
-            hasErrors = true;
-        }
-        
-        // Email
-        var email = $('#input-email').val();
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email.trim())) {
-            $('#input-email').addClass('is-invalid');
-            $('#error-email').html('E-Mail Address does not appear to be valid!').addClass('d-block');
-            $('#input-email').closest('.required').addClass('has-error');
-            errors.push('Valid email is required');
-            hasErrors = true;
-        }
-        
-        // Telephone (if required)
-        if ($('#input-telephone').closest('.required').length || $('#input-telephone').closest('.form-group').hasClass('required')) {
-            var telephone = $('#input-telephone').val();
-            if (!telephone || telephone.trim().length < 3 || telephone.trim().length > 32) {
-                $('#input-telephone').addClass('is-invalid');
-                $('#error-telephone').html('Telephone must be between 3 and 32 characters!').addClass('d-block');
-                $('#input-telephone').closest('.required, .form-group').addClass('has-error');
-                errors.push('Telephone is required');
-                hasErrors = true;
-            }
-        }
-    }
-    
-    // Validate payment address fields (if payment address section exists)
-    if ($('#input-payment-address-1').length) {
-        // Address 1
-        var paymentAddress1 = $('#input-payment-address-1').val();
-        if ($('#input-payment-address-1').closest('.required').length || $('#input-payment-address-1').closest('.form-group').hasClass('required')) {
-            if (!paymentAddress1 || paymentAddress1.trim().length < 3 || paymentAddress1.trim().length > 128) {
-                $('#input-payment-address-1').addClass('is-invalid');
-                $('#error-payment-address-1').html('Address must be between 3 and 128 characters!').addClass('d-block');
-                $('#input-payment-address-1').closest('.required, .form-group').addClass('has-error');
-                errors.push('Payment address is required');
-                hasErrors = true;
-            }
-        }
-        
-        // City
-        var paymentCity = $('#input-payment-city').val();
-        if ($('#input-payment-city').closest('.required').length || $('#input-payment-city').closest('.form-group').hasClass('required')) {
-            if (!paymentCity || paymentCity.trim().length < 2 || paymentCity.trim().length > 128) {
-                $('#input-payment-city').addClass('is-invalid');
-                $('#error-payment-city').html('City must be between 2 and 128 characters!').addClass('d-block');
-                $('#input-payment-city').closest('.required, .form-group').addClass('has-error');
-                errors.push('Payment city is required');
-                hasErrors = true;
-            }
-        }
-        
-        // Country
-        var paymentCountry = $('#input-payment-country').val();
-        if ($('#input-payment-country').closest('.required').length || $('#input-payment-country').closest('.form-group').hasClass('required')) {
-            if (!paymentCountry || paymentCountry == '' || paymentCountry == '0') {
-                $('#input-payment-country').addClass('is-invalid');
-                $('#error-payment-country').html('Please select a country!').addClass('d-block');
-                $('#input-payment-country').closest('.required, .form-group').addClass('has-error');
-                errors.push('Payment country is required');
-                hasErrors = true;
-            }
-        }
-        
-        // Zone
-        var paymentZone = $('#input-payment-zone').val();
-        if ($('#input-payment-zone').closest('.required').length || $('#input-payment-zone').closest('.form-group').hasClass('required')) {
-            if (!paymentZone || paymentZone == '' || paymentZone == '0') {
-                $('#input-payment-zone').addClass('is-invalid');
-                $('#error-payment-zone').html('Please select a region / state!').addClass('d-block');
-                $('#input-payment-zone').closest('.required, .form-group').addClass('has-error');
-                errors.push('Payment zone is required');
-                hasErrors = true;
-            }
-        }
-        
-        // Postcode (if required)
-        if ($('#input-payment-postcode').closest('.required').length || $('#input-payment-postcode').closest('.form-group').hasClass('required')) {
-            var paymentPostcode = $('#input-payment-postcode').val();
-            if (!paymentPostcode || paymentPostcode.trim().length < 2 || paymentPostcode.trim().length > 10) {
-                $('#input-payment-postcode').addClass('is-invalid');
-                $('#error-payment-postcode').html('Postcode must be between 2 and 10 characters!').addClass('d-block');
-                $('#input-payment-postcode').closest('.required, .form-group').addClass('has-error');
-                errors.push('Payment postcode is required');
-                hasErrors = true;
-            }
-        }
-    }
-    
-    // Validate shipping address fields (if shipping is required and address match is not checked)
-    var addressMatch = $('#input-address-match').is(':checked');
-    if (!$('#input-address-match').length || !addressMatch) {
-        if ($('#input-shipping-address-1').length) {
-            // Shipping Address 1
-            var shippingAddress1 = $('#input-shipping-address-1').val();
-            if ($('#input-shipping-address-1').closest('.required').length || $('#input-shipping-address-1').closest('.form-group').hasClass('required')) {
-                if (!shippingAddress1 || shippingAddress1.trim().length < 3 || shippingAddress1.trim().length > 128) {
-                    $('#input-shipping-address-1').addClass('is-invalid');
-                    $('#error-shipping-address-1').html('Address must be between 3 and 128 characters!').addClass('d-block');
-                    $('#input-shipping-address-1').closest('.required, .form-group').addClass('has-error');
-                    errors.push('Shipping address is required');
-                    hasErrors = true;
-                }
-            }
-            
-            // Shipping City
-            var shippingCity = $('#input-shipping-city').val();
-            if ($('#input-shipping-city').closest('.required').length || $('#input-shipping-city').closest('.form-group').hasClass('required')) {
-                if (!shippingCity || shippingCity.trim().length < 2 || shippingCity.trim().length > 128) {
-                    $('#input-shipping-city').addClass('is-invalid');
-                    $('#error-shipping-city').html('City must be between 2 and 128 characters!').addClass('d-block');
-                    $('#input-shipping-city').closest('.required, .form-group').addClass('has-error');
-                    errors.push('Shipping city is required');
-                    hasErrors = true;
-                }
-            }
-            
-            // Shipping Country
-            var shippingCountry = $('#input-shipping-country').val();
-            if ($('#input-shipping-country').closest('.required').length || $('#input-shipping-country').closest('.form-group').hasClass('required')) {
-                if (!shippingCountry || shippingCountry == '' || shippingCountry == '0') {
-                    $('#input-shipping-country').addClass('is-invalid');
-                    $('#error-shipping-country').html('Please select a country!').addClass('d-block');
-                    $('#input-shipping-country').closest('.required, .form-group').addClass('has-error');
-                    errors.push('Shipping country is required');
-                    hasErrors = true;
-                }
-            }
-            
-            // Shipping Zone
-            var shippingZone = $('#input-shipping-zone').val();
-            if ($('#input-shipping-zone').closest('.required').length || $('#input-shipping-zone').closest('.form-group').hasClass('required')) {
-                if (!shippingZone || shippingZone == '' || shippingZone == '0') {
-                    $('#input-shipping-zone').addClass('is-invalid');
-                    $('#error-shipping-zone').html('Please select a region / state!').addClass('d-block');
-                    $('#input-shipping-zone').closest('.required, .form-group').addClass('has-error');
-                    errors.push('Shipping zone is required');
-                    hasErrors = true;
-                }
-            }
-            
-            // Shipping Postcode (if required)
-            if ($('#input-shipping-postcode').closest('.required').length || $('#input-shipping-postcode').closest('.form-group').hasClass('required')) {
-                var shippingPostcode = $('#input-shipping-postcode').val();
-                if (!shippingPostcode || shippingPostcode.trim().length < 2 || shippingPostcode.trim().length > 10) {
-                    $('#input-shipping-postcode').addClass('is-invalid');
-                    $('#error-shipping-postcode').html('Postcode must be between 2 and 10 characters!').addClass('d-block');
-                    $('#input-shipping-postcode').closest('.required, .form-group').addClass('has-error');
-                    errors.push('Shipping postcode is required');
-                    hasErrors = true;
-                }
-            }
-        }
-    }
-    
-    // Validate required custom fields
-    $('#form-register .custom-field.required').each(function() {
-        var $field = $(this);
-        var $input = $field.find('input[type="radio"]:checked, input[type="checkbox"]:checked, select, input[type="text"], input[type="hidden"], textarea').first();
-        var fieldValue = $input.val();
-        
-        // For checkboxes, check if any is checked
-        if ($field.find('input[type="checkbox"]').length) {
-            fieldValue = $field.find('input[type="checkbox"]:checked').length > 0 ? 'checked' : '';
-        }
-        
-        // For radio buttons, check if any is checked
-        if ($field.find('input[type="radio"]').length) {
-            fieldValue = $field.find('input[type="radio"]:checked').length > 0 ? $field.find('input[type="radio"]:checked').val() : '';
-        }
-        
-        if (!fieldValue || fieldValue === '' || (Array.isArray(fieldValue) && fieldValue.length === 0)) {
-            $input.addClass('is-invalid');
-            var errorDiv = $field.find('.invalid-feedback').first();
-            if (errorDiv.length) {
-                errorDiv.html('This field is required!').addClass('d-block');
-            }
-            $field.addClass('has-error');
-            errors.push('Custom field is required');
-            hasErrors = true;
-        }
-    });
-    
-    // Validate password if account type is register
-    if (isRegister) {
-        var password = $('#input-password').val();
-        if ($('#input-password').length && ($('#input-password').closest('.required').length || $('#input-password').closest('.form-group').hasClass('required'))) {
-            if (!password || password.length < 4) {
-                $('#input-password').addClass('is-invalid');
-                $('#error-password').html('Password must be at least 4 characters!').addClass('d-block');
-                $('#input-password').closest('.required, .form-group').addClass('has-error');
-                errors.push('Password is required');
-                hasErrors = true;
-            }
-        }
-    }
-    
-    // Show error alert if there are errors
-    if (hasErrors) {
-        var errorMessage = 'Please fill in all required fields:<br/>' + errors.slice(0, 5).join('<br/>');
-        if (errors.length > 5) {
-            errorMessage += '<br/>... and ' + (errors.length - 5) + ' more error(s)';
-        }
-        $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + errorMessage + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-        
-        // Scroll to first error
-        var firstError = $('#form-register .is-invalid').first();
-        if (firstError.length) {
-            $('html, body').animate({
-                scrollTop: firstError.offset().top - 100
-            }, 500);
-        }
-    }
-    
-    return !hasErrors;
-}
+$('#form-register').on('submit', function (e) {
+    e.preventDefault();
 
-// Function to submit register form
-function submitRegisterForm() {
-    // Validate all required fields before submission
-    if (!validateAllCheckoutFields()) {
-        return false; // Don't submit if validation fails
-    }
+    var element = this;
 
     chain.attach(function () {
         return $.ajax({
@@ -832,10 +555,10 @@ function submitRegisterForm() {
             data: $('#form-register').serialize(),
             contentType: 'application/x-www-form-urlencoded',
             beforeSend: function () {
-                // Show loading indicator if needed
+                $(element).prop('disabled', true).addClass('loading');
             },
             complete: function () {
-                // Hide loading indicator if needed
+                $(element).prop('disabled', false).removeClass('loading');
             },
             success: function (json) {
                 $('#form-register').find('.is-invalid').removeClass('is-invalid');
@@ -868,146 +591,14 @@ function submitRegisterForm() {
                         $('#input-customer-group').prop('disabled', true);
                         $('#input-password').prop('disabled', true);
                         $('#input-captcha').prop('disabled', true);
+                        $('#input-register-agree').prop('disabled', true);
                     }
 
-                    // Auto-load shipping and payment methods
-                    loadShippingAndPaymentMethods();
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-            }
-        });
-    });
-}
-
-// Function to load shipping and payment methods
-function loadShippingAndPaymentMethods() {
-    {% if shipping_required %}
-        // Load shipping methods first
-        setTimeout(function() {
-            if ($('#button-shipping-method').length) {
-                $('#button-shipping-method').trigger('click');
-            } else {
-                // If button doesn't exist, load directly via AJAX
-                chain.attach(function () {
-                    return $.ajax({
-                        url: 'index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}getMethods&language={{ language }}',
-                        dataType: 'json',
-                        success: function (json) {
-                            if (json['redirect']) {
-                                location = json['redirect'];
-                                return;
-                            }
-                            if (json['error']) {
-                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                            }
-                            if (json['shipping_methods']) {
-                                // Reload shipping method section to show methods
-                                $('#checkout-shipping-method').load('index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}', function() {
-                                    // After shipping methods load, wait a bit then load payment methods
-                                    setTimeout(function() {
-                                        loadPaymentMethods();
-                                    }, 500);
-                                });
-                            } else {
-                                // No shipping methods, try payment methods anyway
-                                setTimeout(function() {
-                                    loadPaymentMethods();
-                                }, 500);
-                            }
-                        },
-                        error: function() {
-                            // On error, still try to load payment methods
-                            setTimeout(function() {
-                                loadPaymentMethods();
-                            }, 500);
-                        }
-                    });
-                });
-            }
-        }, 500);
-    {% else %}
-        // No shipping required, load payment methods directly
-        setTimeout(function() {
-            loadPaymentMethods();
-        }, 500);
-    {% endif %}
-}
-
-// Function to load payment methods
-function loadPaymentMethods() {
-    setTimeout(function() {
-        if ($('#button-payment-method').length) {
-            $('#button-payment-method').trigger('click');
-        } else {
-            chain.attach(function () {
-                return $.ajax({
-                    url: 'index.php?route=checkout/payment_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}getMethods&language={{ language }}',
-                    dataType: 'json',
-                    success: function (json) {
-                        if (json['redirect']) {
-                            location = json['redirect'];
-                            return;
-                        }
-                        if (json['error']) {
-                            $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                        }
-                        if (json['payment_methods']) {
-                            // Reload payment method section to show methods
-                            $('#checkout-payment-method').load('index.php?route=checkout/payment_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}', function() {
-                                // Reload confirm section after payment methods load
-                                setTimeout(function() {
-                                    $('#checkout-confirm').load('index.php?route=checkout/confirm{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}confirm&language={{ language }}');
-                                }, 300);
-                            });
-                        }
-                    },
-                    error: function() {
-                        console.log('Error loading payment methods');
-                    }
-                });
-            });
-        }
-    }, 300);
-}
-
-// Prevent form submission on enter key
-$('#form-register').on('submit', function (e) {
-    e.preventDefault();
-});
-
-$('#button-returning-login').on('click', function () {
-    var element = this;
-
-    chain.attach(function () {
-        return $.ajax({
-            url: '{{ login_action|replace({'&amp;':'&'}) }}',
-            type: 'post',
-            dataType: 'json',
-            data: {
-                email: $('#input-login-email').val(),
-                password: $('#input-login-password').val(),
-                redirect: '{{ login_redirect|replace({'&amp;':'&'}) }}'
-            },
-            beforeSend: function () {
-                $(element).prop('disabled', true).addClass('loading');
-            },
-            complete: function () {
-                $(element).prop('disabled', false).removeClass('loading');
-            },
-            success: function (json) {
-                $('#returning-alert').empty();
-
-                if (json['error'] && json['error']['warning']) {
-                    $('#returning-alert').html('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error']['warning'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                    return;
-                }
-
-                if (json['redirect']) {
-                    location = json['redirect'];
-                } else if (json['success']) {
-                    $('#returning-alert').html('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                  {% if shipping_required %}
+                    $('#button-shipping-method').trigger('click');
+                  {% else %}
+                    $('#button-payment-method').trigger('click');
+                  {% endif %}
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -1064,200 +655,4 @@ $('select[name$=\'_country_id\']').on('change', function () {
 });
 
 $('select[name$=\'_country_id\']').trigger('change');
-
-// City change handlers - trigger form submission and reload shipping methods
-var cityChangeTimeout = null;
-var shippingCityChangeTimeout = null;
-
-function handleCityChange() {
-    // Clear any existing timeout
-    if (cityChangeTimeout) {
-        clearTimeout(cityChangeTimeout);
-    }
-    
-    // Debounce the city change - wait 800ms after user stops typing
-    cityChangeTimeout = setTimeout(function() {
-        // Check if required fields are filled before submitting
-        var paymentCity = $('#input-payment-city').val() && $('#input-payment-city').val().trim() !== '';
-        var paymentCountry = $('#input-payment-country').val() && $('#input-payment-country').val() !== '';
-        var paymentZone = $('#input-payment-zone').val() && $('#input-payment-zone').val() !== '';
-        
-        if (paymentCity && paymentCountry && paymentZone) {
-            // Submit register form to save address
-            submitRegisterForm();
-        }
-    }, 800);
-}
-
-function handleShippingCityChange() {
-    // Clear any existing timeout
-    if (shippingCityChangeTimeout) {
-        clearTimeout(shippingCityChangeTimeout);
-    }
-    
-    // Debounce the shipping city change
-    shippingCityChangeTimeout = setTimeout(function() {
-        // Check if required shipping fields are filled
-        var shippingCity = $('#input-shipping-city').val() && $('#input-shipping-city').val().trim() !== '';
-        var shippingCountry = $('#input-shipping-country').val() && $('#input-shipping-country').val() !== '';
-        var shippingZone = $('#input-shipping-zone').val() && $('#input-shipping-zone').val() !== '';
-        
-        if (shippingCity && shippingCountry && shippingZone) {
-            // Submit register form first
-            submitRegisterForm();
-            
-            // Then reload shipping methods
-            {% if shipping_required %}
-            setTimeout(function() {
-                if ($('#button-shipping-method').length) {
-                    $('#button-shipping-method').trigger('click');
-                } else {
-                    // Reload shipping method section
-                    $('#checkout-shipping-method').load('index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}');
-                }
-            }, 1500);
-            {% endif %}
-        }
-    }, 800);
-}
-
-// Payment city change - handle both input and change events
-$('#input-payment-city').on('input change blur', function() {
-    handleCityChange();
-});
-
-// Shipping city change - handle both input and change events
-$('#input-shipping-city').on('input change blur', function() {
-    handleCityChange(); // Also submit form
-    handleShippingCityChange(); // And reload shipping methods
-});
-
-// Shipping zone change - reload shipping methods when zone changes
-$('#input-shipping-zone').on('change', function() {
-    var shippingZone = $(this).val();
-    
-    // Validate shipping zone is selected
-    if (!shippingZone || shippingZone == '' || shippingZone == '0') {
-        // Zone not selected, show error
-        $('#input-shipping-zone').addClass('is-invalid');
-        $('#error-shipping-zone').html('Please select a region / state!').addClass('d-block');
-        return;
-    }
-    
-    // Clear error if zone is selected
-    $('#input-shipping-zone').removeClass('is-invalid');
-    $('#error-shipping-zone').removeClass('d-block');
-    
-    // Check if all required shipping fields are filled
-    var shippingCity = $('#input-shipping-city').val() && $('#input-shipping-city').val().trim() !== '';
-    var shippingCountry = $('#input-shipping-country').val() && $('#input-shipping-country').val() !== '';
-    var shippingAddress1 = $('#input-shipping-address-1').val() && $('#input-shipping-address-1').val().trim() !== '';
-    
-    // If all required fields are filled, submit form and reload shipping methods
-    if (shippingCity && shippingCountry && shippingZone && shippingAddress1) {
-        // Submit register form first to save address
-        submitRegisterForm();
-        
-        // Then reload shipping methods
-        {% if shipping_required %}
-        setTimeout(function() {
-            if ($('#button-shipping-method').length) {
-                $('#button-shipping-method').trigger('click');
-            } else {
-                // Reload shipping method section directly
-                chain.attach(function () {
-                    return $.ajax({
-                        url: 'index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}getMethods&language={{ language }}',
-                        dataType: 'json',
-                        success: function (json) {
-                            if (json['redirect']) {
-                                location = json['redirect'];
-                                return;
-                            }
-                            if (json['error']) {
-                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                            }
-                            if (json['shipping_methods']) {
-                                // Reload shipping method section to show methods
-                                $('#checkout-shipping-method').load('index.php?route=checkout/shipping_method{{ constant('JOURNAL3_ROUTE_SEPARATOR') }}index&language={{ language }}');
-                            }
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                        }
-                    });
-                });
-            }
-        }, 1000);
-        {% endif %}
-    }
-});
-
-// Auto-load shipping and payment methods on page load
-$(document).ready(function() {
-    // Function to check and load methods
-    function checkAndLoadMethods() {
-        // Check if form has enough data to load methods
-        var hasPaymentCity = $('#input-payment-city').val() && $('#input-payment-city').val().trim() !== '';
-        var hasPaymentCountry = $('#input-payment-country').val() && $('#input-payment-country').val() !== '';
-        var hasPaymentZone = $('#input-payment-zone').val() && $('#input-payment-zone').val() !== '';
-        var hasPaymentAddress1 = $('#input-payment-address-1').val() && $('#input-payment-address-1').val().trim() !== '';
-        var hasPaymentPostcode = $('#input-payment-postcode').val() && $('#input-payment-postcode').val().trim() !== '';
-        
-        {% if shipping_required %}
-        var hasShippingCity = $('#input-shipping-city').val() && $('#input-shipping-city').val().trim() !== '';
-        var hasShippingCountry = $('#input-shipping-country').val() && $('#input-shipping-country').val() !== '';
-        var hasShippingZone = $('#input-shipping-zone').val() && $('#input-shipping-zone').val() !== '';
-        var hasShippingAddress1 = $('#input-shipping-address-1').val() && $('#input-shipping-address-1').val().trim() !== '';
-        var hasShippingPostcode = $('#input-shipping-postcode').val() && $('#input-shipping-postcode').val().trim() !== '';
-        
-        // Check if shipping address is complete
-        var shippingComplete = hasShippingCity && hasShippingCountry && hasShippingZone && hasShippingAddress1 && hasShippingPostcode;
-        // Check if payment address is complete
-        var paymentComplete = hasPaymentCity && hasPaymentCountry && hasPaymentZone && hasPaymentAddress1 && hasPaymentPostcode;
-        
-        if (shippingComplete) {
-            // Shipping address complete - submit form and load methods
-            submitRegisterForm();
-        } else if (paymentComplete) {
-            // Payment address complete - submit form and try to load methods
-            submitRegisterForm();
-        }
-        {% else %}
-        // No shipping required, just need payment address
-        var paymentComplete = hasPaymentCity && hasPaymentCountry && hasPaymentZone && hasPaymentAddress1 && hasPaymentPostcode;
-        
-        if (paymentComplete) {
-            submitRegisterForm();
-        }
-        {% endif %}
-    }
-    
-    // Try immediately after a short delay
-    setTimeout(checkAndLoadMethods, 500);
-    
-    // Try again after page fully loads
-    setTimeout(checkAndLoadMethods, 1500);
-    
-    // Try once more after all scripts load
-    setTimeout(checkAndLoadMethods, 2500);
-    
-    // Also try when country/zone selects are populated (they load dynamically)
-    $(document).on('DOMNodeInserted', function() {
-        setTimeout(checkAndLoadMethods, 100);
-    });
-});
 //--></script>
-
-<style>
-  .returning-customer-section{
-    background-color: #eaeaea;
-    padding: 17px;
-    margin-top: 19px;
-    border-radius: 15px;
-  }
-
-  .mt-2{
-    margin-top: 20px;
-  }
-</style>
