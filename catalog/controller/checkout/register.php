@@ -19,10 +19,6 @@ class Register extends \Opencart\System\Engine\Controller {
 		$data['text_login'] = sprintf($this->language->get('text_login'), $this->url->link('account/login', 'language=' . $this->config->get('config_language') . '&redirect=' . urlencode($this->url->link('checkout/checkout', 'language=' . $this->config->get('config_language'), true))));
 
 		$data['entry_newsletter'] = sprintf($this->language->get('entry_newsletter'), $this->config->get('config_name'));
-		$data['text_returning_customer'] = $this->language->get('text_returning_customer');
-		$data['text_returning_customer_description'] = $this->language->get('text_returning_customer_description');
-		$data['text_forgotten'] = $this->language->get('text_forgotten');
-		$data['button_login'] = $this->language->get('button_login');
 
 		$data['error_upload_size'] = sprintf($this->language->get('error_upload_size'), $this->config->get('config_file_max_size'));
 
@@ -37,10 +33,6 @@ class Register extends \Opencart\System\Engine\Controller {
 		$this->session->data['upload_token'] = oc_token(32);
 
 		$data['upload'] = $this->url->link('tool/upload', 'language=' . $this->config->get('config_language') . '&upload_token=' . $this->session->data['upload_token']);
-		$this->session->data['login_token'] = oc_token(26);
-		$data['login_action'] = $this->url->link('account/login.login', 'language=' . $this->config->get('config_language') . '&login_token=' . $this->session->data['login_token']);
-		$data['login_redirect'] = $this->url->link('checkout/checkout', 'language=' . $this->config->get('config_language'), true);
-		$data['forgotten'] = $this->url->link('account/forgotten', 'language=' . $this->config->get('config_language'));
 
 		// Customer Group
 		$data['customer_groups'] = [];
@@ -374,9 +366,9 @@ class Register extends \Opencart\System\Engine\Controller {
 					$json['error']['shipping_address_1'] = $this->language->get('error_address_1');
 				}
 
-				// if (!oc_validate_length($post_info['shipping_city'], 2, 128)) {
-				// 	$json['error']['shipping_city'] = $this->language->get('error_city');
-				// }
+				if (!oc_validate_length($post_info['shipping_city'], 2, 128)) {
+					$json['error']['shipping_city'] = $this->language->get('error_city');
+				}
 
 				// Country
 				$this->load->model('localisation/country');
