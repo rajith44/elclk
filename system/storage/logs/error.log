@@ -1,0 +1,254 @@
+2025-12-05 12:22:31 - PHP Warning:  unlink(C:/xampp/htdocs/elc/system/storage/cache/cache.zone.b5c27ba6187dceb25fcc075bb83be422.1764936912): No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 37
+2025-12-05 12:22:31 - PHP Warning:  unlink(C:/xampp/htdocs/elc/system/storage/cache/cache.zone.b5c27ba6187dceb25fcc075bb83be422.1764936912): No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 37
+2025-12-05 13:34:34 - Error: Error: Could not load model extension/dv_opencart_patch/engine/load!
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 148
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\model\ajax_quick_checkout\store.php
+Line: 54
+Class: Opencart\System\Engine\Loader
+Function: model
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\system\engine\factory.php
+Line: 67
+Class: Opencart\Catalog\Model\Extension\AjaxQuickCheckout\AjaxQuickCheckout\Store
+Function: __construct
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 139
+Class: Opencart\System\Engine\Factory
+Function: model
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\module\ajax_quick_checkout.php
+Line: 14
+Class: Opencart\System\Engine\Loader
+Function: model
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\engine\factory.php
+Line: 45
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module\AjaxQuickCheckout
+Function: __construct
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 81
+Class: Opencart\System\Engine\Factory
+Function: controller
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\system\engine\event.php
+Line: 72
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 311
+Class: Opencart\System\Engine\Event
+Function: trigger
+
+Backtrace: 8
+File: C:\xampp\htdocs\elclk\index.php
+Line: 20
+Function: require_once
+2025-12-05 23:51:44 - Error: 3 arguments are required, 1 given
+File: C:\xampp\htdocs\elc\extension\next_day_trishaw_delivery_rate\catalog\model\shipping\next_day_trishaw_delivery_rate.php
+Line: 93
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\extension\next_day_trishaw_delivery_rate\catalog\model\shipping\next_day_trishaw_delivery_rate.php
+Line: 93
+Function: sprintf
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Catalog\Model\Extension\NextDayTrishawDeliveryRate\Shipping\NextDayTrishawDeliveryRate
+Function: getQuote
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\model\ajax_quick_checkout\method.php
+Line: 24
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Catalog\Model\Extension\AjaxQuickCheckout\AjaxQuickCheckout\Method
+Function: getShippingMethods
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\ajax_quick_checkout\shipping_method.php
+Line: 235
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\ajax_quick_checkout\shipping_method.php
+Line: 37
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\AjaxQuickCheckout\ShippingMethod
+Function: getShippingMethods
+
+Backtrace: 8
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 112
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\AjaxQuickCheckout\ShippingMethod
+Function: index
+
+Backtrace: 9
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\module\ajax_quick_checkout.php
+Line: 600
+Class: Opencart\System\Engine\Loader
+Function: controller
+
+Backtrace: 10
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\module\ajax_quick_checkout.php
+Line: 37
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module\AjaxQuickCheckout
+Function: initSteps
+
+Backtrace: 11
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 112
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module\AjaxQuickCheckout
+Function: index
+
+Backtrace: 12
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\module\ajax_quick_checkout.php
+Line: 348
+Class: Opencart\System\Engine\Loader
+Function: controller
+
+Backtrace: 13
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module\AjaxQuickCheckout
+Function: view_checkout_checkout_before
+
+Backtrace: 14
+File: C:\xampp\htdocs\elc\system\engine\event.php
+Line: 72
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 15
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 183
+Class: Opencart\System\Engine\Event
+Function: trigger
+
+Backtrace: 16
+File: C:\xampp\htdocs\elc\catalog\controller\checkout\checkout.php
+Line: 75
+Class: Opencart\System\Engine\Loader
+Function: view
+
+Backtrace: 17
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Catalog\Controller\Checkout\Checkout
+Function: index
+
+Backtrace: 18
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 19
+File: C:\xampp\htdocs\elclk\index.php
+Line: 20
+Function: require_once
+2025-12-06 00:44:17 - PHP Warning:  rename(C:\xampp\htdocs\elc\system\storage\cache\template\37\37898B4.tmp,C:/xampp/htdocs/elc/system/storage/cache/template/37/3780f25178ebbc4aac215f75b827fdde.php): Access is denied (code: 5) in C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Cache\FilesystemCache.php on line 61
+2025-12-06 00:44:17 - Error: Failed to write cache file "C:/xampp/htdocs/elc/system/storage/cache/template/37/3780f25178ebbc4aac215f75b827fdde.php".
+File: C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Cache\FilesystemCache.php
+Line: 76
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Environment.php
+Line: 397
+Class: Twig\Cache\FilesystemCache
+Function: write
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Environment.php
+Line: 357
+Class: Twig\Environment
+Function: loadTemplate
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Environment.php
+Line: 320
+Class: Twig\Environment
+Function: load
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\library\template\twig.php
+Line: 119
+Class: Twig\Environment
+Function: render
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\library\template.php
+Line: 58
+Class: Opencart\System\Library\Template\Twig
+Function: render
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 187
+Class: Opencart\System\Library\Template
+Function: render
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\catalog\controller\common\column_right.php
+Line: 110
+Class: Opencart\System\Engine\Loader
+Function: view
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 112
+Class: Opencart\Catalog\Controller\Common\ColumnRight
+Function: index
+
+Backtrace: 8
+File: C:\xampp\htdocs\elc\catalog\controller\product\product.php
+Line: 465
+Class: Opencart\System\Engine\Loader
+Function: controller
+
+Backtrace: 9
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Catalog\Controller\Product\Product
+Function: index
+
+Backtrace: 10
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 11
+File: C:\xampp\htdocs\elc\index.php
+Line: 20
+Function: require_once
