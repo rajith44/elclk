@@ -66,6 +66,13 @@ class ProductFilter extends Option {
 
 				break;
 
+			case 'back_in_stock':
+				$result['back_in_stock'] = true;
+				$result['sort'] = 'p.date_modified';
+				$result['order'] = 'DESC';
+
+				break;
+
 			case 'custom':
 				$result['products'] = Arr::get($value, 'products', array());
 				$result['custom'] = true;

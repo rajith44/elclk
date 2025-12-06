@@ -12,6 +12,7 @@ class ModelJournal3Filter extends Model {
 		'rating',
 		'p.sort_order',
 		'p.date_added',
+		'p.date_modified',
 		'random',
 		'p.viewed',
 		'sales',
@@ -1196,6 +1197,13 @@ class ModelJournal3Filter extends Model {
 			} else if (is_numeric(Arr::get($filter_data, 'price.max'))) {
 				$sql .= " AND COALESCE(" . $special . ", " . $discount . ", p.price) <= " . (float)$this->undoTax($filter_data, 'max');
 			}
+		}
+
+		if (Arr::get($filter_data, 'back_in_stock')) {
+			// Products that are back in stock: currently have quantity > 0
+			// and were recently modified (within last 30 days) suggesting restock
+			$sql .= " AND p.quantity > 0";
+			$sql .= " AND p.date_modified >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
 		}
 
 		if ($query !== 'quantity') {
