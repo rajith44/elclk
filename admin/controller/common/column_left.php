@@ -458,6 +458,12 @@ class ColumnLeft extends \Opencart\System\Engine\Controller {
 				];
 			}
 
+			$marketing[] = [
+				'name'     => 'Newsletter',
+				'href'     => $this->url->link('marketing/newsletter', 'user_token=' . $this->session->data['user_token']),
+				'children' => []
+			];
+
 			if ($marketing) {
 				$data['menus'][] = [
 					'id'       => 'menu-marketing',
