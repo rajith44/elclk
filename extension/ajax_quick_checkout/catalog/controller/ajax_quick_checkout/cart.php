@@ -472,11 +472,95 @@ class Cart extends \Opencart\System\Engine\Controller {
                     );
             }
 
-                    // Display prices
+            // Get original price and check for special/discount from product_discount table
+            $original_price = $product['price'];
+            $special_price = false;
+            $has_special = false;
+            
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                $this->load->model('catalog/product');
+                
+                // Get base product price
+                $product_info = $this->model_catalog_product->getProduct($product['product_id']);
+                
+                if ($product_info && isset($product_info['price'])) {
+                    $base_price = $product_info['price'];
+                    $current_price = $product['price'];
+                    
+                    // Check for special price (special = 1, quantity = 1)
+                    $special_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity = '1' AND special = '1' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
+                    
+                    if ($special_query->num_rows) {
+                        // Calculate special price based on type
+                        $discount_row = $special_query->row;
+                        if ($discount_row['type'] == 'F') {
+                            // Fixed Price
+                            $special_price = $discount_row['price'];
+                        } elseif ($discount_row['type'] == 'P') {
+                            // Percentage discount
+                            $special_price = $base_price - ($base_price * ($discount_row['price'] / 100));
+                        } elseif ($discount_row['type'] == 'S') {
+                            // Subtract fixed amount
+                            $special_price = $base_price - $discount_row['price'];
+                        }
+                        
+                        if ($special_price < $base_price) {
+                            $original_price = $base_price;
+                            $has_special = true;
+                        }
+                    } else {
+                        // Check for quantity-based discount (special = 0, quantity <= product_total)
+                        $discount_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_discount WHERE product_id = 
+                        '" . (int)$product['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . 
+                        "' AND quantity <= '" . (int)$product_total . "' AND special = '0' AND ((date_start = '0000-00-00' OR date_start < NOW()) 
+                        AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
+                        
+                        if ($discount_query->num_rows) {
+                            // Calculate discount price based on type
+                            $discount_row = $discount_query->row;
+                            $discount_price = $base_price;
+                            
+                            if ($discount_row['type'] == 'F') {
+                                // Fixed Price
+                                $discount_price = $discount_row['price'];
+                            } elseif ($discount_row['type'] == 'P') {
+                                // Percentage discount
+                                $discount_price = $base_price - ($base_price * ($discount_row['price'] / 100));
+                            } elseif ($discount_row['type'] == 'S') {
+                                // Subtract fixed amount
+                                $discount_price = $base_price - $discount_row['price'];
+                            }
+                            
+                            if ($discount_price < $base_price) {
+                                $original_price = $base_price;
+                                $special_price = $discount_price;
+                                $has_special = true;
+                            }
+                        } else {
+                            // Check if current cart price is different from base price (discount already applied in cart)
+                            if ($current_price < $base_price) {
+                                $original_price = $base_price;
+                                $special_price = $current_price;
+                                $has_special = true;
+                            }
+                        }
+                    }
+                }
+                
+                // Format prices
                 $price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']);
+                
+                if ($has_special) {
+                    $original_price_formatted = $this->currency->format($this->tax->calculate($original_price, $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']);
+                    $special_price_formatted = $this->currency->format($this->tax->calculate($special_price, $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']);
+                } else {
+                    $original_price_formatted = false;
+                    $special_price_formatted = false;
+                }
             } else {
                 $price = false;
+                $original_price_formatted = false;
+                $special_price_formatted = false;
             }
 
                     // Display prices
@@ -522,6 +606,9 @@ class Cart extends \Opencart\System\Engine\Controller {
                 'stock'     => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
                 'reward'    => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                 'price'     => $price,
+                'original_price' => isset($original_price_formatted) ? $original_price_formatted : false,
+                'special_price' => isset($special_price_formatted) ? $special_price_formatted : false,
+                'has_special' => isset($has_special) ? $has_special : false,
                 'total'     => $total,
                 'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id'])
                 );

@@ -53,7 +53,12 @@
                                 <p each={option in product.option}>
                                     <small>{option.name}: {option.value}</small>
                                 </p>
-                                <p class="ve-help ve-hidden ve-visible--sm">{ product.price } x { product.quantity }</p>
+                                <p class="ve-help ve-hidden ve-visible--sm">
+                                    <span if={product.has_special && product.original_price} style="text-decoration: line-through; color: #999; margin-right: 5px;">{ product.original_price }</span>
+                                    <span if={product.has_special && product.special_price} style="color: #e74c3c; font-weight: bold;">{ product.special_price }</span>
+                                    <span if={!product.has_special}>{ product.price }</span>
+                                    <span> x { product.quantity }</span>
+                                </p>
                             </td>
 
                             <td class="qc-model ve-hidden--sm" show={ getConfig().cart.columns.model.display == 1 }>{ product.model }</td>
@@ -74,7 +79,11 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="qc-price ve-hidden--sm { ( getConfig().cart.columns.price.display == 1 )  ? '' : 've-hidden' }">{ product.price }</td>
+                            <td class="qc-price ve-hidden--sm { ( getConfig().cart.columns.price.display == 1 )  ? '' : 've-hidden' }">
+                                <span if={product.has_special && product.original_price} style="text-decoration: line-through; color: #999; margin-right: 5px;">{ product.original_price }</span>
+                                <span if={product.has_special && product.special_price} style="color: #e74c3c; font-weight: bold;">{ product.special_price }</span>
+                                <span if={!product.has_special}>{ product.price }</span>
+                            </td>
                             <td class="qc-total { ( getConfig().cart.columns.total.display == 1 )  ? '' : 've-hidden' }">{ product.total }</td>
                         </tr>
                         <hr>
@@ -224,7 +233,12 @@
                                 <p each={option in product.option}>
                                     <small>{option.name}: {option.value}</small>
                                 </p>
-                                <p class="ve-help ve-hidden ve-visible--sm">{ product.price } x { product.quantity }</p>
+                                <p class="ve-help ve-hidden ve-visible--sm">
+                                    <span if={product.has_special && product.original_price} style="text-decoration: line-through; color: #999; margin-right: 5px;">{ product.original_price }</span>
+                                    <span if={product.has_special && product.special_price} style="color: #e74c3c; font-weight: bold;">{ product.special_price }</span>
+                                    <span if={!product.has_special}>{ product.price }</span>
+                                    <span> x { product.quantity }</span>
+                                </p>
                             </td>
 
                             <td class="qc-model ve-hidden--sm" show={ getConfig().cart.columns.model.display == 1 }>{ product.model }</td>
@@ -246,7 +260,11 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="qc-price ve-hidden--sm { ( getConfig().cart.columns.price.display == 1 )  ? '' : 've-hidden' }">{ product.price }</td>
+                            <td class="qc-price ve-hidden--sm { ( getConfig().cart.columns.price.display == 1 )  ? '' : 've-hidden' }">
+                                <span if={product.has_special && product.original_price} style="text-decoration: line-through; color: #999; margin-right: 5px;">{ product.original_price }</span>
+                                <span if={product.has_special && product.special_price} style="color: #e74c3c; font-weight: bold;">{ product.special_price }</span>
+                                <span if={!product.has_special}>{ product.price }</span>
+                            </td>
                             <td class="qc-total { ( getConfig().cart.columns.total.display == 1 )  ? '' : 've-hidden' }">{ product.total }</td>
                         </tr>
                     </tbody>
