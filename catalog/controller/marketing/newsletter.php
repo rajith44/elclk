@@ -57,11 +57,28 @@ class Newsletter extends \Opencart\System\Engine\Controller {
 
 			$subscriber = $this->model_marketing_newsletter->getSubscriberByEmail($email);
 
-			if ($subscriber && md5($email . $subscriber['subscriber_id']) == $code) {
-				$this->model_marketing_newsletter->deleteSubscriber($subscriber['subscriber_id']);
-				$data['success'] = $this->language->get('text_unsubscribe_success');
+			if ($subscriber) {
+				// Verify code for existing subscriber
+				if (md5($email . $subscriber['subscriber_id']) == $code) {
+					// Update status to 0 (unsubscribed) instead of deleting
+					$this->db->query("UPDATE `" . DB_PREFIX . "newsletter_subscriber` SET `status` = '0', `date_modified` = NOW() WHERE `subscriber_id` = '" . (int)$subscriber['subscriber_id'] . "'");
+					$data['success'] = $this->language->get('text_unsubscribe_success');
+				} else {
+					$data['error'] = $this->language->get('error_unsubscribe');
+				}
 			} else {
-				$data['error'] = $this->language->get('error_unsubscribe');
+				// New unsubscribe - verify code and create subscriber record with status=0
+				if (md5($email . 'newsletter_unsubscribe') == $code) {
+					// Create subscriber record with status=0 (unsubscribed)
+					$this->model_marketing_newsletter->addSubscriber([
+						'email'  => $email,
+						'name'   => '',
+						'status' => 0
+					]);
+					$data['success'] = $this->language->get('text_unsubscribe_success');
+				} else {
+					$data['error'] = $this->language->get('error_unsubscribe');
+				}
 			}
 		} else {
 			$data['error'] = $this->language->get('error_unsubscribe');
@@ -69,7 +86,19 @@ class Newsletter extends \Opencart\System\Engine\Controller {
 
 		$this->document->setTitle($this->language->get('heading_title'));
 
-		$data['continue'] = $this->url->link('common/home');
+		$data['breadcrumbs'] = [];
+
+		$data['breadcrumbs'][] = [
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/home', 'language=' . $this->config->get('config_language'))
+		];
+
+		$data['breadcrumbs'][] = [
+			'text' => $this->language->get('heading_title'),
+			'href' => $this->url->link('marketing/newsletter/unsubscribe', 'language=' . $this->config->get('config_language'))
+		];
+
+		$data['continue'] = $this->url->link('common/home', 'language=' . $this->config->get('config_language'));
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['footer'] = $this->load->controller('common/footer');

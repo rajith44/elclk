@@ -504,12 +504,17 @@ class Newsletter extends \Opencart\System\Engine\Controller {
 							$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
 							$mail->setSubject($campaign['subject']);
 
+							// Generate unsubscribe link for all recipients
 							$unsubscribe_code = '';
-							if ($send_to_type == 'subscribers') {
-								$subscriber_info = $this->model_marketing_newsletter->getSubscriberByEmail($recipient['email']);
-								if ($subscriber_info) {
-									$unsubscribe_code = HTTP_CATALOG . 'index.php?route=marketing/newsletter/unsubscribe&email=' . urlencode($recipient['email']) . '&code=' . md5($recipient['email'] . $subscriber_info['subscriber_id']);
-								}
+							$subscriber_info = $this->model_marketing_newsletter->getSubscriberByEmail($recipient['email']);
+							
+							if ($subscriber_info) {
+								// If subscriber exists, use their ID for the code
+								$unsubscribe_code = HTTP_CATALOG . 'index.php?route=marketing/newsletter.unsubscribe&email=' . urlencode($recipient['email']) . '&code=' . md5($recipient['email'] . $subscriber_info['subscriber_id']);
+							} else {
+								// If not a subscriber, create a temporary code based on email
+								// The unsubscribe handler will create a subscriber record with status=0
+								$unsubscribe_code = HTTP_CATALOG . 'index.php?route=marketing/newsletter.unsubscribe&email=' . urlencode($recipient['email']) . '&code=' . md5($recipient['email'] . 'newsletter_unsubscribe');
 							}
 
 							$data = [
