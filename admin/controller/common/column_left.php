@@ -157,6 +157,14 @@ class ColumnLeft extends \Opencart\System\Engine\Controller {
 				];
 			}
 
+			if ($this->user->hasPermission('access', 'catalog/sync')) {
+				$catalog[] = [
+					'name'     => $this->language->get('text_sync'),
+					'href'     => $this->url->link('catalog/sync', 'user_token=' . $this->session->data['user_token']),
+					'children' => []
+				];
+			}
+
 			if ($catalog) {
 				$data['menus'][] = [
 					'id'       => 'menu-catalog',

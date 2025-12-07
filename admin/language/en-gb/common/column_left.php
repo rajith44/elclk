@@ -69,6 +69,7 @@ $_['text_seo_url']             = 'SEO URL';
 $_['text_startup']             = 'Startup';
 $_['text_statistics']          = 'Statistics';
 $_['text_stock_status']        = 'Stock Statuses';
+$_['text_sync']                = 'POS Sync';
 $_['text_system']              = 'System';
 $_['text_subscription_plan']   = 'Subscription Plans';
 $_['text_subscription']        = 'Subscriptions';
