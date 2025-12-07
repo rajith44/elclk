@@ -416,6 +416,21 @@ class Setting extends \Opencart\System\Engine\Controller {
 		$data['config_image_location_width'] = $this->config->get('config_image_location_width');
 		$data['config_image_location_height'] = $this->config->get('config_image_location_height');
 
+		// Watermark
+		$data['config_watermark_status'] = $this->config->get('config_watermark_status');
+		$data['config_watermark_image'] = $this->config->get('config_watermark_image');
+		$data['config_watermark_position'] = $this->config->get('config_watermark_position');
+		$data['config_watermark_size_type'] = $this->config->get('config_watermark_size_type') ?: 'percentage';
+		$data['config_watermark_size_percentage'] = $this->config->get('config_watermark_size_percentage') ?: 20;
+		$data['config_watermark_size_width'] = $this->config->get('config_watermark_size_width') ?: 0;
+		$data['config_watermark_size_height'] = $this->config->get('config_watermark_size_height') ?: 0;
+
+		if ($data['config_watermark_image'] && is_file(DIR_IMAGE . html_entity_decode($data['config_watermark_image'], ENT_QUOTES, 'UTF-8'))) {
+			$data['watermark_thumb'] = $this->model_tool_image->resize($data['config_watermark_image'], $this->config->get('config_image_default_width'), $this->config->get('config_image_default_height'));
+		} else {
+			$data['watermark_thumb'] = $data['placeholder'];
+		}
+
 		// Mail
 		$data['config_mail_engine'] = $this->config->get('config_mail_engine');
 		$data['config_mail_parameter'] = $this->config->get('config_mail_parameter');

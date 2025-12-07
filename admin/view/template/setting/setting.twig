@@ -1271,6 +1271,93 @@
                   </div>
                 </div>
               </fieldset>
+              <fieldset>
+                <legend>{{ text_watermark }}</legend>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">{{ entry_watermark_status }}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-switch form-switch-lg">
+                      <input type="hidden" name="config_watermark_status" value="0"/> <input type="checkbox" name="config_watermark_status" value="1" id="input-watermark-status" class="form-check-input"{% if config_watermark_status %} checked{% endif %}/>
+                    </div>
+                    <div class="form-text">{{ help_watermark_status }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-watermark-image" class="col-sm-2 col-form-label">{{ entry_watermark_image }}</label>
+                  <div class="col-sm-10">
+                    <div id="watermark-image" class="border rounded d-block" style="max-width: 300px;">
+                      <img src="{{ watermark_thumb }}" alt="" title="" id="thumb-watermark-image" data-oc-placeholder="{{ placeholder }}" class="img-fluid"/> <input type="hidden" name="config_watermark_image" value="{{ config_watermark_image }}" id="input-watermark-image"/>
+                      <div class="d-grid">
+                        <button type="button" data-oc-toggle="image" data-oc-target="#input-watermark-image" data-oc-thumb="#thumb-watermark-image" class="btn btn-primary rounded-0"><i class="fa-solid fa-pencil"></i> {{ button_edit }}</button>
+                        <button type="button" data-oc-toggle="clear" data-oc-target="#input-watermark-image" data-oc-thumb="#thumb-watermark-image" class="btn btn-warning rounded-0"><i class="fa-regular fa-trash-can"></i> {{ button_clear }}</button>
+                      </div>
+                    </div>
+                    <div class="form-text">{{ help_watermark_image }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-watermark-position" class="col-sm-2 col-form-label">{{ entry_watermark_position }}</label>
+                  <div class="col-sm-10">
+                    <select name="config_watermark_position" id="input-watermark-position" class="form-select">
+                      <option value="topleft"{% if config_watermark_position == 'topleft' %} selected{% endif %}>Top Left</option>
+                      <option value="topcenter"{% if config_watermark_position == 'topcenter' %} selected{% endif %}>Top Center</option>
+                      <option value="topright"{% if config_watermark_position == 'topright' %} selected{% endif %}>Top Right</option>
+                      <option value="middleleft"{% if config_watermark_position == 'middleleft' %} selected{% endif %}>Middle Left</option>
+                      <option value="middlecenter"{% if config_watermark_position == 'middlecenter' %} selected{% endif %}>Middle Center</option>
+                      <option value="middleright"{% if config_watermark_position == 'middleright' %} selected{% endif %}>Middle Right</option>
+                      <option value="bottomleft"{% if config_watermark_position == 'bottomleft' %} selected{% endif %}>Bottom Left</option>
+                      <option value="bottomcenter"{% if config_watermark_position == 'bottomcenter' %} selected{% endif %}>Bottom Center</option>
+                      <option value="bottomright"{% if config_watermark_position == 'bottomright' %} selected{% endif %}>Bottom Right</option>
+                    </select>
+                    <div class="form-text">{{ help_watermark_position }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-watermark-size-type" class="col-sm-2 col-form-label">{{ entry_watermark_size_type }}</label>
+                  <div class="col-sm-10">
+                    <select name="config_watermark_size_type" id="input-watermark-size-type" class="form-select">
+                      <option value="percentage"{% if config_watermark_size_type == 'percentage' %} selected{% endif %}>{{ text_percentage }}</option>
+                      <option value="fixed"{% if config_watermark_size_type == 'fixed' %} selected{% endif %}>{{ text_fixed_size }}</option>
+                    </select>
+                    <div class="form-text">{{ help_watermark_size_type }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3" id="watermark-size-percentage"{% if config_watermark_size_type != 'percentage' %} style="display: none;"{% endif %}>
+                  <label for="input-watermark-size-percentage" class="col-sm-2 col-form-label">{{ entry_watermark_size_percentage }}</label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <input type="number" name="config_watermark_size_percentage" value="{{ config_watermark_size_percentage }}" placeholder="20" id="input-watermark-size-percentage" class="form-control" min="1" max="100"/>
+                      <span class="input-group-text">%</span>
+                    </div>
+                    <div class="form-text">{{ help_watermark_size_percentage }}</div>
+                  </div>
+                </div>
+                <div class="row mb-3" id="watermark-size-fixed"{% if config_watermark_size_type != 'fixed' %} style="display: none;"{% endif %}>
+                  <label class="col-sm-2 col-form-label">{{ entry_watermark_size_fixed }}</label>
+                  <div class="col-sm-10">
+                    <div id="input-watermark-size-fixed" class="row">
+                      <div class="col-sm-6">
+                        <input type="number" name="config_watermark_size_width" value="{{ config_watermark_size_width }}" placeholder="{{ entry_width }}" id="input-watermark-size-width" class="form-control" min="0"/>
+                      </div>
+                      <div class="col-sm-6">
+                        <input type="number" name="config_watermark_size_height" value="{{ config_watermark_size_height }}" placeholder="{{ entry_height }}" id="input-watermark-size-height" class="form-control" min="0"/>
+                      </div>
+                    </div>
+                    <div class="form-text">{{ help_watermark_size_fixed }}</div>
+                  </div>
+                </div>
+                <script>
+                $('#input-watermark-size-type').on('change', function() {
+                  if ($(this).val() == 'percentage') {
+                    $('#watermark-size-percentage').show();
+                    $('#watermark-size-fixed').hide();
+                  } else {
+                    $('#watermark-size-percentage').hide();
+                    $('#watermark-size-fixed').show();
+                  }
+                });
+                </script>
+              </fieldset>
             </div>
             <div id="tab-mail" class="tab-pane">
               <fieldset>
