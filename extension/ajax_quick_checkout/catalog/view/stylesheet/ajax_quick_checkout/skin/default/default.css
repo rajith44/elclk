@@ -126,14 +126,14 @@ hr{
   margin: 0 !important;
 }
 
-.ve-card__header{
+/* .ve-card__header{
  background: #F16272;
   background: linear-gradient(90deg, rgba(251, 38, 61, 0.63) 0%, rgb(255, 219, 224) 100%, rgb(237, 221, 83) 100%) !important;
-}
+} */
 
-.ve-card__header .ve-h4 .text{
+/* .ve-card__header .ve-h4 .text{
   color: #fff !important;
-}
+} */
 .step.qc-custom{
   display: none !important;
 }
