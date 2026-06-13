@@ -1,0 +1,8 @@
+{
+    "name": "Store Chatbot",
+    "codename": "chatbot",
+    "description": "AI-ready store chatbot with product search, FAQ, order status, human handoff and transcripts for OpenCart 4.1.0.3",
+    "version": "1.0.0",
+    "author": "ELC",
+    "link": ""
+}
