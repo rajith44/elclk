@@ -114,23 +114,18 @@
                 <div class="">
 
                     <div class="ve-field d-vis qc-coupon" show={getConfig().cart.option.coupon.display == '1'}>
-                        
                         <div class="ve-alert ve-alert--danger" if={getState().notifications.cart && getState().notifications.cart.error_coupon}>
                             {getState().notifications.cart.error_coupon}
                         </div>
                         <div class="ve-alert ve-alert--success" if={getState().notifications.cart && getState().notifications.cart.success_coupon}>
                             {getState().notifications.cart.success_coupon}
                         </div>
-                        <div class="ve-row">
-                            <label class="ve-col-md-4 ve-label" >
-                                { getLanguage().cart.entry_coupon }
-                            </label>
-                            <div class="ve-col-md-8">
-                                <div class="ve-field ve-field--block">
-                                    <input type="text" value="{getSession().coupon}" name="coupon" placeholder="{ getLanguage().cart.entry_coupon }" class="ve-input" onkeydown={changeCoupon}/>
-                                    <button class="ve-btn d-vis ve-btn--default" onclick={useCoupon} type="button">{ getLanguage().cart.button_apply }</button>
-                                </div>
-                            </div>
+                        <label class="ve-label qc-coupon__label">
+                            { getLanguage().cart.entry_coupon }
+                        </label>
+                        <div class="qc-coupon__group">
+                            <input type="text" value="{getSession().coupon}" name="coupon" class="ve-input qc-coupon__input" onkeydown={changeCoupon}/>
+                            <button class="ve-btn d-vis ve-btn--default qc-coupon__btn" onclick={useCoupon} type="button">{ getLanguage().cart.button_apply }</button>
                         </div>
                     </div>
                     
@@ -275,23 +270,18 @@
                 <div class="">
 
                     <div class="ve-field d-vis qc-coupon" show={getConfig().cart.option.coupon.display == '1'}>
-                        
                         <div class="ve-alert ve-alert--danger" if={getState().notifications.cart && getState().notifications.cart.error_coupon}>
                             {getState().notifications.cart.error_coupon}
                         </div>
                         <div class="ve-alert ve-alert--success" if={getState().notifications.cart && getState().notifications.cart.success_coupon}>
                             {getState().notifications.cart.success_coupon}
                         </div>
-                        <div class="ve-row">
-                            <label class="ve-col-md-4 ve-label" >
-                                { getLanguage().cart.entry_coupon }
-                            </label>
-                            <div class="ve-col-md-8">
-                                <div class="ve-field ve-field--block">
-                                    <input type="text" value="{getSession().coupon}" name="coupon" placeholder="{ getLanguage().cart.entry_coupon }" class="ve-input" onkeydown={changeCoupon}/>
-                                    <button class="ve-btn d-vis ve-btn--default" onclick={useCoupon} type="button">{ getLanguage().cart.button_apply }</button>
-                                </div>
-                            </div>
+                        <label class="ve-label qc-coupon__label">
+                            { getLanguage().cart.entry_coupon }
+                        </label>
+                        <div class="qc-coupon__group">
+                            <input type="text" value="{getSession().coupon}" name="coupon" class="ve-input qc-coupon__input" onkeydown={changeCoupon}/>
+                            <button class="ve-btn d-vis ve-btn--default qc-coupon__btn" onclick={useCoupon} type="button">{ getLanguage().cart.button_apply }</button>
                         </div>
                     </div>
                     <virtual if={getState.opencart_version < '4.1.0.0'}>

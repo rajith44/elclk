@@ -2,7 +2,8 @@
 
 namespace Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\AjaxQuickCheckout;
 
-class Cart extends \Opencart\System\Engine\Controller {
+class Cart extends \Opencart\System\Engine\Controller
+{
     private $route = 'extension/ajax_quick_checkout/ajax_quick_checkout/cart';
 
     public $action = array(
@@ -17,10 +18,11 @@ class Cart extends \Opencart\System\Engine\Controller {
 
     private $pro = '';
 
-    public function __construct($registry){
+    public function __construct($registry)
+    {
         parent::__construct($registry);
-        
-        if(is_file(DIR_EXTENSION.'ajax_quick_checkout_pro/install.json')) $this->pro .= '_pro';
+
+        if (is_file(DIR_EXTENSION . 'ajax_quick_checkout_pro/install.json')) $this->pro .= '_pro';
 
         $this->config->addPath(DIR_EXTENSION . 'ajax_quick_checkout' . $this->pro . '/system/config/');
 
@@ -30,13 +32,13 @@ class Cart extends \Opencart\System\Engine\Controller {
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/store');
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/method');
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/address');
-
     }
 
     /**
      * Initialization
      */
-    public function index(){
+    public function index()
+    {
         $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
         $state['config'] = $this->getConfig();
         $state['language']['cart'] = $this->getLanguages();
@@ -45,29 +47,30 @@ class Cart extends \Opencart\System\Engine\Controller {
 
         $cart = $this->getDefault();
         //$this->model_extension_ajax_quick_checkout_store->updateState(array( 'session' , 'cart'), $cart);
-        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'cart', 'products'), $cart['products']);
         if (VERSION < '4.1.0.0') {
-            if(isset($cart['vouchers'])){
+            if (isset($cart['vouchers'])) {
                 $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'vouchers'), $cart['vouchers']);
             }
         }
 
         $totals = $this->getTotals();
-        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'totals'), $totals);
+        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'totals'), $totals);
         $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_order->updateOrder();
     }
 
     //fix cart quantity lateness on 4.0.2.x
-    public function get_cart_data() {
+    public function get_cart_data()
+    {
         $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->loadState();
         $cart = $this->getCart();
-        if(!$cart['products']){
-            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session', 'status'), false);
-        }else{
-            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+        if (!$cart['products']) {
+            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'status'), false);
+        } else {
+            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'cart', 'products'), $cart['products']);
 
             $totals = $this->getTotals();
-            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'totals'), $totals);
+            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'totals'), $totals);
         }
 
         $data = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getStateUpdated();
@@ -79,10 +82,11 @@ class Cart extends \Opencart\System\Engine\Controller {
     /**
      * update via ajax
      */
-    public function update(){
+    public function update()
+    {
         $rawData = file_get_contents('php://input');
         $post = json_decode($rawData, true);
-        if(!$post){
+        if (!$post) {
             $post = $this->request->post;
         }
         $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->loadState();
@@ -102,21 +106,22 @@ class Cart extends \Opencart\System\Engine\Controller {
      * Receiver
      * Receiver listens to dispatch of events and accepts data array with action and state
      */
-    public function receiver($data){
+    public function receiver($data)
+    {
         $update = false;
 
         //updating payment_method value
-        if($data['action'] == 'cart/update'){
+        if ($data['action'] == 'cart/update') {
 
-            if(isset($data['data']['cart'])){
+            if (isset($data['data']['cart'])) {
                 $cart = $this->updateCart($data['data']['cart']);
-                if(!$cart['products']){
-                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session', 'status'), false);
-                }else{
-                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+                if (!$cart['products']) {
+                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'status'), false);
+                } else {
+                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'cart', 'products'), $cart['products']);
 
                     $totals = $this->getTotals();
-                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'totals'), $totals);
+                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'totals'), $totals);
                 }
 
                 $this->validate();
@@ -124,7 +129,7 @@ class Cart extends \Opencart\System\Engine\Controller {
                 $update = true;
             }
 
-            if(isset($data['data']['coupon'])){
+            if (isset($data['data']['coupon'])) {
                 $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
                 $coupon = $data['data']['coupon'];
 
@@ -144,20 +149,20 @@ class Cart extends \Opencart\System\Engine\Controller {
                     $state['notifications']['cart']['error_coupon'] = $this->language->get('error_coupon');
                 }
 
-                if(!isset($state['session']['coupon'])){
+                if (!isset($state['session']['coupon'])) {
                     $state['session']['coupon'] = $coupon;
                 }
 
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'coupon'), $state['session']['coupon']);
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'notifications' , 'cart'), $state['notifications']['cart']);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'coupon'), $state['session']['coupon']);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('notifications', 'cart'), $state['notifications']['cart']);
 
                 $totals = $this->getTotals();
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'totals'), $totals);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'totals'), $totals);
 
                 $update = true;
             }
             if (VERSION < '4.1.0.0') {
-                if(isset($data['data']['voucher'])){
+                if (isset($data['data']['voucher'])) {
                     $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
 
                     $voucher = $data['data']['voucher'];
@@ -177,21 +182,21 @@ class Cart extends \Opencart\System\Engine\Controller {
                         $state['notifications']['cart']['error_voucher'] = $this->language->get('error_voucher');
                     }
 
-                    if(!isset($state['session']['voucher'])){
+                    if (!isset($state['session']['voucher'])) {
                         $state['session']['voucher'] = $voucher;
                     }
 
-                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'voucher'), $state['session']['voucher']);
-                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'notifications' , 'cart'), $state['notifications']['cart']);
+                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'voucher'), $state['session']['voucher']);
+                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('notifications', 'cart'), $state['notifications']['cart']);
 
                     $totals = $this->getTotals();
-                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'totals'), $totals);
+                    $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'totals'), $totals);
 
                     $update = true;
                 }
             }
 
-            if(!empty($data['data']['reward'])){
+            if (!empty($data['data']['reward'])) {
                 $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
 
                 $this->load->language('extension/opencart/total/reward');
@@ -220,25 +225,24 @@ class Cart extends \Opencart\System\Engine\Controller {
                     $state['notifications']['cart']['success_reward'] = $this->language->get('text_success');
                 }
 
-                if(!isset($state['session']['reward'])){
+                if (!isset($state['session']['reward'])) {
                     $state['session']['reward'] = $reward;
                 }
 
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'reward'), $state['session']['reward']);
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'notifications' , 'cart'), $state['notifications']['cart']);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'reward'), $state['session']['reward']);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('notifications', 'cart'), $state['notifications']['cart']);
 
                 $totals = $this->getTotals();
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'totals'), $totals);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'totals'), $totals);
 
                 $update = true;
-
             }
         }
 
-        if($data['action'] == 'account/update/after'){
-            if($this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->isUpdated('account')){
+        if ($data['action'] == 'account/update/after') {
+            if ($this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->isUpdated('account')) {
                 $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
-                if($state['session']['account'] == 'logged'){
+                if ($state['session']['account'] == 'logged') {
                     $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/order');
                     $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_order->initCart();
                 }
@@ -247,29 +251,31 @@ class Cart extends \Opencart\System\Engine\Controller {
                 //Need for load rewards, etc. after customer log in on checkout page.
                 $this->load->config('ajax_quick_checkout/cart');
                 $cart_language = $this->getLanguages();
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'language' , 'cart'),  $cart_language);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('language', 'cart'),  $cart_language);
 
                 $cart = $this->getCart();
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'cart', 'products'), $cart['products']);
 
                 $totals = $this->getTotals();
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'totals'), $totals);
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'totals'), $totals);
 
                 $update = true;
             }
         }
 
-        if($update){
+        if ($update) {
             $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('cart_total_text'), $this->getCartTotalText());
             $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->dispatch('cart/update/after', $data);
         }
 
-        if($data['action'] == 'total/update'
+        if (
+            $data['action'] == 'total/update'
             || $data['action'] == 'shipping_method/update/after'
-            || $data['action'] == 'payment_method/update/after'){
+            || $data['action'] == 'payment_method/update/after'
+        ) {
 
             $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
-            if($state['session']['account'] == 'logged'){
+            if ($state['session']['account'] == 'logged') {
                 $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/order');
                 $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_order->initCart();
                 $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('cart_total_text'), $this->getCartTotalText());
@@ -280,30 +286,31 @@ class Cart extends \Opencart\System\Engine\Controller {
             $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_address->updateTaxAddress();
 
             $cart = $this->getCart();
-            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'cart', 'products'), $cart['products']);
 
             $totals = $this->getTotals();
-            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'totals'), $totals);
+            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'totals'), $totals);
 
             $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->dispatch('total/update/after', $data);
         }
     }
 
-    public function validate(){
+    public function validate()
+    {
         $result = true;
         $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
         $this->load->language('extension/ajax_quick_checkout/ajax_quick_checkout/cart');
-        if($state['config']['guest']['cart']['min_total'] > $state['session']['total']){
-            $state['errors']['cart']['error_min_total'] = sprintf($this->language->get('error_min_total'), $this->currency->format( $state['config']['guest']['cart']['min_total'], $this->session->data['currency']));
+        if ($state['config']['guest']['cart']['min_total'] > $state['session']['total']) {
+            $state['errors']['cart']['error_min_total'] = sprintf($this->language->get('error_min_total'), $this->currency->format($state['config']['guest']['cart']['min_total'], $this->session->data['currency']));
             $result = false;
-        }else{
+        } else {
             $state['errors']['cart']['error_min_total'] = '';
         }
 
-        if($state['config']['guest']['cart']['min_quantity'] > $state['session']['quantity']){
+        if ($state['config']['guest']['cart']['min_quantity'] > $state['session']['quantity']) {
             $state['errors']['cart']['error_min_quantity'] = sprintf($this->language->get('error_min_quantity'), $state['config']['guest']['cart']['min_quantity']);
             $result = false;
-        }else{
+        } else {
             $state['errors']['cart']['error_min_quantity'] = '';
         }
 
@@ -311,29 +318,30 @@ class Cart extends \Opencart\System\Engine\Controller {
             $this->load->language('checkout/cart');
             $state['errors']['cart']['error_stock'] = $this->language->get('error_stock');
             $result = false;
-        }else{
+        } else {
             $state['errors']['cart']['error_stock'] = '';
         }
 
-        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'errors' , 'cart'), $state['errors']['cart']);
+        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('errors', 'cart'), $state['errors']['cart']);
 
 
         $cart = $this->getCart();
-        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'cart', 'products'), $cart['products']);
+        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'cart', 'products'), $cart['products']);
 
         return $result;
     }
 
-    private function getConfig(){
+    private function getConfig()
+    {
         $this->load->config('ajax_quick_checkout/cart');
         $config = $this->config->get('ajax_quick_checkout_cart');
 
         $settings = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getSetting();
         $result = array();
-        foreach($config['account'] as $account => $value){
-            if(!empty($settings['config'][$account]['cart'])){
+        foreach ($config['account'] as $account => $value) {
+            if (!empty($settings['config'][$account]['cart'])) {
                 $result[$account]['cart'] = $settings['config'][$account]['cart'];
-            }else{
+            } else {
                 $result[$account]['cart'] = array_replace_recursive($config, $value);
             }
         }
@@ -341,7 +349,8 @@ class Cart extends \Opencart\System\Engine\Controller {
         return $result;
     }
 
-    private function getLanguages(){
+    private function getLanguages()
+    {
 
         $this->load->language('extension/ajax_quick_checkout/ajax_quick_checkout/confirm');
         $this->load->language('extension/ajax_quick_checkout/ajax_quick_checkout/cart');
@@ -354,10 +363,7 @@ class Cart extends \Opencart\System\Engine\Controller {
         }
 
         $result['heading_title'] = $this->language->get('heading_title');
-
-        $this->load->language('extension/opencart/total/coupon');
-
-        $result['entry_coupon'] = $this->language->get('heading_title');
+        $result['entry_coupon'] = $this->language->get('entry_coupon');
 
         if (VERSION < '4.1.0.0') {
             $this->load->language('extension/opencart/total/voucher');
@@ -376,29 +382,31 @@ class Cart extends \Opencart\System\Engine\Controller {
 
         $language = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getLanguage();
 
-        if(isset($language['cart'])){
+        if (isset($language['cart'])) {
             $result = array_replace_recursive($result, $language['cart']);
         }
         $result['reward_heading_title'] = sprintf($this->language->get('heading_title'), $points ? $points : 0);
         $result['entry_reward'] = sprintf($this->language->get('entry_reward'), $points_total ? $points_total : 0);
 
         if (is_file(DIR_IMAGE . 'catalog/ajax_quick_checkout/step/cart.svg')) {
-            $result['image'] = HTTP_SERVER.'image/catalog/ajax_quick_checkout/step/cart.svg';
+            $result['image'] = HTTP_SERVER . 'image/catalog/ajax_quick_checkout/step/cart.svg';
         } else {
-            $result['image'] = HTTP_SERVER.'extension/ajax_quick_checkout/image/catalog/ajax_quick_checkout/step/cart.svg';
+            $result['image'] = HTTP_SERVER . 'extension/ajax_quick_checkout/image/catalog/ajax_quick_checkout/step/cart.svg';
         }
 
         return $result;
     }
 
 
-    private function getDefault(){
+    private function getDefault()
+    {
         return $this->getCart();
     }
 
-    private function updateCart($cart){
-        if($cart){
-            foreach($cart as $key => $value){
+    private function updateCart($cart)
+    {
+        if ($cart) {
+            foreach ($cart as $key => $value) {
                 $this->cart->update($key, $value);
             }
         }
@@ -406,7 +414,8 @@ class Cart extends \Opencart\System\Engine\Controller {
         return $this->getCart();
     }
 
-    private function getCart(){
+    private function getCart()
+    {
 
         $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
 
@@ -435,7 +444,7 @@ class Cart extends \Opencart\System\Engine\Controller {
                     $product['image'],
                     $state['config'][$state['session']['account']]['cart']['image_size']['width'],
                     $state['config'][$state['session']['account']]['cart']['image_size']['height']
-                    );
+                );
             } else {
                 $image = '';
             }
@@ -445,7 +454,7 @@ class Cart extends \Opencart\System\Engine\Controller {
                     $product['image'],
                     $state['config'][$state['session']['account']]['cart']['thumb_size']['width'],
                     $state['config'][$state['session']['account']]['cart']['thumb_size']['height']
-                    );
+                );
             } else {
                 $thumb = '';
             }
@@ -469,27 +478,27 @@ class Cart extends \Opencart\System\Engine\Controller {
                 $option_data[] = array(
                     'name'  => $option['name'],
                     'value' => ($this->model_extension_dv_opencart_patch_helper_general->strlen($value) > 20 ? $this->model_extension_dv_opencart_patch_helper_general->substr($value, 0, 20) . '..' : $value)
-                    );
+                );
             }
 
             // Get original price and check for special/discount from product_discount table
             $original_price = $product['price'];
             $special_price = false;
             $has_special = false;
-            
+
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                 $this->load->model('catalog/product');
-                
+
                 // Get base product price
                 $product_info = $this->model_catalog_product->getProduct($product['product_id']);
-                
+
                 if ($product_info && isset($product_info['price'])) {
                     $base_price = $product_info['price'];
                     $current_price = $product['price'];
-                    
+
                     // Check for special price (special = 1, quantity = 1)
                     $special_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity = '1' AND special = '1' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
-                    
+
                     if ($special_query->num_rows) {
                         // Calculate special price based on type
                         $discount_row = $special_query->row;
@@ -503,7 +512,7 @@ class Cart extends \Opencart\System\Engine\Controller {
                             // Subtract fixed amount
                             $special_price = $base_price - $discount_row['price'];
                         }
-                        
+
                         if ($special_price < $base_price) {
                             $original_price = $base_price;
                             $has_special = true;
@@ -511,15 +520,15 @@ class Cart extends \Opencart\System\Engine\Controller {
                     } else {
                         // Check for quantity-based discount (special = 0, quantity <= product_total)
                         $discount_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_discount WHERE product_id = 
-                        '" . (int)$product['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . 
-                        "' AND quantity <= '" . (int)$product_total . "' AND special = '0' AND ((date_start = '0000-00-00' OR date_start < NOW()) 
+                        '" . (int)$product['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') .
+                            "' AND quantity <= '" . (int)$product_total . "' AND special = '0' AND ((date_start = '0000-00-00' OR date_start < NOW()) 
                         AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
-                        
+
                         if ($discount_query->num_rows) {
                             // Calculate discount price based on type
                             $discount_row = $discount_query->row;
                             $discount_price = $base_price;
-                            
+
                             if ($discount_row['type'] == 'F') {
                                 // Fixed Price
                                 $discount_price = $discount_row['price'];
@@ -530,7 +539,7 @@ class Cart extends \Opencart\System\Engine\Controller {
                                 // Subtract fixed amount
                                 $discount_price = $base_price - $discount_row['price'];
                             }
-                            
+
                             if ($discount_price < $base_price) {
                                 $original_price = $base_price;
                                 $special_price = $discount_price;
@@ -546,13 +555,13 @@ class Cart extends \Opencart\System\Engine\Controller {
                         }
                     }
                 }
-                
+
                 // Format prices
-                $price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']);
-                
+                $price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+
                 if ($has_special) {
-                    $original_price_formatted = $this->currency->format($this->tax->calculate($original_price, $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']);
-                    $special_price_formatted = $this->currency->format($this->tax->calculate($special_price, $product['tax_class_id'], $this->config->get('config_tax')),$this->session->data['currency']);
+                    $original_price_formatted = $this->currency->format($this->tax->calculate($original_price, $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                    $special_price_formatted = $this->currency->format($this->tax->calculate($special_price, $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
                 } else {
                     $original_price_formatted = false;
                     $special_price_formatted = false;
@@ -563,9 +572,9 @@ class Cart extends \Opencart\System\Engine\Controller {
                 $special_price_formatted = false;
             }
 
-                    // Display prices
+            // Display prices
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                $total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'],$this->session->data['currency']);
+                $total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'], $this->session->data['currency']);
             } else {
                 $total = false;
             }
@@ -573,29 +582,29 @@ class Cart extends \Opencart\System\Engine\Controller {
             $subscription = '';
 
             if ($product['subscription']) {
-				$trial_price = $this->currency->format($this->tax->calculate($product['subscription']['trial_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-				$trial_cycle = $product['subscription']['trial_cycle'];
-				$trial_frequency = $this->language->get('text_' . $product['subscription']['trial_frequency']);
-				$trial_duration = $product['subscription']['trial_duration'];
+                $trial_price = $this->currency->format($this->tax->calculate($product['subscription']['trial_price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                $trial_cycle = $product['subscription']['trial_cycle'];
+                $trial_frequency = $this->language->get('text_' . $product['subscription']['trial_frequency']);
+                $trial_duration = $product['subscription']['trial_duration'];
 
-				if ($product['subscription']['trial_status']) {
-					$description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
-				}
+                if ($product['subscription']['trial_status']) {
+                    $description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
+                }
 
-				$price = $this->currency->format($this->tax->calculate($product['subscription']['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-				$cycle = $product['subscription']['cycle'];
-				$frequency = $this->language->get('text_' . $product['subscription']['frequency']);
-				$duration = $product['subscription']['duration'];
+                $price = $this->currency->format($this->tax->calculate($product['subscription']['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                $cycle = $product['subscription']['cycle'];
+                $frequency = $this->language->get('text_' . $product['subscription']['frequency']);
+                $duration = $product['subscription']['duration'];
 
-				if ($duration) {
-					$subscription .= sprintf($this->language->get('text_subscription_duration'), $price, $cycle, $frequency, $duration);
-				} else {
-					$subscription .= sprintf($this->language->get('text_subscription_cancel'), $price, $cycle, $frequency);
-				}
-			}
+                if ($duration) {
+                    $subscription .= sprintf($this->language->get('text_subscription_duration'), $price, $cycle, $frequency, $duration);
+                } else {
+                    $subscription .= sprintf($this->language->get('text_subscription_cancel'), $price, $cycle, $frequency);
+                }
+            }
             $data['products'][] = array(
                 'key'       => (isset($product['cart_id'])) ? $product['cart_id'] : $product['key'],
-                'product_id'=> $product['product_id'],
+                'product_id' => $product['product_id'],
                 'image'     => $image,
                 'thumb'     => $thumb,
                 'name'      => $product['name'],
@@ -611,69 +620,69 @@ class Cart extends \Opencart\System\Engine\Controller {
                 'has_special' => isset($has_special) ? $has_special : false,
                 'total'     => $total,
                 'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id'])
-                );
-                
+            );
+
             $data[(isset($product['cart_id'])) ? $product['cart_id'] : $product['key']] = $product['quantity'];
 
             $quantity = $product['quantity'];
         }
-        
+
         if (VERSION < '4.1.0.0') {
             if (!empty($this->session->data['vouchers'])) {
-            foreach ($this->session->data['vouchers'] as $voucher) {
-                $data['vouchers'][] = array(
-                    'description'      => $voucher['description'],
-                    'code'             => substr(md5(mt_rand()), 0, 10),
-                    'to_name'          => $voucher['to_name'],
-                    'to_email'         => $voucher['to_email'],
-                    'from_name'        => $voucher['from_name'],
-                    'from_email'       => $voucher['from_email'],
-                    'voucher_theme_id' => $voucher['voucher_theme_id'],
-                    'message'          => $voucher['message'],
-                    'amount'           => $voucher['amount']
-                );
-            }
+                foreach ($this->session->data['vouchers'] as $voucher) {
+                    $data['vouchers'][] = array(
+                        'description'      => $voucher['description'],
+                        'code'             => substr(md5(mt_rand()), 0, 10),
+                        'to_name'          => $voucher['to_name'],
+                        'to_email'         => $voucher['to_email'],
+                        'from_name'        => $voucher['from_name'],
+                        'from_email'       => $voucher['from_email'],
+                        'voucher_theme_id' => $voucher['voucher_theme_id'],
+                        'message'          => $voucher['message'],
+                        'amount'           => $voucher['amount']
+                    );
+                }
 
-            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'vouchers'), $data['vouchers']);
-
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'vouchers'), $data['vouchers']);
             }
         }
 
-        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session' , 'quantity'), $quantity);
+        $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'quantity'), $quantity);
 
         if (VERSION < '4.1.0.0') {
-            if(!$quantity && !isset($data['vouchers'])){
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session', 'status'), false);
+            if (!$quantity && !isset($data['vouchers'])) {
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'status'), false);
             }
         } else {
-            if(!$quantity){
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'session', 'status'), false);
+            if (!$quantity) {
+                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'status'), false);
             }
         }
 
 
-        if(isset($data['error_warning'])){
-            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'errors' , 'cart', 'error_minimum'), $data['error_warning']);
-        }else{
-            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array( 'errors' , 'cart', 'error_minimum'), '');
+        if (isset($data['error_warning'])) {
+            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('errors', 'cart', 'error_minimum'), $data['error_warning']);
+        } else {
+            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('errors', 'cart', 'error_minimum'), '');
         }
 
         return $data;
     }
 
-    private function getCartTotalText(){
+    private function getCartTotalText()
+    {
         $this->load->language('checkout/cart');
 
         if (VERSION < '4.1.0.0') {
-            return sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format( $this->session->data['total'], $this->session->data['currency']));
+            return sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($this->session->data['total'], $this->session->data['currency']));
         } else {
             return sprintf($this->language->get('text_items'), $this->cart->countProducts(), $this->currency->format($this->session->data['total'], $this->session->data['currency']));
-
         }
     }
 
 
-    private function getTotals(){
+    private function getTotals()
+    {
 
         $totals = array();
         $taxes = $this->cart->getTaxes();
@@ -683,11 +692,12 @@ class Cart extends \Opencart\System\Engine\Controller {
             'totals' => &$totals,
             'taxes'  => &$taxes,
             'total'  => &$total
-            );
+        );
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/order');
         return $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_order->getTotals($total_data);
     }
-    private function rewardsToUse(){
+    private function rewardsToUse()
+    {
 
         $points_total = 0;
 

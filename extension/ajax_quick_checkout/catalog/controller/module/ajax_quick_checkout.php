@@ -1,12 +1,15 @@
 <?php
+
 namespace Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module;
 
-class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
+class AjaxQuickCheckout extends \Opencart\System\Engine\Controller
+{
     private $codename = 'ajax_quick_checkout';
     private $route = 'extension/ajax_quick_checkout/module/ajax_quick_checkout';
     private $pro = '';
 
-    public function __construct($registry) {
+    public function __construct($registry)
+    {
         parent::__construct($registry);
         $error_handler = new \Opencart\Catalog\Model\Extension\AjaxQuickCheckout\Utils\Error($registry);
         set_error_handler([$error_handler, 'customErrorHandler'], E_ALL);
@@ -15,18 +18,19 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/order');
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/account');
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/error');
-        if(is_file(DIR_EXTENSION.'ajax_quick_checkout_pro/install.json')) $this->pro .= '_pro';
+        if (is_file(DIR_EXTENSION . 'ajax_quick_checkout_pro/install.json')) $this->pro .= '_pro';
 
         $this->load->model('extension/ajax_quick_checkout/module/ajax_quick_checkout');
         $this->model_extension_ajax_quick_checkout_module_ajax_quick_checkout->loadDependencies();
 
         $this->config->addPath(DIR_EXTENSION . 'ajax_quick_checkout' . $this->pro . '/system/config/');
-        if(!isset($this->user)){
+        if (!isset($this->user)) {
             $this->user = new \Opencart\System\Library\Cart\User($registry);
         }
     }
 
-    public function index() {
+    public function index()
+    {
         $data = array();
 
 
@@ -42,9 +46,9 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
 
         $extra_steps = array_diff($all_steps, $default_steps);
 
-        if($extra_steps){
-            foreach($extra_steps as $extra_step){
-                $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/'.$extra_step);
+        if ($extra_steps) {
+            foreach ($extra_steps as $extra_step) {
+                $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/' . $extra_step);
             }
         }
 
@@ -55,12 +59,12 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $data['state']['language']['general'] = $this->getLanguage();
 
         //set opened page
-        if(!isset($state['session']['page_id'])){
+        if (!isset($state['session']['page_id'])) {
             $data['state']['session']['page_id'] = 'page0';
         }
 
         //set opened page
-        if(!isset($state['layout']['skin'])){
+        if (!isset($state['layout']['skin'])) {
             $data['state']['layout']['skin'] = 'default';
         }
 
@@ -72,8 +76,8 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $data['state']['close'] = $this->url->link('checkout/checkout');
 
         //set opened page
-        if(is_file(DIR_EXTENSION.'ajax_quick_checkout_pro/install.json')){
-             $data['state']['pro'] = true;
+        if (is_file(DIR_EXTENSION . 'ajax_quick_checkout_pro/install.json')) {
+            $data['state']['pro'] = true;
         }
 
 
@@ -86,7 +90,7 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
 
         $data['edit'] = false;
 
-        if($this->user->isLogged() && isset($this->request->get['edit'])){
+        if ($this->user->isLogged() && isset($this->request->get['edit'])) {
             $data['state']['edit'] = true;
             $data['edit'] = true;
             $data['state']['settings'] = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getAllSettings();
@@ -97,11 +101,12 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         return $this->load->view($this->route, $data);
     }
 
-    public function update(){
+    public function update()
+    {
 
         $setting_id = 1;
 
-        if($this->validate()){
+        if ($this->validate()) {
             $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/store');
 
 
@@ -109,7 +114,7 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
             //$post = $this->request->post;
             $rawData = file_get_contents('php://input');
             $post = json_decode($rawData, true);
-            if(!$post){
+            if (!$post) {
                 $post = $this->request->post;
             }
 
@@ -132,11 +137,11 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
 
             $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->loadState();
 
-            if(isset($post['layout'])){
+            if (isset($post['layout'])) {
                 $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('layout'), $post['layout']);
                 unset($post['layout']);
             }
-            if(isset($post['config']) && isset($post['config']['guest'])){
+            if (isset($post['config']) && isset($post['config']['guest'])) {
                 $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('config'), $post['config']);
                 unset($post['config']);
             }
@@ -152,7 +157,8 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         }
     }
 
-    protected function validate() {
+    protected function validate()
+    {
         $error = [];
         if (!$this->user->hasPermission('modify', $this->route)) {
             $error['warning'] = $this->language->get('error_permission');
@@ -161,7 +167,8 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         return !$error;
     }
 
-    public function change_language(){
+    public function change_language()
+    {
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/store');
         $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->loadState();
 
@@ -171,45 +178,46 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $this->response->setOutput(json_encode($state));
     }
 
-    public function get_language(){
+    public function get_language()
+    {
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/store');
         $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->loadState();
 
         $rawData = file_get_contents('php://input');
         $post = json_decode($rawData, true);
-        if(!$post){
+        if (!$post) {
             $post = $this->request->post;
         }
 
         $this->load->model('localisation/language');
 
-		$results = $this->model_localisation_language->getLanguages();
+        $results = $this->model_localisation_language->getLanguages();
 
-		foreach ($results as $result) $language_data[$result['code']] = $result;
+        foreach ($results as $result) $language_data[$result['code']] = $result;
 
-		// Language not available then use default
-		$code = $this->config->get('config_language');
+        // Language not available then use default
+        $code = $this->config->get('config_language');
 
-		if (isset($post['language']) && array_key_exists($post['language'], $language_data)) {
-			$code = $post['language'];
-		}
+        if (isset($post['language']) && array_key_exists($post['language'], $language_data)) {
+            $code = $post['language'];
+        }
 
-		// Set the config language_id
-		$this->config->set('config_language_id', $language_data[$code]['language_id']);
-		$this->config->set('config_language', $code);
+        // Set the config language_id
+        $this->config->set('config_language_id', $language_data[$code]['language_id']);
+        $this->config->set('config_language', $code);
 
-		// Language
-		$language = new \Opencart\System\Library\Language($code);
+        // Language
+        $language = new \Opencart\System\Library\Language($code);
 
-		if (!$language_data[$code]['extension']) {
-			$language->addPath(DIR_LANGUAGE);
-		} else {
-			$language->addPath(DIR_EXTENSION . $language_data[$code]['extension'] . '/catalog/language/');
-		}
+        if (!$language_data[$code]['extension']) {
+            $language->addPath(DIR_LANGUAGE);
+        } else {
+            $language->addPath(DIR_EXTENSION . $language_data[$code]['extension'] . '/catalog/language/');
+        }
 
-		$language->load($code);
+        $language->load($code);
 
-		$this->registry->set('language', $language);
+        $this->registry->set('language', $language);
 
         $this->initSteps();
 
@@ -220,10 +228,11 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $this->response->setOutput(json_encode($state));
     }
 
-    public function get_store_setting(){
+    public function get_store_setting()
+    {
         $rawData = file_get_contents('php://input');
         $post = json_decode($rawData, true);
-        if(!$post){
+        if (!$post) {
             $post = $this->request->post;
         }
         $this->request->post = $post;
@@ -240,10 +249,11 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $this->response->setOutput(json_encode($state));
     }
 
-    public function reset(){
+    public function reset()
+    {
         $rawData = file_get_contents('php://input');
         $post = json_decode($rawData, true);
-        if(!$post){
+        if (!$post) {
             $post = $this->request->post;
         }
         $this->request->post = $post;
@@ -259,16 +269,17 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $this->response->setOutput(json_encode($state));
     }
 
-    public function change_layout(){
+    public function change_layout()
+    {
 
         $rawData = file_get_contents('php://input');
         $post = json_decode($rawData, true);
-        if(!$post){
+        if (!$post) {
             $post = $this->request->post;
         }
         $this->request->post = $post;
 
-        if(isset($post['layout_codename'])){
+        if (isset($post['layout_codename'])) {
 
             $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/store');
             $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->changeLayout($post['layout_codename']);
@@ -284,18 +295,19 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
     }
 
     //REFACTOR !!!!
-    public function open_page(){
+    public function open_page()
+    {
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/store');
         $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->loadState();
 
         //REFACTOR - need a cleaner way to update pages.
         $rawData = file_get_contents('php://input');
         $post = json_decode($rawData, true);
-        if(!$post){
+        if (!$post) {
             $post = $this->request->post;
         }
 
-        if(isset($post['layout'])){
+        if (isset($post['layout'])) {
             unset($post['layout']);
         }
 
@@ -306,7 +318,8 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $this->response->setOutput(json_encode($post));
     }
 
-    public function get_custom_fields(){
+    public function get_custom_fields()
+    {
 
         // Custom Fields
         $this->load->model('account/custom_field');
@@ -317,16 +330,17 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    private function initState(){
+    private function initState()
+    {
 
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/store');
         return $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->initState();
-
     }
 
-    public function controller_checkout_checkout_before($route, &$data) {
-        if($this->user->isLogged() && isset($this->request->get['edit'])){
-            if(!isset($this->cart)){
+    public function controller_checkout_checkout_before($route, &$data)
+    {
+        if ($this->user->isLogged() && isset($this->request->get['edit'])) {
+            if (!isset($this->cart)) {
                 $this->cart = new \Opencart\System\Library\Cart\Cart($this->registry);
             }
 
@@ -334,8 +348,8 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
 
             $store_id = $this->config->get('config_store_id');
 
-            if(!$cart){
-                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.quantity > '0' AND p2s.store_id = '".(int)$store_id."' LIMIT 1");
+            if (!$cart) {
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.quantity > '0' AND p2s.store_id = '" . (int)$store_id . "' LIMIT 1");
 
                 $product = $query->row;
 
@@ -344,7 +358,8 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         }
     }
 
-    public function view_checkout_checkout_before($route, &$data) {
+    public function view_checkout_checkout_before($route, &$data)
+    {
         $data['ajax_quick_checkout'] = $this->load->controller('extension/ajax_quick_checkout/module/ajax_quick_checkout');
         $state = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getState();
         $skin = $state['layout']['skin'] ?? 'default';
@@ -403,7 +418,7 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $scripts[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/javascript/ajax_quick_checkout/libraries/datetimepicker/dqc_flatpickr.min.js');
         $scripts[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/javascript/ajax_quick_checkout/libraries/datetimepicker/moment/locales.min.js');
 
-        if($this->config->get('ajax_quick_checkout_rtl')){
+        if ($this->config->get('ajax_quick_checkout_rtl')) {
             if (isset($this->request->get['language'])) {
                 $language = $this->request->get['language'];
             } else {
@@ -412,40 +427,42 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
                 $language = $language_info['code'];
             }
             $rtl = $this->config->get('ajax_quick_checkout_rtl');
-            if(!empty($rtl[$language])){
+            if (!empty($rtl[$language])) {
                 $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/javascript/ajax_quick_checkout/libraries/ripecss/ripe.rtl.css');
                 $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/stylesheet/ajax_quick_checkout/libraries/main.css');
                 $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/stylesheet/ajax_quick_checkout/libraries/rtl.css');
-            }else{
+            } else {
                 $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/javascript/ajax_quick_checkout/libraries/ripecss/ripe.css');
                 $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/stylesheet/ajax_quick_checkout/main.css');
             }
-        }else{
+        } else {
             $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/javascript/ajax_quick_checkout/libraries/ripecss/ripe.css');
             $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/stylesheet/ajax_quick_checkout/main.css');
         }
 
-        if(is_file(DIR_EXTENSION.'ajax_quick_checkout_pro/install.json')) {
-            $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout_pro/catalog/view/stylesheet/ajax_quick_checkout/skin/'.$skin .'/'.$skin .'.css?'.rand());
+        if (is_file(DIR_EXTENSION . 'ajax_quick_checkout_pro/install.json')) {
+            $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout_pro/catalog/view/stylesheet/ajax_quick_checkout/skin/' . $skin . '/' . $skin . '.css?' . rand());
         } else {
-            $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/stylesheet/ajax_quick_checkout/skin/'.$skin .'/'.$skin .'.css?'.rand());
+            $styles[] = (HTTP_SERVER . 'extension/ajax_quick_checkout/catalog/view/stylesheet/ajax_quick_checkout/skin/' . $skin . '/' . $skin . '.css?' . rand());
         }
 
         $data['header'] = $this->parseHeader($data['header'], $scripts, $styles);
     }
 
-    public function view_checkout_checkout_after($route, $data, &$output) {
-        
+    public function view_checkout_checkout_after($route, $data, &$output)
+    {
+
         $data['version'] = VERSION;
 
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/view');
         $supports = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_view->browserSupported();
-        if($supports){
+        if ($supports) {
             $output = $this->load->view('extension/ajax_quick_checkout/checkout/ajax_quick_checkout', $data);
         }
     }
 
-    public function getLanguage(){
+    public function getLanguage()
+    {
         $this->load->language('checkout/checkout');
         $this->load->language('checkout/cart');
         $this->load->language('checkout/confirm');
@@ -543,16 +560,16 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         $data['name'] = $this->config->get('config_name');
 
         if ($this->request->server['HTTPS']) {
-			$server = $this->config->get('config_ssl');
-		} else {
-			$server = $this->config->get('config_url');
-		}
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
 
-		if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
-		} else {
-			$data['logo'] =  $server . 'image/' . $this->config->get('config_logo');
-		}
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] =  $server . 'image/' . $this->config->get('config_logo');
+        }
 
 
         $data['text_cart_title'] = $this->language->get('heading_title');
@@ -560,14 +577,14 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
 
         $this->load->model('extension/ajax_quick_checkout/ajax_quick_checkout/store');
         $language = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->getLanguage();
-        if(isset($language['general'])){
+        if (isset($language['general'])) {
             $data = array_replace_recursive($data, $language['general']);
         }
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
-		} else {
-			$data['logo'] =  $server . 'image/' . $this->config->get('config_logo');
-		}
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] =  $server . 'image/' . $this->config->get('config_logo');
+        }
 
 
         $data['img'] = $this->getLanguageImage();
@@ -575,7 +592,8 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
         return $data;
     }
 
-    private function getLanguageImage(){
+    private function getLanguageImage()
+    {
         if (isset($this->request->get['language'])) {
             $language = $this->request->get['language'];
         } else {
@@ -584,27 +602,29 @@ class AjaxQuickCheckout extends \Opencart\System\Engine\Controller {
             $language = $language_info['code'];
         }
 
-        return HTTP_SERVER.'catalog/language/'.$language.'/'. $language .'.png';
+        return HTTP_SERVER . 'catalog/language/' . $language . '/' . $language . '.png';
     }
 
-    public function initSteps($initOrder = false){
+    public function initSteps($initOrder = false)
+    {
 
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/account');
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/payment_address'); //2.6
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/shipping_address'); //1.5
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/custom'); //0.12
-            if($initOrder){
-                $order_id = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_order->getOrder();
-                $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'order_id'), $order_id);
-            }
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/shipping_method'); //3
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/payment_method'); //10
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/cart'); //1.5
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/confirm'); //0.36
-            $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/payment'); //4.5
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/account');
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/payment_address'); //2.6
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/shipping_address'); //1.5
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/custom'); //0.12
+        if ($initOrder) {
+            $order_id = $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_order->getOrder();
+            $this->model_extension_ajax_quick_checkout_ajax_quick_checkout_store->updateState(array('session', 'order_id'), $order_id);
+        }
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/shipping_method'); //3
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/payment_method'); //10
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/cart'); //1.5
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/confirm'); //0.36
+        $this->load->controller('extension/ajax_quick_checkout/ajax_quick_checkout/payment'); //4.5
     }
 
-    private function parsseHeader($header, $pro, $skin) {
+    private function parsseHeader($header, $pro, $skin)
+    {
 
         $html_dom->load((string)$header, $lowercase = true, $stripRN = false, $defaultBRText = DEFAULT_BR_TEXT);
 
