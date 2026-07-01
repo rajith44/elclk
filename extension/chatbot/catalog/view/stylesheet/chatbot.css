@@ -2,7 +2,7 @@
 .chatbot {
   --chatbot-accent: #f16272;
   position: fixed;
-  right: 20px;
+  right: 63px;
   bottom: 20px;
   z-index: 99999;
   font-family: inherit;

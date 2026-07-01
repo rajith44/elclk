@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f8e8ef">
+<title>{{ heading_title }}</title>
+<meta name="description" content="{{ meta_description }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<link href="{{ base }}extension/store_selector/catalog/view/stylesheet/store_selector.css" type="text/css" rel="stylesheet">
+</head>
+<body class="ss-gateway-body">
+<div class="ss-gateway" id="ss-gateway">
+  <div class="ss-gateway__bg" aria-hidden="true"></div>
+
+  <main class="ss-gateway__main">
+    <header class="ss-gateway__header">
+      {% if logo %}
+      <img src="{{ logo }}" alt="{{ store_name }}" class="ss-gateway__logo">
+      {% else %}
+      <h1 class="ss-gateway__brand">{{ store_name }}</h1>
+      {% endif %}
+      <p class="ss-gateway__title">{{ heading_title }}</p>
+      <p class="ss-gateway__subtitle">{{ text_subtitle }}</p>
+    </header>
+
+    <div class="ss-gateway__cards" role="list">
+      {% for region in regions %}
+      <button type="button"
+              class="ss-region-card"
+              data-region="{{ region.code }}"
+              data-url="{{ region.url }}"
+              role="listitem"
+              aria-label="{{ text_continue }} {{ region.name }}">
+        <span class="ss-region-card__flag" aria-hidden="true">{{ region.flag }}</span>
+        <span class="ss-region-card__content">
+          <span class="ss-region-card__name">{{ region.name }}</span>
+          <span class="ss-region-card__desc">{{ region.description }}</span>
+        </span>
+        <span class="ss-region-card__arrow" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+      {% endfor %}
+    </div>
+
+    <p class="ss-gateway__note">{{ text_detecting }}</p>
+  </main>
+
+  <div class="ss-gateway__loading" id="ss-loading" hidden>
+    <div class="ss-gateway__spinner"></div>
+    <p>{{ text_continue }}…</p>
+  </div>
+</div>
+
+<script>
+window.ssStoreSelector = {
+  switchUrl: '{{ select|e('js') }}'
+};
+</script>
+<script src="{{ base }}extension/store_selector/catalog/view/javascript/store_selector.js"></script>
+</body>
+</html>

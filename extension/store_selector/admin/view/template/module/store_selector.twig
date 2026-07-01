@@ -1,0 +1,112 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div id="alert"></div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-globe"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <ul class="nav nav-tabs">
+            <li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ text_general }}</a></li>
+            <li class="nav-item"><a href="#tab-regions" data-bs-toggle="tab" class="nav-link">{{ text_regions }}</a></li>
+          </ul>
+          <div class="tab-content mt-3">
+            <div id="tab-general" class="tab-pane active">
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="status" value="0"/>
+                    <input type="checkbox" name="status" value="1" id="input-status" class="form-check-input"{% if status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_first_visit_mode }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check mb-2">
+                    <input type="radio" name="first_visit_mode" value="ask" id="input-first-visit-ask" class="form-check-input"{% if first_visit_mode == 'ask' %} checked{% endif %}/>
+                    <label class="form-check-label" for="input-first-visit-ask">{{ text_first_visit_ask }}</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="radio" name="first_visit_mode" value="geo" id="input-first-visit-geo" class="form-check-input"{% if first_visit_mode == 'geo' %} checked{% endif %}/>
+                    <label class="form-check-label" for="input-first-visit-geo">{{ text_first_visit_geo }}</label>
+                  </div>
+                  <div class="form-text">{{ help_first_visit_mode }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-cookie-days" class="col-sm-3 col-form-label">{{ entry_cookie_days }}</label>
+                <div class="col-sm-9">
+                  <input type="number" name="cookie_days" value="{{ cookie_days }}" min="1" max="365" id="input-cookie-days" class="form-control" style="max-width:120px"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-cookie-domain" class="col-sm-3 col-form-label">{{ entry_cookie_domain }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="cookie_domain" value="{{ cookie_domain }}" placeholder=".elc.com" id="input-cookie-domain" class="form-control"/>
+                  <div class="form-text">{{ help_cookie_domain }}</div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-regions" class="tab-pane">
+              <div class="row mb-3">
+                <label for="input-sl-url" class="col-sm-3 col-form-label">{{ entry_sl_url }}</label>
+                <div class="col-sm-9">
+                  <input type="url" name="sl_url" value="{{ sl_url }}" placeholder="https://www.elc.com/" id="input-sl-url" class="form-control" required/>
+                  <div class="form-text">{{ help_sl_url }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-au-url" class="col-sm-3 col-form-label">{{ entry_au_url }}</label>
+                <div class="col-sm-9">
+                  <input type="url" name="au_url" value="{{ au_url }}" placeholder="https://au.elc.com/" id="input-au-url" class="form-control" required/>
+                  <div class="form-text">{{ help_au_url }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-sl-name" class="col-sm-3 col-form-label">{{ entry_sl_name }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="sl_name" value="{{ sl_name }}" id="input-sl-name" class="form-control"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-sl-description" class="col-sm-3 col-form-label">{{ entry_sl_description }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="sl_description" value="{{ sl_description }}" id="input-sl-description" class="form-control"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-au-name" class="col-sm-3 col-form-label">{{ entry_au_name }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="au_name" value="{{ au_name }}" id="input-au-name" class="form-control"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-au-description" class="col-sm-3 col-form-label">{{ entry_au_description }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="au_description" value="{{ au_description }}" id="input-au-description" class="form-control"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}
