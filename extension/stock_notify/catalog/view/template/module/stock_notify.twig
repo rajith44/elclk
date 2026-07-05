@@ -1,0 +1,70 @@
+<link href="{{ base }}extension/stock_notify/catalog/view/stylesheet/stock_notify.css" type="text/css" rel="stylesheet">
+
+{% if show_product_button %}
+<div class="sn-notify" id="sn-notify">
+  <button type="button" class="btn sn-notify__trigger" id="sn-notify-trigger" aria-controls="sn-notify-modal" aria-haspopup="dialog">
+    <span class="btn-text">
+      <span class="sn-notify__icon" aria-hidden="true"><i class="fa fa-envelope"></i></span>
+      {{ button_notify }}
+    </span>
+  </button>
+</div>
+{% endif %}
+
+<div class="sn-notify-modal" id="sn-notify-modal" hidden>
+  <div class="sn-notify-modal__backdrop" data-sn-close></div>
+  <div class="sn-notify-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="sn-notify-title">
+    <button type="button" class="sn-notify-modal__close" data-sn-close aria-label="{{ button_close }}">&times;</button>
+
+    <div class="sn-notify-modal__header">
+      <div class="sn-notify-modal__badge" aria-hidden="true"><i class="fa fa-envelope"></i></div>
+      <h3 class="sn-notify-modal__title" id="sn-notify-title">{{ text_title }}</h3>
+      <p class="sn-notify-modal__intro" id="sn-notify-intro">{% if is_logged %}{{ text_intro_logged }}{% else %}{{ text_intro }}{% endif %}</p>
+    </div>
+
+    <div class="sn-notify-modal__body">
+      <p class="sn-notify-modal__product"><strong id="sn-notify-product-name">{% if product_name %}{{ product_name }}{% endif %}</strong></p>
+
+      <form id="sn-notify-form" class="sn-notify-form" novalidate>
+        <input type="hidden" name="product_id" id="sn-notify-product-id" value="{{ product_id }}">
+
+        <div class="sn-notify-form__group">
+          <label for="sn-notify-name">{{ entry_name }}{% if not require_name %} <span class="sn-notify-optional">({{ text_optional }})</span>{% endif %}</label>
+          <input type="text" id="sn-notify-name" name="name" value="{{ name|e('html_attr') }}" class="form-control"{% if require_name %} required{% endif %} autocomplete="name">
+        </div>
+
+        <div class="sn-notify-form__group">
+          <label for="sn-notify-email">{{ entry_email }}</label>
+          <input type="email" id="sn-notify-email" name="email" value="{{ email|e('html_attr') }}" class="form-control" required autocomplete="email" inputmode="email"{% if is_logged %} readonly{% endif %}>
+        </div>
+
+        {% if show_phone %}
+        <div class="sn-notify-form__group" id="sn-notify-phone-group">
+          <label for="sn-notify-phone">{{ entry_phone }}</label>
+          <input type="tel" id="sn-notify-phone" name="telephone" value="{{ telephone|e('html_attr') }}" class="form-control" autocomplete="tel">
+        </div>
+        {% endif %}
+
+        <div class="sn-notify-form__alert" id="sn-notify-alert" hidden></div>
+
+        <div class="sn-notify-form__actions">
+          <button type="submit" class="sn-notify-form__submit">{{ button_submit }}</button>
+          <button type="button" class="sn-notify-form__cancel" data-sn-close>{{ button_close }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+window.snStockNotify = {
+  subscribeUrl: '{{ subscribe|e('js') }}',
+  customer: {{ customer_json|raw }},
+  labels: {{ labels_json|raw }},
+  productId: {{ product_id }},
+  productName: '{{ product_name|e('js') }}',
+  showPhone: {{ show_phone }},
+  requireName: {{ require_name }}
+};
+</script>
+<script src="{{ base }}extension/stock_notify/catalog/view/javascript/stock_notify.js" defer></script>
