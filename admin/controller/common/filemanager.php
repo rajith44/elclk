@@ -333,89 +333,9 @@ class FileManager extends \Opencart\System\Engine\Controller {
 				if (!$json) {
 					$target_file = $directory . $filename;
 					move_uploaded_file($file['tmp_name'], $target_file);
-					
-					// Apply watermark if enabled and file is an image
-					if ($this->config->get('config_watermark_status') && $this->config->get('config_watermark_image')) {
-						$watermark_image = $this->config->get('config_watermark_image');
-						$watermark_path = DIR_IMAGE . html_entity_decode($watermark_image, ENT_QUOTES, 'UTF-8');
-						
-						if (is_file($watermark_path)) {
-							// Check if uploaded file is an image
-							$image_info = getimagesize($target_file);
-							if ($image_info !== false && in_array($image_info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_WEBP])) {
-								try {
-									$image = new \Opencart\System\Library\Image($target_file);
-									$watermark = new \Opencart\System\Library\Image($watermark_path);
-									
-									// Resize watermark based on settings
-									$size_type = $this->config->get('config_watermark_size_type') ?: 'percentage';
-									$image_width = $image->getWidth();
-									$image_height = $image->getHeight();
-									$watermark_width = $watermark->getWidth();
-									$watermark_height = $watermark->getHeight();
-									
-									if ($size_type == 'percentage') {
-										// Calculate size based on percentage
-										$percentage = (float)($this->config->get('config_watermark_size_percentage') ?: 20);
-										$percentage = max(1, min(100, $percentage)); // Clamp between 1-100
-										
-										// Calculate target size based on image width
-										$target_width = (int)($image_width * ($percentage / 100));
-										
-										// Maintain aspect ratio
-										$target_height = (int)($watermark_height * ($target_width / $watermark_width));
-										
-										// If calculated height exceeds image height, scale based on height instead
-										if ($target_height > $image_height) {
-											$target_height = (int)($image_height * ($percentage / 100));
-											$target_width = (int)($watermark_width * ($target_height / $watermark_height));
-										}
-									} else {
-										// Fixed size
-										$target_width = (int)($this->config->get('config_watermark_size_width') ?: 0);
-										$target_height = (int)($this->config->get('config_watermark_size_height') ?: 0);
-										
-										// If width or height is 0, maintain aspect ratio based on the other dimension
-										if ($target_width > 0 && $target_height > 0) {
-											// Both specified, use them (may distort)
-										} elseif ($target_width > 0) {
-											// Only width specified, maintain aspect ratio
-											$target_height = (int)($watermark_height * ($target_width / $watermark_width));
-										} elseif ($target_height > 0) {
-											// Only height specified, maintain aspect ratio
-											$target_width = (int)($watermark_width * ($target_height / $watermark_height));
-										} else {
-											// Neither specified, use original size
-											$target_width = $watermark_width;
-											$target_height = $watermark_height;
-										}
-										
-										// Ensure watermark doesn't exceed image dimensions
-										if ($target_width > $image_width) {
-											$target_width = $image_width;
-											$target_height = (int)($watermark_height * ($target_width / $watermark_width));
-										}
-										if ($target_height > $image_height) {
-											$target_height = $image_height;
-											$target_width = (int)($watermark_width * ($target_height / $watermark_height));
-										}
-									}
-									
-									// Resize watermark if needed
-									if ($target_width > 0 && $target_height > 0 && ($target_width != $watermark_width || $target_height != $watermark_height)) {
-										$watermark->resize($target_width, $target_height);
-									}
-									
-									$position = $this->config->get('config_watermark_position') ?: 'bottomright';
-									$image->watermark($watermark, $position);
-									$image->save($target_file);
-								} catch (\Exception $e) {
-									// Silently fail if watermark cannot be applied
-									error_log('Watermark error: ' . $e->getMessage());
-								}
-							}
-						}
-					}
+
+					$this->load->helper('watermark');
+					oc_apply_config_watermark($this->registry, $target_file);
 				}
 			}
 		}

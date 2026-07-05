@@ -1357,6 +1357,80 @@
                   }
                 });
                 </script>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">{{ button_watermark_apply_existing }}</label>
+                  <div class="col-sm-10">
+                    <button type="button" id="button-watermark-apply-existing" class="btn btn-warning"><i class="fa-solid fa-stamp"></i> {{ button_watermark_apply_existing }}</button>
+                    <div id="watermark-apply-status" class="form-text mt-2">{{ text_watermark_apply_existing }}</div>
+                  </div>
+                </div>
+                <script>
+                (function () {
+                  var button = document.getElementById('button-watermark-apply-existing');
+                  var status = document.getElementById('watermark-apply-status');
+
+                  if (!button || !status) {
+                    return;
+                  }
+
+                  function runBatch(start) {
+                    fetch('{{ watermark_apply_existing|e('js') }}', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                      },
+                      body: 'start=' + encodeURIComponent(start)
+                    })
+                      .then(function (response) {
+                        return response.text().then(function (text) {
+                          if (!response.ok) {
+                            throw new Error(text || ('Request failed with status ' + response.status));
+                          }
+
+                          try {
+                            return JSON.parse(text);
+                          } catch (e) {
+                            throw new Error(text || 'Invalid server response');
+                          }
+                        });
+                      })
+                      .then(function (json) {
+                        if (json.error) {
+                          status.textContent = json.error;
+                          button.disabled = false;
+                          return;
+                        }
+
+                        if (json.progress) {
+                          status.textContent = json.progress;
+                        }
+
+                        if (json.complete) {
+                          status.textContent = json.success || json.progress || 'Done.';
+                          button.disabled = false;
+                          return;
+                        }
+
+                        runBatch(json.next || 0);
+                      })
+                      .catch(function (error) {
+                        status.textContent = error && error.message ? error.message : 'Watermark batch failed. Please try again.';
+                        button.disabled = false;
+                      });
+                  }
+
+                  button.addEventListener('click', function () {
+                    if (!confirm('{{ text_watermark_apply_existing|e('js') }}')) {
+                      return;
+                    }
+
+                    button.disabled = true;
+                    status.textContent = 'Starting...';
+                    runBatch(0);
+                  });
+                })();
+                </script>
               </fieldset>
             </div>
             <div id="tab-mail" class="tab-pane">

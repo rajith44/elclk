@@ -34,6 +34,7 @@ class Setting extends \Opencart\System\Engine\Controller {
 		];
 
 		$data['save'] = $this->url->link('setting/setting.save', 'user_token=' . $this->session->data['user_token']);
+		$data['watermark_apply_existing'] = $this->url->link('setting/setting.applyExisting', 'user_token=' . $this->session->data['user_token'], true);
 		$data['back'] = $this->url->link('setting/store', 'user_token=' . $this->session->data['user_token']);
 
 		// General
@@ -688,6 +689,111 @@ class Setting extends \Opencart\System\Engine\Controller {
 			$this->model_setting_setting->editSetting('config', $this->request->post);
 
 			$json['success'] = $this->language->get('text_success');
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	/**
+	 * Apply watermark to existing catalog images in batches.
+	 *
+	 * @return void
+	 */
+	public function applyExisting(): void {
+		$this->load->language('setting/setting');
+
+		$json = [];
+
+		try {
+			if (!$this->user->hasPermission('modify', 'setting/setting')) {
+				$json['error'] = $this->language->get('error_permission');
+			}
+
+			if (!$json && (!$this->config->get('config_watermark_status') || !$this->config->get('config_watermark_image'))) {
+				$json['error'] = $this->language->get('error_watermark_not_configured');
+			}
+
+			$watermark_image = html_entity_decode((string)$this->config->get('config_watermark_image'), ENT_QUOTES, 'UTF-8');
+			$watermark_path = DIR_IMAGE . $watermark_image;
+
+			if (!$json && !is_file($watermark_path)) {
+				$json['error'] = $this->language->get('error_watermark_image_missing');
+			}
+
+			if (!$json) {
+				@set_time_limit(0);
+
+				$this->load->helper('watermark');
+
+				$start = (int)($this->request->post['start'] ?? 0);
+				$limit = 20;
+				$batch_file = DIR_CACHE . 'watermark_batch_' . md5($this->session->getId()) . '.json';
+
+				if ($start === 0) {
+					$files = oc_collect_watermark_target_files(DIR_IMAGE . 'catalog/', $watermark_image);
+					file_put_contents($batch_file, json_encode($files));
+					$this->session->data['watermark_batch_applied'] = 0;
+					$this->session->data['watermark_batch_skipped'] = 0;
+				}
+
+				$files = [];
+
+				if (is_file($batch_file)) {
+					$decoded = json_decode((string)file_get_contents($batch_file), true);
+					$files = is_array($decoded) ? $decoded : [];
+				}
+
+				$batch = array_slice($files, $start, $limit);
+				$applied = 0;
+				$skipped = 0;
+
+				foreach ($batch as $file) {
+					if (!is_writable($file)) {
+						$skipped++;
+						continue;
+					}
+
+					if (oc_apply_config_watermark($this->registry, $file)) {
+						$applied++;
+					}
+				}
+
+				$this->session->data['watermark_batch_applied'] = (int)($this->session->data['watermark_batch_applied'] ?? 0) + $applied;
+				$this->session->data['watermark_batch_skipped'] = (int)($this->session->data['watermark_batch_skipped'] ?? 0) + $skipped;
+
+				$total = count($files);
+				$next = $start + $limit;
+
+				if ($total === 0) {
+					$json['success'] = $this->language->get('text_watermark_no_images');
+					$json['complete'] = true;
+				} elseif ($next >= $total) {
+					$applied_total = (int)($this->session->data['watermark_batch_applied'] ?? 0);
+					$skipped_total = (int)($this->session->data['watermark_batch_skipped'] ?? 0);
+					unset($this->session->data['watermark_batch_applied'], $this->session->data['watermark_batch_skipped']);
+
+					if (is_file($batch_file)) {
+						@unlink($batch_file);
+					}
+
+					$cache_cleared = oc_clear_image_cache();
+
+					$json['complete'] = true;
+					$json['success'] = sprintf($this->language->get('text_watermark_apply_complete'), $applied_total, $cache_cleared);
+
+					if ($skipped_total > 0) {
+						$json['success'] .= ' ' . sprintf($this->language->get('text_watermark_apply_skipped'), $skipped_total);
+					}
+				} else {
+					$json['complete'] = false;
+					$json['next'] = $next;
+					$json['total'] = $total;
+					$json['progress'] = sprintf($this->language->get('text_watermark_apply_progress'), min($next, $total), $total);
+				}
+			}
+		} catch (\Throwable $e) {
+			$json = ['error' => $e->getMessage()];
 		}
 
 		$this->response->addHeader('Content-Type: application/json');
