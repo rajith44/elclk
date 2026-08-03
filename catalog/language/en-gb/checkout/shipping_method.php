@@ -15,4 +15,5 @@ $_['error_customer']         = 'Customer required!';
 $_['error_payment_address']  = 'Payment address required!';
 $_['error_shipping_address'] = 'Shipping address required!';
 $_['error_shipping_method']  = 'Shipping method required!';
-$_['error_no_shipping']      = 'No Shipping options are available. Please <a href="%s">contact us</a> for assistance!';
+$_['error_shipping']         = 'Please select your city for shipping rate.';
+$_['error_no_shipping']      = 'Please select your city for shipping rate.';

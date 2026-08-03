@@ -1,0 +1,187 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ add }}" data-bs-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-list"></i> {{ text_campaigns }}</div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <td class="text-start">{{ column_name }}</td>
+                <td class="text-start">{{ column_subject }}</td>
+                <td class="text-center">{{ column_status }}</td>
+                <td class="text-center">{{ column_sent }}</td>
+                <td class="text-start">{{ column_date_created }}</td>
+                <td class="text-start">{{ column_date_sent }}</td>
+                <td class="text-end">{{ column_action }}</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if campaigns %}
+                {% for campaign in campaigns %}
+                  <tr>
+                    <td class="text-start">{{ campaign.name }}</td>
+                    <td class="text-start">{{ campaign.subject }}</td>
+                    <td class="text-center">
+                      {% if campaign.status %}
+                        <span class="badge bg-success">{{ text_enabled }}</span>
+                      {% else %}
+                        <span class="badge bg-danger">{{ text_disabled }}</span>
+                      {% endif %}
+                    </td>
+                    <td class="text-center">{{ campaign.total_sent }}</td>
+                    <td class="text-start">{{ campaign.date_created }}</td>
+                    <td class="text-start">{{ campaign.date_sent }}</td>
+                    <td class="text-end">
+                      <a href="{{ campaign.edit }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a>
+                      <button type="button" id="btn-send-{{ campaign.campaign_id }}" onclick="sendCampaign({{ campaign.campaign_id }})" data-bs-toggle="tooltip" title="{{ button_send }}" class="btn btn-success"><i class="fa-solid fa-envelope"></i></button>
+                      <button type="button" onclick="deleteCampaign({{ campaign.campaign_id }})" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td class="text-center" colspan="7">{{ text_no_results }}</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header"><i class="fa-solid fa-users"></i> {{ text_subscribers }} ({{ subscribers|length }})</div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <td class="text-start">{{ column_email }}</td>
+                <td class="text-start">{{ column_name }}</td>
+                <td class="text-center">{{ column_status }}</td>
+                <td class="text-start">{{ column_date_added }}</td>
+                <td class="text-end">{{ column_action }}</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if subscribers %}
+                {% for subscriber in subscribers %}
+                  <tr>
+                    <td class="text-start">{{ subscriber.email }}</td>
+                    <td class="text-start">{{ subscriber.name }}</td>
+                    <td class="text-center">
+                      {% if subscriber.status %}
+                        <span class="badge bg-success">{{ text_enabled }}</span>
+                      {% else %}
+                        <span class="badge bg-danger">{{ text_disabled }}</span>
+                      {% endif %}
+                    </td>
+                    <td class="text-start">{{ subscriber.date_added }}</td>
+                    <td class="text-end">
+                      <button type="button" onclick="deleteSubscriber({{ subscriber.subscriber_id }})" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td class="text-center" colspan="5">{{ text_no_subscribers }}</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function sendCampaign(campaign_id) {
+  if (confirm('{{ text_confirm_send }}')) {
+    var $btn = $('#btn-send-' + campaign_id);
+    var originalHtml = $btn.html();
+    var originalDisabled = $btn.prop('disabled');
+    
+    // Show spinner and disable button
+    $btn.prop('disabled', true);
+    $btn.html('<i class="fa-solid fa-spinner fa-spin me-2"></i><i class="fa-solid fa-envelope"></i>');
+    $btn.data('original-html', originalHtml);
+    
+    $.ajax({
+      url: 'index.php?route=marketing/newsletter.send&user_token={{ user_token }}&campaign_id=' + campaign_id,
+      type: 'post',
+      dataType: 'json',
+      success: function(json) {
+        if (json['error']) {
+          alert(json['error']);
+          // Restore button
+          $btn.prop('disabled', originalDisabled);
+          $btn.html($btn.data('original-html'));
+        }
+        if (json['success']) {
+          alert(json['success']);
+          location.reload();
+        }
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        // Restore button on error
+        $btn.prop('disabled', originalDisabled);
+        $btn.html($btn.data('original-html'));
+      }
+    });
+  }
+}
+
+function deleteCampaign(campaign_id) {
+  if (confirm('{{ text_confirm }}')) {
+    $.ajax({
+      url: 'index.php?route=marketing/newsletter.delete&user_token={{ user_token }}&campaign_id=' + campaign_id,
+      type: 'post',
+      dataType: 'json',
+      success: function(json) {
+        if (json['error']) {
+          alert(json['error']);
+        }
+        if (json['success']) {
+          location.reload();
+        }
+      }
+    });
+  }
+}
+
+function deleteSubscriber(subscriber_id) {
+  if (confirm('{{ text_confirm }}')) {
+    $.ajax({
+      url: 'index.php?route=marketing/newsletter.deleteSubscriber&user_token={{ user_token }}&subscriber_id=' + subscriber_id,
+      type: 'post',
+      dataType: 'json',
+      success: function(json) {
+        if (json['error']) {
+          alert(json['error']);
+        }
+        if (json['success']) {
+          location.reload();
+        }
+      }
+    });
+  }
+}
+</script>
+{{ footer }}
+

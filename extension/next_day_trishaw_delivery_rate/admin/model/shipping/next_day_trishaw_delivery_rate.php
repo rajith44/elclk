@@ -15,33 +15,14 @@ class NextDayTrishawDeliveryRate extends \Opencart\System\Engine\Model {
 	 * @return array<int, string>
 	 */
 	public function getProvinces(): array {
-		return [
-			'Ampara',
-			'Anuradhapura',
-			'Badulla',
-			'Batticaloa',
-			'Colombo',
-			'Galle',
-			'Gampaha',
-			'Hambantota',
-			'Jaffna',
-			'Kalutara',
-			'Kandy',
-			'Kegalle',
-			'Kilinochchi',
-			'Kurunegala',
-			'Mannar',
-			'Matale',
-			'Matara',
-			'Monaragala',
-			'Mullaitivu',
-			'Nuwara Eliya',
-			'Polonnaruwa',
-			'Puttalam',
-			'Ratnapura',
-			'Trincomalee',
-			'Vavuniya'
-		];
+
+		// get form geo_zone table
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "geo_zone`");
+		$geo_zones = $query->rows;
+		foreach ($geo_zones as $geo_zone) {
+			$provinces[] = $geo_zone['name'];
+		}
+		return $provinces;
 	}
 
 	/**
@@ -53,7 +34,6 @@ class NextDayTrishawDeliveryRate extends \Opencart\System\Engine\Model {
 	 */
 	public function getCitiesByProvince(string $province): array {
 		$query = $this->db->query("SELECT * FROM `" . self::TABLE_NAME . "` WHERE `province` = '" . $this->db->escape($province) . "' ORDER BY `city` ASC");
-
 		return $query->rows;
 	}
 

@@ -1,0 +1,39 @@
+<link href="{{ base }}extension/store_selector/catalog/view/stylesheet/store_selector.css" type="text/css" rel="stylesheet">
+
+<div class="ss-switcher" id="ss-switcher">
+  <button type="button" class="ss-switcher__toggle" id="ss-switcher-toggle" aria-expanded="false" aria-controls="ss-switcher-panel">
+    <span class="ss-switcher__flag" aria-hidden="true">{{ current.flag }}</span>
+    <span class="ss-switcher__label">
+      <span class="ss-switcher__hint">{{ text_location }}</span>
+      <span class="ss-switcher__name">{{ current.name }}</span>
+    </span>
+    <svg class="ss-switcher__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <div class="ss-switcher__panel" id="ss-switcher-panel" hidden>
+    <div class="ss-switcher__panel-inner">
+      <p class="ss-switcher__panel-title">{{ text_select_store }}</p>
+      <div class="ss-switcher__options">
+        {% for region in regions %}
+        <button type="button"
+                class="ss-switcher__option{% if region.code == current.code %} is-active{% endif %}"
+                data-region="{{ region.code }}"
+                data-url="{{ region.url }}">
+          <span class="ss-switcher__option-flag">{{ region.flag }}</span>
+          <span class="ss-switcher__option-name">{{ region.name }}</span>
+          {% if region.code == current.code %}
+          <svg class="ss-switcher__check" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {% endif %}
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.ssStoreSelector = window.ssStoreSelector || {
+  switchUrl: '{{ select|e('js') }}'
+};
+</script>
+<script src="{{ base }}extension/store_selector/catalog/view/javascript/store_selector.js" defer></script>

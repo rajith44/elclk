@@ -1,0 +1,8 @@
+{
+    "name": "Store Region Selector",
+    "codename": "store_selector",
+    "description": "Geo-aware store selector for Sri Lanka and Australia with location switcher",
+    "version": "1.0.0",
+    "author": "ELC",
+    "link": ""
+}

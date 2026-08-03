@@ -1,0 +1,137 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-exclamation-circle"></i> {{ error_warning }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endif %}
+    
+    {% if sync_log %}
+      <div class="card mb-3">
+        <div class="card-header"><i class="fa-solid fa-info-circle"></i> {{ text_sync_info }}</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <strong>{{ entry_sync_date }}:</strong><br/>
+              {{ sync_log.sync_date }}
+            </div>
+            <div class="col-md-2">
+              <strong>{{ entry_status }}:</strong><br/>
+              {% if sync_log.status == 'completed' %}
+                <span class="badge bg-success">{{ text_completed }}</span>
+              {% elseif sync_log.status == 'running' %}
+                <span class="badge bg-info">{{ text_running }}</span>
+              {% elseif sync_log.status == 'error' %}
+                <span class="badge bg-danger">{{ text_error }}</span>
+              {% endif %}
+            </div>
+            <div class="col-md-2">
+              <strong>{{ entry_total_items }}:</strong><br/>
+              {{ sync_log.total_items }}
+            </div>
+            <div class="col-md-2">
+              <strong>{{ entry_updated_products }}:</strong><br/>
+              <span class="badge bg-success">{{ sync_log.updated_products }}</span>
+            </div>
+            <div class="col-md-2">
+              <strong>{{ entry_updated_options }}:</strong><br/>
+              <span class="badge bg-info">{{ sync_log.updated_options }}</span>
+            </div>
+            <div class="col-md-1">
+              <strong>{{ entry_execution_time }}:</strong><br/>
+              {{ sync_log.execution_time }}s
+            </div>
+          </div>
+          {% if sync_log.error_message %}
+            <div class="row mt-3">
+              <div class="col-12">
+                <strong>{{ entry_errors }}:</strong><br/>
+                <div class="alert alert-danger">{{ sync_log.error_message }}</div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><i class="fa-solid fa-list"></i> {{ text_sync_details }}</div>
+        <div class="card-body">
+          <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <td class="text-start">{{ column_sku }}</td>
+                  <td class="text-start">{{ column_product_name }}</td>
+                  <td class="text-center">{{ column_action }}</td>
+                  <td class="text-center">{{ column_quantity }}</td>
+                  <td class="text-center">{{ column_price }}</td>
+                  <td class="text-start">{{ column_message }}</td>
+                  <td class="text-center">{{ column_log_date }}</td>
+                </tr>
+              </thead>
+              <tbody>
+                {% if log_details %}
+                  {% for detail in log_details %}
+                    <tr>
+                      <td class="text-start">{{ detail.sku }}</td>
+                      <td class="text-start">{{ detail.product_name }}</td>
+                      <td class="text-center">
+                        {% if detail.action == 'updated' %}
+                          <span class="badge bg-success">{{ text_updated }}</span>
+                        {% elseif detail.action == 'updated_option' %}
+                          <span class="badge bg-info">{{ text_updated_option }}</span>
+                        {% elseif detail.action == 'skipped' %}
+                          <span class="badge bg-warning">{{ text_skipped }}</span>
+                        {% else %}
+                          <span class="badge bg-secondary">{{ detail.action }}</span>
+                        {% endif %}
+                      </td>
+                      <td class="text-center">
+                        {% if detail.old_quantity is not null and detail.new_quantity is not null %}
+                          <span style="text-decoration: line-through; color: #888;">{{ detail.old_quantity }}</span>
+                          <span style="font-weight: bold; color: #28a745; margin-left: 5px;">→ {{ detail.new_quantity }}</span>
+                        {% else %}
+                          -
+                        {% endif %}
+                      </td>
+                      <td class="text-center">
+                        {% if detail.old_price and detail.new_price %}
+                          <span style="text-decoration: line-through; color: #888;">{{ detail.old_price }}</span>
+                          <span style="font-weight: bold; color: #28a745; margin-left: 5px;">→ {{ detail.new_price }}</span>
+                        {% else %}
+                          -
+                        {% endif %}
+                      </td>
+                      <td class="text-start">{{ detail.message }}</td>
+                      <td class="text-center">{{ detail.log_date }}</td>
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td class="text-center" colspan="7">{{ text_no_results }}</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{{ footer }}
+

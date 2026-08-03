@@ -90,6 +90,7 @@ class NextDayTrishawDeliveryRate extends \Opencart\System\Engine\Model {
 		$quote_data['next_day_trishaw_delivery_rate'] = [
 			'code' => 'next_day_trishaw_delivery_rate.next_day_trishaw_delivery_rate',
 			'name' => sprintf($this->language->get('text_quote_title'), $method_title, $rate_row['city']),
+			// 'name' => sprintf($this->language->get('text_quote_title'), '', ''). $rate_row['city'],
 			'cost' => $cost,
 			'tax_class_id' => $tax_class_id,
 			'text' => $this->currency->format($this->tax->calculate($cost, $tax_class_id, $this->config->get('config_tax')), $this->session->data['currency'])

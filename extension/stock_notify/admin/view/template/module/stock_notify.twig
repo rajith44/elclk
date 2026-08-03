@@ -1,0 +1,124 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div id="alert"></div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-bell"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ text_general }}</a></li>
+          <li class="nav-item"><a href="#tab-email" data-bs-toggle="tab" class="nav-link">{{ text_email }}</a></li>
+          <li class="nav-item"><a href="#tab-subscriptions" data-bs-toggle="tab" class="nav-link">{{ text_subscriptions }}</a></li>
+        </ul>
+        <div class="tab-content mt-3">
+          <div id="tab-general" class="tab-pane active">
+            <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="status" value="0"/>
+                    <input type="checkbox" name="status" value="1" class="form-check-input"{% if status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-button-text" class="col-sm-3 col-form-label">{{ entry_button_text }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="button_text" value="{{ button_text }}" id="input-button-text" class="form-control"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_require_name }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="require_name" value="0"/>
+                    <input type="checkbox" name="require_name" value="1" class="form-check-input"{% if require_name %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_show_phone }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="show_phone" value="0"/>
+                    <input type="checkbox" name="show_phone" value="1" class="form-check-input"{% if show_phone %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div id="tab-email" class="tab-pane">
+            <div class="row mb-3">
+              <label for="input-email-subject" class="col-sm-3 col-form-label">{{ entry_email_subject }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="email_subject" value="{{ email_subject }}" id="input-email-subject" class="form-control" form="form-module"/>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-email-body" class="col-sm-3 col-form-label">{{ entry_email_body }}</label>
+              <div class="col-sm-9">
+                <textarea name="email_body" rows="8" id="input-email-body" class="form-control" form="form-module">{{ email_body }}</textarea>
+                <div class="form-text">{{ help_email_tags }}</div>
+              </div>
+            </div>
+          </div>
+          <div id="tab-subscriptions" class="tab-pane">
+            <form id="form-subscriptions" action="{{ delete }}" method="post" data-oc-toggle="ajax">
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <td class="text-center" style="width:1px;"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', $(this).prop('checked'));"/></td>
+                      <td>{{ column_product }}</td>
+                      <td>{{ column_name }}</td>
+                      <td>{{ column_email }}</td>
+                      <td>{{ column_status }}</td>
+                      <td>{{ column_date_added }}</td>
+                      <td>{{ column_date_notified }}</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% if subscriptions %}
+                      {% for subscription in subscriptions %}
+                        <tr>
+                          <td class="text-center"><input type="checkbox" name="selected[]" value="{{ subscription.stock_notify_id }}"/></td>
+                          <td>{{ subscription.product_name }} (#{{ subscription.product_id }})</td>
+                          <td>{{ subscription.name }}</td>
+                          <td>{{ subscription.email }}</td>
+                          <td>{% if subscription.status == 1 %}{{ text_notified }}{% else %}{{ text_pending }}{% endif %}</td>
+                          <td>{{ subscription.date_added }}</td>
+                          <td>{{ subscription.date_notified }}</td>
+                        </tr>
+                      {% endfor %}
+                    {% else %}
+                      <tr>
+                        <td colspan="7" class="text-center">{{ text_no_results }}</td>
+                      </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+              <button type="submit" class="btn btn-danger" onclick="return confirm('{{ text_confirm_delete|e('js') }}');"><i class="fa-solid fa-trash-can"></i> {{ button_delete }}</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

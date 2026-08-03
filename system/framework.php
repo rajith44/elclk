@@ -5,6 +5,41 @@ $autoloader->register('Opencart\\' . APPLICATION, DIR_APPLICATION);
 $autoloader->register('Opencart\Extension', DIR_EXTENSION);
 $autoloader->register('Opencart\System', DIR_SYSTEM);
 
+// Auto-register extension namespaces for extensions that exist
+// This allows extension routes to work even if not fully installed
+if (defined('DIR_EXTENSION') && is_dir(DIR_EXTENSION) && defined('APPLICATION')) {
+	$extensions = glob(DIR_EXTENSION . '*/' . strtolower(APPLICATION) . '/controller/*/*.php');
+	if ($extensions) {
+		$registered = [];
+		foreach ($extensions as $file) {
+			$path = substr($file, strlen(DIR_EXTENSION));
+			$parts = explode('/', $path);
+			if (count($parts) >= 4) {
+				$extension = $parts[0];
+				if (!in_array($extension, $registered)) {
+					$namespace = str_replace(['_', '/'], ['', '\\'], ucwords($extension, '_/'));
+					
+					// Register controller namespace
+					$controller_namespace = 'Opencart\\' . APPLICATION . '\Controller\Extension\\' . $namespace;
+					$controller_directory = DIR_EXTENSION . $extension . '/' . strtolower(APPLICATION) . '/controller/';
+					if (is_dir($controller_directory)) {
+						$autoloader->register($controller_namespace, $controller_directory);
+					}
+					
+					// Register model namespace
+					$model_namespace = 'Opencart\\' . APPLICATION . '\Model\Extension\\' . $namespace;
+					$model_directory = DIR_EXTENSION . $extension . '/' . strtolower(APPLICATION) . '/model/';
+					if (is_dir($model_directory)) {
+						$autoloader->register($model_namespace, $model_directory);
+					}
+					
+					$registered[] = $extension;
+				}
+			}
+		}
+	}
+}
+
 //require_once(DIR_SYSTEM . 'helper/vendor.php');
 //oc_generate_vendor();
 
@@ -188,6 +223,33 @@ $language = new \Opencart\System\Library\Language($config->get('language_code'))
 $language->addPath(DIR_LANGUAGE);
 $language->load('default');
 $registry->set('language', $language);
+
+// Auto-register extension template and language paths
+if (defined('DIR_EXTENSION') && is_dir(DIR_EXTENSION) && defined('APPLICATION')) {
+	$extension_dirs = glob(DIR_EXTENSION . '*/' . strtolower(APPLICATION) . '/view/template', GLOB_ONLYDIR);
+	if ($extension_dirs) {
+		foreach ($extension_dirs as $dir) {
+			$path = substr($dir, strlen(DIR_EXTENSION));
+			$parts = explode('/', $path);
+			if (count($parts) >= 2) {
+				$extension = $parts[0];
+				$template->addPath('extension/' . $extension, $dir . '/');
+			}
+		}
+	}
+	
+	$language_dirs = glob(DIR_EXTENSION . '*/' . strtolower(APPLICATION) . '/language', GLOB_ONLYDIR);
+	if ($language_dirs) {
+		foreach ($language_dirs as $dir) {
+			$path = substr($dir, strlen(DIR_EXTENSION));
+			$parts = explode('/', $path);
+			if (count($parts) >= 2) {
+				$extension = $parts[0];
+				$language->addPath('extension/' . $extension, $dir . '/');
+			}
+		}
+	}
+}
 
 // Url
 $registry->set('url', new \Opencart\System\Library\Url($config->get('site_url')));

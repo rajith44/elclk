@@ -1,0 +1,403 @@
+/* Back In Stock Notify — matches Journal3 product page buttons */
+
+.sn-notify-group {
+  flex: 1 1 100%;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.sn-notify {
+  width: 100%;
+}
+
+.sn-notify__trigger.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 20px;
+  margin: 0;
+  border: none;
+  border-radius: var(--j-btn-radius, var(--border-radius, 4px));
+  background: #f16272;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(241, 98, 114, 0.28);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.sn-notify__trigger.btn:hover,
+.sn-notify__trigger.btn:focus-visible {
+  background: #e04d5f;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(241, 98, 114, 0.38);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.sn-notify__trigger.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(241, 98, 114, 0.25);
+}
+
+.sn-notify__trigger .btn-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sn-notify__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sn-notify__icon .fa {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Product card — envelope icon next to compare */
+.product-layout.out-of-stock .btn.sn-card-notify,
+.out-of-stock .side-product .btn.sn-card-notify,
+.out-of-stock.product-layout .btn.sn-card-notify {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-width: 0;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #6b6b6b;
+}
+
+.product-layout.out-of-stock .btn.sn-card-notify .btn-text,
+.out-of-stock .side-product .btn.sn-card-notify .btn-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  line-height: 0;
+  background: none;
+}
+
+.product-layout.out-of-stock .btn.sn-card-notify .btn-text .fa,
+.out-of-stock .side-product .btn.sn-card-notify .btn-text .fa {
+  font-size: 18px;
+  line-height: 1;
+  width: auto;
+  height: auto;
+  color: #6b6b6b;
+}
+
+.product-layout.out-of-stock .btn.sn-card-notify:hover,
+.product-layout.out-of-stock .btn.sn-card-notify:focus-visible,
+.out-of-stock .side-product .btn.sn-card-notify:hover,
+.out-of-stock .side-product .btn.sn-card-notify:focus-visible {
+  background: none !important;
+  color: #f16272;
+  outline: none;
+}
+
+.product-layout.out-of-stock .btn.sn-card-notify:hover .btn-text .fa,
+.product-layout.out-of-stock .btn.sn-card-notify:focus-visible .btn-text .fa,
+.out-of-stock .side-product .btn.sn-card-notify:hover .btn-text .fa,
+.out-of-stock .side-product .btn.sn-card-notify:focus-visible .btn-text .fa {
+  color: #f16272;
+}
+
+.sn-notify-optional {
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+/* Hide qty stepper on OOS — notify is the main action */
+.product-info.out-of-stock .button-group-page .cart-group .stepper,
+.product-info.out-of-stock .button-group-page .cart-group > .control-label {
+  display: none !important;
+}
+
+.product-info.out-of-stock .button-group-page .cart-group #button-cart {
+  display: none !important;
+}
+
+.product-info.out-of-stock .button-group-page .cart-group {
+  display: none;
+}
+
+.product-info.out-of-stock .button-group-page .buttons-wrapper {
+  gap: 0;
+}
+
+/* Modal */
+.sn-notify-modal[hidden] {
+  display: none !important;
+}
+
+.sn-notify-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99995;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font: inherit;
+}
+
+.sn-notify-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 20, 24, 0.52);
+  backdrop-filter: blur(3px);
+}
+
+.sn-notify-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+  animation: snFadeUp 0.22s ease-out both;
+}
+
+.sn-notify-modal__header {
+  padding: 20px 20px 0;
+  text-align: center;
+}
+
+.sn-notify-modal__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: rgba(241, 98, 114, 0.12);
+  color: #f16272;
+}
+
+.sn-notify-modal__badge .fa {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.sn-notify-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #f3f4f6;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sn-notify-modal__close:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.sn-notify-modal__title {
+  margin: 0 0 6px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.sn-notify-modal__intro {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+  font-size: 0.875rem;
+}
+
+.sn-notify-modal__body {
+  padding: 16px 20px 20px;
+}
+
+.sn-notify-modal__product {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #374151;
+}
+
+.sn-notify-modal__product strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+.sn-notify-form__group {
+  margin-bottom: 14px;
+}
+
+.sn-notify-form__group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.sn-notify-form__group .form-control {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.9375rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sn-notify-form__group .form-control:focus {
+  border-color: #f16272;
+  box-shadow: 0 0 0 3px rgba(241, 98, 114, 0.15);
+  outline: none;
+}
+
+.sn-notify-form__group .form-control[readonly] {
+  background: #f3f4f6;
+  color: #374151;
+  cursor: default;
+}
+
+.sn-notify-form__alert {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.sn-notify-form__alert.is-success {
+  background: #ecfdf3;
+  color: #067647;
+  border: 1px solid #abefc6;
+}
+
+.sn-notify-form__alert.is-error {
+  background: #fef3f2;
+  color: #b42318;
+  border: 1px solid #fecdca;
+}
+
+.sn-notify-form__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sn-notify-form__submit {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #f16272;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sn-notify-form__submit:hover:not(:disabled) {
+  background: #e04d5f;
+}
+
+.sn-notify-form__submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.sn-notify-form__cancel {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 20px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  color: #374151;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sn-notify-form__cancel:hover {
+  background: #f9fafb;
+}
+
+@keyframes snFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (min-width: 481px) {
+  .sn-notify-form__actions {
+    flex-direction: row;
+  }
+
+  .sn-notify-form__submit {
+    flex: 1 1 auto;
+  }
+
+  .sn-notify-form__cancel {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sn-notify-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .sn-notify-modal__dialog {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    max-width: none;
+    max-height: 92vh;
+  }
+
+  .sn-notify-modal__header {
+    padding-top: 24px;
+  }
+}

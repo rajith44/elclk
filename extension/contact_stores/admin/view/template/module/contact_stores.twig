@@ -1,0 +1,154 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div id="alert"></div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-link"></i> {{ text_page_link }}</div>
+      <div class="card-body">
+        <code>index.php?route={{ page_route }}</code>
+        <div class="form-text mt-2">{{ help_page_link }}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pen"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label class="col-sm-3 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="status" value="0"/>
+                <input type="checkbox" name="status" value="1" class="form-check-input"{% if status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <label for="input-intro" class="col-sm-3 col-form-label">{{ entry_intro }}</label>
+            <div class="col-sm-9">
+              <textarea name="intro" rows="3" id="input-intro" class="form-control">{{ intro }}</textarea>
+            </div>
+          </div>
+
+          <fieldset class="mb-4">
+            <legend>{{ text_store_sl }}</legend>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_name }}</label>
+              <div class="col-sm-9"><input type="text" name="sl_name" value="{{ sl_name }}" class="form-control"/></div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-sl-image" class="col-sm-3 col-form-label">{{ entry_image }}</label>
+              <div class="col-sm-9">
+                <div class="border rounded d-block" style="max-width: 320px;">
+                  <img src="{{ sl_thumb }}" alt="" title="" id="thumb-sl-image" data-oc-placeholder="{{ placeholder }}" class="img-fluid"/>
+                  <input type="hidden" name="sl_image" value="{{ sl_image }}" id="input-sl-image"/>
+                  <div class="d-grid">
+                    <button type="button" data-oc-toggle="image" data-oc-target="#input-sl-image" data-oc-thumb="#thumb-sl-image" class="btn btn-primary rounded-0"><i class="fa-solid fa-pencil"></i> {{ button_edit }}</button>
+                    <button type="button" data-oc-toggle="clear" data-oc-target="#input-sl-image" data-oc-thumb="#thumb-sl-image" class="btn btn-warning rounded-0"><i class="fa-regular fa-trash-can"></i> {{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="form-text">{{ help_image }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_address }}</label>
+              <div class="col-sm-9"><textarea name="sl_address" rows="3" class="form-control">{{ sl_address }}</textarea></div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_telephone }}</label>
+              <div class="col-sm-9"><input type="text" name="sl_telephone" value="{{ sl_telephone }}" class="form-control"/></div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_email }}</label>
+              <div class="col-sm-9"><input type="email" name="sl_email" value="{{ sl_email }}" class="form-control"/></div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_open }}</label>
+              <div class="col-sm-9"><textarea name="sl_open" rows="2" class="form-control">{{ sl_open }}</textarea></div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_geocode }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="sl_geocode" value="{{ sl_geocode }}" class="form-control"/>
+                <div class="form-text">{{ help_geocode }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_map_embed }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="sl_map_embed" value="{{ sl_map_embed }}" class="form-control"/>
+                <div class="form-text">{{ help_map_embed }}</div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_store_au }}</legend>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_name }}</label>
+              <div class="col-sm-9"><input type="text" name="au_name" value="{{ au_name }}" class="form-control"/></div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-au-image" class="col-sm-3 col-form-label">{{ entry_image }}</label>
+              <div class="col-sm-9">
+                <div class="border rounded d-block" style="max-width: 320px;">
+                  <img src="{{ au_thumb }}" alt="" title="" id="thumb-au-image" data-oc-placeholder="{{ placeholder }}" class="img-fluid"/>
+                  <input type="hidden" name="au_image" value="{{ au_image }}" id="input-au-image"/>
+                  <div class="d-grid">
+                    <button type="button" data-oc-toggle="image" data-oc-target="#input-au-image" data-oc-thumb="#thumb-au-image" class="btn btn-primary rounded-0"><i class="fa-solid fa-pencil"></i> {{ button_edit }}</button>
+                    <button type="button" data-oc-toggle="clear" data-oc-target="#input-au-image" data-oc-thumb="#thumb-au-image" class="btn btn-warning rounded-0"><i class="fa-regular fa-trash-can"></i> {{ button_clear }}</button>
+                  </div>
+                </div>
+                <div class="form-text">{{ help_image }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_address }}</label>
+              <div class="col-sm-9"><textarea name="au_address" rows="3" class="form-control">{{ au_address }}</textarea></div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_telephone }}</label>
+              <div class="col-sm-9"><input type="text" name="au_telephone" value="{{ au_telephone }}" class="form-control"/></div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_email }}</label>
+              <div class="col-sm-9"><input type="email" name="au_email" value="{{ au_email }}" class="form-control"/></div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_open }}</label>
+              <div class="col-sm-9"><textarea name="au_open" rows="2" class="form-control">{{ au_open }}</textarea></div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_geocode }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="au_geocode" value="{{ au_geocode }}" class="form-control"/>
+                <div class="form-text">{{ help_geocode }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_map_embed }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="au_map_embed" value="{{ au_map_embed }}" class="form-control"/>
+                <div class="form-text">{{ help_map_embed }}</div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

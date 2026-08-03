@@ -1,0 +1,237 @@
+.qc .ve-btn--primary,
+.qc a.ve-btn--primary,
+.qc-btn.ve-btn--primary {
+  background: #f16272 !important;
+  color: #fff !important;
+}
+
+.qc .ve-btn--primary>*,
+.qc a.ve-btn--primary>*,
+.qc-btn.ve-btn--primary>* {
+  color: #fff !important;
+}
+
+.qc .ve-btn--primary.ve-btn--loading,
+.qc a.ve-btn--primary.ve-btn--loading,
+.qc-btn.ve-btn--primary.ve-btn--loading {
+  color: transparent !important;
+}
+
+.qc .ve-btn--primary.ve-btn--loading>*,
+.qc a.ve-btn--primary.ve-btn--loading>*,
+.qc-btn.ve-btn--primary.ve-btn--loading>* {
+  color: transparent !important;
+}
+
+.qc .ve-btn--primary.ve-btn--loading:after,
+.qc a.ve-btn--primary.ve-btn--loading:after,
+.qc-btn.ve-btn--primary.ve-btn--loading:after {
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+}
+
+.qc .ve-btn--primary:after,
+.qc a.ve-btn--primary:after,
+.qc-btn.ve-btn--primary:after {
+  border-color: #fff !important;
+}
+
+.qc .ve-btn--primary:hover,
+.qc a.ve-btn--primary:hover,
+.qc-btn.ve-btn--primary:hover {
+  background: #f26e7f !important;
+}
+
+.qc .ve-btn--primary:active,
+.qc .ve-btn--primary.active,
+.qc a.ve-btn--primary:active,
+.qc a.ve-btn--primary.active,
+.qc-btn.ve-btn--primary:active,
+.qc-btn.ve-btn--primary.active {
+  background: #f37a8c !important;
+}
+
+.qc-loader {
+  background: #f16272;
+}
+
+.qc-spinner:before {
+  border-top: 3px solid #f16272;
+}
+
+.qc .ve-radio--selected {
+  color: #f16272 !important;
+}
+
+.qc .ve-radio [type=radio]:checked+i:before {
+  border-color: #f16272 !important;
+  background-color: #fff;
+}
+
+.qc .ve-radio [type=radio]:checked+i:after {
+  background-color: #f16272 !important;
+}
+
+.qc .ve-checkbox [type=checkbox]:checked+i:before {
+  border: 1px solid #f16272 !important;
+  background-color: #f16272 !important;
+}
+
+.qc .qc-name a,
+.qc label a {
+  color: #f16272 !important;
+}
+
+.qc .process-page-progress-bar,
+.qc .process-page .process-page-dot {
+  background-color: #f16272;
+}
+
+.qc .process-page .process-page-dot:after {
+  background-color: #f16272;
+}
+
+.qc .process-page.disabled .process-page-dot {
+  background-color: #f5f5f5;
+}
+
+.ve-field {
+  margin-top: 10px !important;
+}
+
+@media (max-width: 767.98px) {
+  .qc .process-page.active {
+    background: #f16272;
+  }
+
+  .qc .process-page.active .process-page-label {
+    color: #f16272;
+  }
+}
+
+/* Login Modal (Medium Size) Styling */
+.dvdy-modal#login_popup .dvdy-modal-md {
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+}
+
+.dvdy-modal#login_popup .ve-card__header {
+  border-bottom: 2px solid #f16272;
+}
+
+.dvdy-modal#login_popup .ve-h4 {
+  color: #f16272;
+  font-weight: 600;
+}
+
+.dvdy-modal#login_popup .dvdy-close {
+  color: #f16272;
+  font-size: 28px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+  margin-top: -8px
+}
+
+.dvdy-modal#login_popup .dvdy-close:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .dvdy-modal#login_popup .dvdy-modal-md {
+    max-width: 95%;
+    width: 95%;
+  }
+}
+
+/*# sourceMappingURL=default.css.map */
+.ve-input[type="text"],
+.ve-input[type="email"],
+.ve-input[type="password"],
+.ve-input[type="time"],
+.ve-input[type="date"],
+.ve-input[type="datetime"],
+.ve-input[type="tel"] {
+  border: 1px solid rgba(87, 85, 85, 0.36);
+}
+
+#login_popup .ve-card__section {
+  padding-top: 0px !important;
+}
+
+hr {
+  margin: 0 !important;
+}
+
+/* .ve-card__header{
+ background: #F16272;
+  background: linear-gradient(90deg, rgba(251, 38, 61, 0.63) 0%, rgb(255, 219, 224) 100%, rgb(237, 221, 83) 100%) !important;
+} */
+
+/* .ve-card__header .ve-h4 .text{
+  color: #fff !important;
+} */
+.step.qc-custom {
+  display: none !important;
+}
+
+/* Coupon field */
+.qc .qc-coupon {
+  margin-top: 16px !important;
+  padding: 16px;
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+}
+
+.qc .qc-coupon__label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+.qc .qc-coupon__group {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.qc .qc-coupon__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 !important;
+  height: 42px;
+}
+
+.qc .qc-coupon__btn {
+  flex: 0 0 auto;
+  min-width: 90px;
+  height: 42px;
+  white-space: nowrap;
+  border: 1px solid #f16272 !important;
+  color: #f16272 !important;
+  background: #fff !important;
+  font-weight: 600;
+}
+
+.qc .qc-coupon__btn:hover,
+.qc .qc-coupon__btn:focus {
+  background: #f16272 !important;
+  color: #fff !important;
+}
+
+.qc .qc-coupon .ve-alert {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 575.98px) {
+  .qc .qc-coupon__group {
+    flex-direction: column;
+  }
+
+  .qc .qc-coupon__btn {
+    width: 100%;
+    min-width: 0;
+  }
+}

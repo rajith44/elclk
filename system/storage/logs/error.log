@@ -1,0 +1,568 @@
+2025-12-05 12:22:31 - PHP Warning:  unlink(C:/xampp/htdocs/elc/system/storage/cache/cache.zone.b5c27ba6187dceb25fcc075bb83be422.1764936912): No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 37
+2025-12-05 12:22:31 - PHP Warning:  unlink(C:/xampp/htdocs/elc/system/storage/cache/cache.zone.b5c27ba6187dceb25fcc075bb83be422.1764936912): No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 37
+2025-12-05 13:34:34 - Error: Error: Could not load model extension/dv_opencart_patch/engine/load!
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 148
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\model\ajax_quick_checkout\store.php
+Line: 54
+Class: Opencart\System\Engine\Loader
+Function: model
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\system\engine\factory.php
+Line: 67
+Class: Opencart\Catalog\Model\Extension\AjaxQuickCheckout\AjaxQuickCheckout\Store
+Function: __construct
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 139
+Class: Opencart\System\Engine\Factory
+Function: model
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\module\ajax_quick_checkout.php
+Line: 14
+Class: Opencart\System\Engine\Loader
+Function: model
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\engine\factory.php
+Line: 45
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module\AjaxQuickCheckout
+Function: __construct
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 81
+Class: Opencart\System\Engine\Factory
+Function: controller
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\system\engine\event.php
+Line: 72
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 311
+Class: Opencart\System\Engine\Event
+Function: trigger
+
+Backtrace: 8
+File: C:\xampp\htdocs\elclk\index.php
+Line: 20
+Function: require_once
+2025-12-05 23:51:44 - Error: 3 arguments are required, 1 given
+File: C:\xampp\htdocs\elc\extension\next_day_trishaw_delivery_rate\catalog\model\shipping\next_day_trishaw_delivery_rate.php
+Line: 93
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\extension\next_day_trishaw_delivery_rate\catalog\model\shipping\next_day_trishaw_delivery_rate.php
+Line: 93
+Function: sprintf
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Catalog\Model\Extension\NextDayTrishawDeliveryRate\Shipping\NextDayTrishawDeliveryRate
+Function: getQuote
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\model\ajax_quick_checkout\method.php
+Line: 24
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Catalog\Model\Extension\AjaxQuickCheckout\AjaxQuickCheckout\Method
+Function: getShippingMethods
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\ajax_quick_checkout\shipping_method.php
+Line: 235
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\ajax_quick_checkout\shipping_method.php
+Line: 37
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\AjaxQuickCheckout\ShippingMethod
+Function: getShippingMethods
+
+Backtrace: 8
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 112
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\AjaxQuickCheckout\ShippingMethod
+Function: index
+
+Backtrace: 9
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\module\ajax_quick_checkout.php
+Line: 600
+Class: Opencart\System\Engine\Loader
+Function: controller
+
+Backtrace: 10
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\module\ajax_quick_checkout.php
+Line: 37
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module\AjaxQuickCheckout
+Function: initSteps
+
+Backtrace: 11
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 112
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module\AjaxQuickCheckout
+Function: index
+
+Backtrace: 12
+File: C:\xampp\htdocs\elc\extension\ajax_quick_checkout\catalog\controller\module\ajax_quick_checkout.php
+Line: 348
+Class: Opencart\System\Engine\Loader
+Function: controller
+
+Backtrace: 13
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Catalog\Controller\Extension\AjaxQuickCheckout\Module\AjaxQuickCheckout
+Function: view_checkout_checkout_before
+
+Backtrace: 14
+File: C:\xampp\htdocs\elc\system\engine\event.php
+Line: 72
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 15
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 183
+Class: Opencart\System\Engine\Event
+Function: trigger
+
+Backtrace: 16
+File: C:\xampp\htdocs\elc\catalog\controller\checkout\checkout.php
+Line: 75
+Class: Opencart\System\Engine\Loader
+Function: view
+
+Backtrace: 17
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Catalog\Controller\Checkout\Checkout
+Function: index
+
+Backtrace: 18
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 19
+File: C:\xampp\htdocs\elclk\index.php
+Line: 20
+Function: require_once
+2025-12-06 00:44:17 - PHP Warning:  rename(C:\xampp\htdocs\elc\system\storage\cache\template\37\37898B4.tmp,C:/xampp/htdocs/elc/system/storage/cache/template/37/3780f25178ebbc4aac215f75b827fdde.php): Access is denied (code: 5) in C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Cache\FilesystemCache.php on line 61
+2025-12-06 00:44:17 - Error: Failed to write cache file "C:/xampp/htdocs/elc/system/storage/cache/template/37/3780f25178ebbc4aac215f75b827fdde.php".
+File: C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Cache\FilesystemCache.php
+Line: 76
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Environment.php
+Line: 397
+Class: Twig\Cache\FilesystemCache
+Function: write
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Environment.php
+Line: 357
+Class: Twig\Environment
+Function: loadTemplate
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\storage\vendor\twig\twig\src\Environment.php
+Line: 320
+Class: Twig\Environment
+Function: load
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\library\template\twig.php
+Line: 119
+Class: Twig\Environment
+Function: render
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\library\template.php
+Line: 58
+Class: Opencart\System\Library\Template\Twig
+Function: render
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 187
+Class: Opencart\System\Library\Template
+Function: render
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\catalog\controller\common\column_right.php
+Line: 110
+Class: Opencart\System\Engine\Loader
+Function: view
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 112
+Class: Opencart\Catalog\Controller\Common\ColumnRight
+Function: index
+
+Backtrace: 8
+File: C:\xampp\htdocs\elc\catalog\controller\product\product.php
+Line: 465
+Class: Opencart\System\Engine\Loader
+Function: controller
+
+Backtrace: 9
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Catalog\Controller\Product\Product
+Function: index
+
+Backtrace: 10
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 11
+File: C:\xampp\htdocs\elc\index.php
+Line: 20
+Function: require_once
+2026-01-21 13:17:44 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-01-25 09:32:47 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-06-07 06:48:33 - PHP Warning:  unlink(C:/xampp/htdocs/elc/system/storage/cache/cache.information.6872327ecc679a163f79f98950419698.1774849028): No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 37
+2026-06-07 06:48:35 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.catalog.775.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c6eaf41dc1.10911572.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.catalog.775.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): Access is denied (code: 5) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:36 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/cache.language.4ab6fc1e6e1e7fd0d80be63206cc592f.1780798776): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 64
+2026-06-07 06:49:36 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/cache.currency.c5c18028d03262f0feeb2bf646fb83f1.1780798776): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 64
+2026-06-07 06:49:36 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.variables.all.v3.2.8-dbc52b11.hae867f2691.cache.6a24c728d85320.74536275.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:36 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.variables.all.v3.2.8-dbc52b11.hae867f2691.cache.6a24c728d85320.74536275.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.variables.all.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:37 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.settings.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c7290fbf08.96885230.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:37 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.settings.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c7290fbf08.96885230.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.settings.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:37 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.icons.217f06fdd5.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72916d7a1.45580959.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:37 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.icons.217f06fdd5.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72916d7a1.45580959.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.icons.217f06fdd5.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:39 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.skin.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72bb64379.08740196.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:39 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.skin.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72bb64379.08740196.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.skin.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:39 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_exclude_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72bc2ea90.45232510.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:39 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_exclude_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72bc2ea90.45232510.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_exclude_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:39 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_extra_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72bc9fd60.02092071.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:39 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_extra_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72bc9fd60.02092071.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_extra_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:40 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_label.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72c62f6a6.98507510.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:40 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_label.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72c62f6a6.98507510.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_label.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:40 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.layout.1.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72c793179.99318912.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:40 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.layout.1.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72c793179.99318912.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.layout.1.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:49:40 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.banners_grid.904.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72ca7e568.84938714.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-06-07 06:49:40 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.banners_grid.904.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a24c72ca7e568.84938714.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.banners_grid.904.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-07 06:53:37 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-06-07 07:33:35 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-06-13 09:14:14 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-06-13 09:16:07 - Error: Error: Table 'elc.oc_chatbot_transcript' doesn't exist<br/>Error No: 1146<br/>SELECT * FROM `oc_chatbot_transcript` ORDER BY `transcript_id` DESC LIMIT 0, 50
+File: C:\xampp\htdocs\elc\system\library\db\mysqli.php
+Line: 122
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\library\db.php
+Line: 54
+Class: Opencart\System\Library\DB\MySQLi
+Function: query
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\extension\chatbot\admin\model\module\chatbot.php
+Line: 43
+Class: Opencart\System\Library\DB
+Function: query
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Admin\Model\Extension\Chatbot\Module\Chatbot
+Function: getTranscripts
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\extension\chatbot\admin\controller\module\chatbot.php
+Line: 72
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Admin\Controller\Extension\Chatbot\Module\Chatbot
+Function: index
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\admin\index.php
+Line: 20
+Function: require_once
+2026-06-13 09:16:39 - Error: Error: Table 'elc.oc_chatbot_transcript' doesn't exist<br/>Error No: 1146<br/>SELECT * FROM `oc_chatbot_transcript` ORDER BY `transcript_id` DESC LIMIT 0, 50
+File: C:\xampp\htdocs\elc\system\library\db\mysqli.php
+Line: 122
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\library\db.php
+Line: 54
+Class: Opencart\System\Library\DB\MySQLi
+Function: query
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\extension\chatbot\admin\model\module\chatbot.php
+Line: 43
+Class: Opencart\System\Library\DB
+Function: query
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Admin\Model\Extension\Chatbot\Module\Chatbot
+Function: getTranscripts
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\extension\chatbot\admin\controller\module\chatbot.php
+Line: 72
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Admin\Controller\Extension\Chatbot\Module\Chatbot
+Function: index
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\admin\index.php
+Line: 20
+Function: require_once
+2026-06-13 09:20:45 - Error: Error: Table 'elc.oc_product_special' doesn't exist<br/>Error No: 1146<br/>SELECT p.product_id, pd.name, p.image, p.price, p.tax_class_id,
+				(SELECT ps.price FROM `oc_product_special` ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '1' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special
+			FROM `oc_product` p
+			LEFT JOIN `oc_product_description` pd ON (p.product_id = pd.product_id)
+			LEFT JOIN `oc_product_to_store` p2s ON (p.product_id = p2s.product_id)
+			WHERE pd.language_id = '1'
+				AND p.status = '1'
+				AND p.date_available <= NOW()
+				AND p2s.store_id = '0'
+				AND (pd.name LIKE '%choc%' OR pd.tag LIKE '%choc%' OR p.model LIKE '%choc%')
+			GROUP BY p.product_id
+			ORDER BY pd.name ASC
+			LIMIT 4
+File: C:\xampp\htdocs\elc\system\library\db\mysqli.php
+Line: 122
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\library\db.php
+Line: 54
+Class: Opencart\System\Library\DB\MySQLi
+Function: query
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\extension\chatbot\catalog\model\module\chatbot.php
+Line: 38
+Class: Opencart\System\Library\DB
+Function: query
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Catalog\Model\Extension\Chatbot\Module\Chatbot
+Function: searchProducts
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\extension\chatbot\catalog\controller\module\chatbot.php
+Line: 214
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\extension\chatbot\catalog\controller\module\chatbot.php
+Line: 159
+Class: Opencart\Catalog\Controller\Extension\Chatbot\Module\Chatbot
+Function: buildProductCards
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Catalog\Controller\Extension\Chatbot\Module\Chatbot
+Function: send
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 8
+File: C:\xampp\htdocs\elc\index.php
+Line: 20
+Function: require_once
+2026-06-13 09:28:57 - Error: Opencart\Catalog\Model\Catalog\Product::getProduct(): Argument #1 ($product_id) must be of type int, null given, called in C:\xampp\htdocs\elc\system\engine\loader.php on line 343
+File: C:\xampp\htdocs\elc\catalog\model\catalog\product.php
+Line: 67
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Catalog\Model\Catalog\Product
+Function: getProduct
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\catalog\controller\journal3\price.php
+Line: 14
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: ControllerJournal3Price
+Function: index
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\index.php
+Line: 20
+Function: require_once
+2026-06-13 09:41:14 - Error: Opencart\Catalog\Model\Catalog\Product::getProduct(): Argument #1 ($product_id) must be of type int, null given, called in C:\xampp\htdocs\elc\system\engine\loader.php on line 343
+File: C:\xampp\htdocs\elc\catalog\model\catalog\product.php
+Line: 67
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Catalog\Model\Catalog\Product
+Function: getProduct
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\catalog\controller\journal3\price.php
+Line: 14
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: ControllerJournal3Price
+Function: index
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\index.php
+Line: 20
+Function: require_once
+2026-06-13 10:37:01 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_extra_button.s0.l1.c0.c0.g1.a0.w0.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a2ce5759725e2.10715272.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_extra_button.s0.l1.c0.c0.g1.a0.w0.desktop.v3.2.8-dbc52b11.hae867f2691.cache): Access is denied (code: 5) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-06-13 10:37:35 - PHP Warning:  Undefined array key "file" in C:\xampp\htdocs\elc\catalog\controller\startup\error.php on line 78
+2026-06-13 10:37:35 - PHP Warning:  Undefined array key "line" in C:\xampp\htdocs\elc\catalog\controller\startup\error.php on line 79
+2026-06-13 10:37:35 - Error: syntax error, unexpected token "switch", expecting identifier
+File: C:\xampp\htdocs\elc\extension\store_selector\catalog\controller\store\switch.php
+Line: 8
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\engine\autoloader.php
+Line: 26
+Class: Opencart\System\Engine\Autoloader
+Function: load
+
+Backtrace: 1
+File: 
+Line: 
+Class: Opencart\System\Engine\Autoloader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\factory.php
+Line: 44
+Function: class_exists
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 81
+Class: Opencart\System\Engine\Factory
+Function: controller
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 321
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\index.php
+Line: 20
+Function: require_once
+2026-07-07 05:38:59 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-07-07 16:14:40 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-07-07 21:55:01 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111

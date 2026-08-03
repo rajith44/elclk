@@ -1,0 +1,8 @@
+{
+    "name": "Back In Stock Notify",
+    "codename": "stock_notify",
+    "description": "Let customers subscribe for email alerts when out-of-stock products are available again",
+    "version": "1.0.0",
+    "author": "ELC",
+    "link": ""
+}

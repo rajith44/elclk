@@ -1,0 +1,193 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div id="alert"></div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <ul class="nav nav-tabs">
+            <li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ text_general }}</a></li>
+            <li class="nav-item"><a href="#tab-faq" data-bs-toggle="tab" class="nav-link">{{ text_faq }}</a></li>
+            <li class="nav-item"><a href="#tab-ai" data-bs-toggle="tab" class="nav-link">{{ text_ai }}</a></li>
+            <li class="nav-item"><a href="#tab-transcripts" data-bs-toggle="tab" class="nav-link">{{ text_transcripts }}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="tab-general" class="tab-pane active">
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_status }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="status" value="0"/>
+                    <input type="checkbox" name="status" value="1" id="input-status" class="form-check-input"{% if status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-title" class="col-sm-3 col-form-label">{{ entry_title }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="title" value="{{ title }}" placeholder="{{ entry_title }}" id="input-title" class="form-control"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-greeting" class="col-sm-3 col-form-label">{{ entry_greeting }}</label>
+                <div class="col-sm-9">
+                  <textarea name="greeting" rows="2" placeholder="{{ entry_greeting }}" id="input-greeting" class="form-control">{{ greeting }}</textarea>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-placeholder" class="col-sm-3 col-form-label">{{ entry_placeholder }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="placeholder" value="{{ placeholder }}" placeholder="{{ entry_placeholder }}" id="input-placeholder" class="form-control"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_product_search }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="product_search" value="0"/>
+                    <input type="checkbox" name="product_search" value="1" id="input-product-search" class="form-check-input"{% if product_search %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_order_status }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="order_status" value="0"/>
+                    <input type="checkbox" name="order_status" value="1" id="input-order-status" class="form-check-input"{% if order_status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-handoff-label" class="col-sm-3 col-form-label">{{ entry_handoff_label }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="handoff_label" value="{{ handoff_label }}" placeholder="{{ entry_handoff_label }}" id="input-handoff-label" class="form-control"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-handoff-url" class="col-sm-3 col-form-label">{{ entry_handoff_url }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="handoff_url" value="{{ handoff_url }}" placeholder="{{ entry_handoff_url }}" id="input-handoff-url" class="form-control"/>
+                  <div class="form-text">{{ help_handoff_url }}</div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_save_transcripts }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="save_transcripts" value="0"/>
+                    <input type="checkbox" name="save_transcripts" value="1" id="input-save-transcripts" class="form-check-input"{% if save_transcripts %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-faq" class="tab-pane">
+              <div class="row mb-3">
+                <label for="input-faq" class="col-sm-3 col-form-label">{{ entry_faq }}</label>
+                <div class="col-sm-9">
+                  <textarea name="faq" rows="10" id="input-faq" class="form-control">{{ faq }}</textarea>
+                  <div class="form-text">{{ text_faq_help }}</div>
+                </div>
+              </div>
+            </div>
+            <div id="tab-ai" class="tab-pane">
+              <div class="alert alert-info">{{ text_ai_help }}</div>
+              <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">{{ entry_ai_status }}</label>
+                <div class="col-sm-9">
+                  <div class="form-check form-switch form-switch-lg">
+                    <input type="hidden" name="ai_status" value="0"/>
+                    <input type="checkbox" name="ai_status" value="1" id="input-ai-status" class="form-check-input"{% if ai_status %} checked{% endif %}/>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-ai-key" class="col-sm-3 col-form-label">{{ entry_ai_key }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="ai_key" value="{{ ai_key }}" placeholder="sk-..." id="input-ai-key" class="form-control" autocomplete="off"/>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="input-ai-model" class="col-sm-3 col-form-label">{{ entry_ai_model }}</label>
+                <div class="col-sm-9">
+                  <input type="text" name="ai_model" value="{{ ai_model }}" placeholder="gpt-4o-mini" id="input-ai-model" class="form-control"/>
+                </div>
+              </div>
+            </div>
+            <div id="tab-transcripts" class="tab-pane">
+              <div class="float-end mb-2">
+                <button type="button" id="button-clear" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> {{ button_clear }}</button>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <td>{{ column_date }}</td>
+                      <td>{{ column_session }}</td>
+                      <td>{{ column_sender }}</td>
+                      <td>{{ column_message }}</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% if transcripts %}
+                      {% for row in transcripts %}
+                        <tr>
+                          <td class="text-nowrap">{{ row.date_added }}</td>
+                          <td class="text-nowrap"><small>{{ row.session_id|slice(0, 8) }}</small></td>
+                          <td>{{ row.sender }}</td>
+                          <td>{{ row.message }}</td>
+                        </tr>
+                      {% endfor %}
+                    {% else %}
+                      <tr>
+                        <td colspan="4" class="text-center">{{ text_no_transcripts }}</td>
+                      </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript"><!--
+$('#button-clear').on('click', function() {
+    if (!confirm('{{ text_confirm_clear }}')) {
+        return;
+    }
+
+    $.ajax({
+        url: '{{ clear }}',
+        dataType: 'json',
+        success: function(json) {
+            $('.alert-dismissible').remove();
+
+            if (json['success']) {
+                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+            }
+
+            if (json['error']) {
+                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+            }
+        }
+    });
+});
+//--></script>
+{{ footer }}

@@ -1,0 +1,118 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="button" id="button-sync" onclick="startSync()" data-bs-toggle="tooltip" title="{{ button_sync }}" class="btn btn-primary"><i class="fa-solid fa-sync"></i> {{ button_sync }}</button>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-list"></i> {{ text_sync_logs }}</div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <td class="text-center">{{ column_sync_date }}</td>
+                <td class="text-center">{{ column_status }}</td>
+                <td class="text-center">{{ column_total_items }}</td>
+                <td class="text-center">{{ column_updated_products }}</td>
+                <td class="text-center">{{ column_updated_options }}</td>
+                <td class="text-center">{{ column_skipped }}</td>
+                <td class="text-center">{{ column_errors }}</td>
+                <td class="text-center">{{ column_execution_time }}</td>
+                <td class="text-end">{{ column_action }}</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if sync_logs %}
+                {% for log in sync_logs %}
+                  <tr>
+                    <td class="text-center">{{ log.sync_date }}</td>
+                    <td class="text-center">
+                      {% if log.status == 'completed' %}
+                        <span class="badge bg-success">{{ text_completed }}</span>
+                      {% elseif log.status == 'running' %}
+                        <span class="badge bg-info">{{ text_running }}</span>
+                      {% elseif log.status == 'error' %}
+                        <span class="badge bg-danger">{{ text_error }}</span>
+                      {% else %}
+                        <span class="badge bg-secondary">{{ log.status }}</span>
+                      {% endif %}
+                    </td>
+                    <td class="text-center">{{ log.total_items }}</td>
+                    <td class="text-center">{{ log.updated_products }}</td>
+                    <td class="text-center">{{ log.updated_options }}</td>
+                    <td class="text-center">{{ log.skipped_items }}</td>
+                    <td class="text-center">
+                      {% if log.error_count > 0 %}
+                        <span class="badge bg-danger">{{ log.error_count }}</span>
+                      {% else %}
+                        {{ log.error_count }}
+                      {% endif %}
+                    </td>
+                    <td class="text-center">{{ log.execution_time }}s</td>
+                    <td class="text-end">
+                      <a href="{{ log.view }}" data-bs-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td class="text-center" colspan="9">{{ text_no_results }}</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function startSync() {
+  if (confirm('{{ text_confirm_sync }}')) {
+    var $btn = $('#button-sync');
+    var originalHtml = $btn.html();
+    
+    $btn.prop('disabled', true);
+        $btn.html('<i class="fa-solid fa-spinner fa-spin me-2"></i>{{ text_syncing }}');
+    
+    $.ajax({
+      url: '{{ sync|raw }}',
+      type: 'post',
+      dataType: 'json',
+      success: function(json) {
+        if (json['error']) {
+          alert(json['error']);
+          $btn.prop('disabled', false);
+          $btn.html(originalHtml);
+        }
+        if (json['success']) {
+          alert(json['success']);
+          if (json['redirect']) {
+            location.href = json['redirect'];
+          } else {
+            location.reload();
+          }
+        }
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        $btn.prop('disabled', false);
+        $btn.html(originalHtml);
+      }
+    });
+  }
+}
+</script>
+{{ footer }}
+

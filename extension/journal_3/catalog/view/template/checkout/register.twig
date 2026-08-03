@@ -327,11 +327,10 @@
       <div class="form-group col mb-3">
         <label for="input-shipping-address-2" class="form-label">{{ entry_address_2 }}</label> <input type="text" name="shipping_address_2" value="{{ shipping_address_2 }}" placeholder="{{ entry_address_2 }}" id="input-shipping-address-2" class="form-control"/>
       </div>
-      {# <div class="form-group col mb-3 required">
-        <label for="input-shipping-city" class="form-label">{{ entry_city }}</label> 
-        <input type="text" name="shipping_city" value="{{ shipping_city }}" placeholder="{{ entry_city }}" id="input-shipping-city" class="form-control"/>
+      <div class="form-group col mb-3 required">
+        <label for="input-shipping-city" class="form-label">{{ entry_city }}</label> <input type="text" name="shipping_city" value="{{ shipping_city }}" placeholder="{{ entry_city }}" id="input-shipping-city" class="form-control"/>
         <div id="error-shipping-city" class="invalid-feedback"></div>
-      </div> #}
+      </div>
       <div class="form-group col mb-3 required">
         <label for="input-shipping-postcode" class="form-label">{{ entry_postcode }}</label> <input type="text" name="shipping_postcode" value="{{ shipping_postcode }}" placeholder="{{ entry_postcode }}" id="input-shipping-postcode" class="form-control"/>
         <div id="error-shipping-postcode" class="invalid-feedback"></div>
@@ -346,8 +345,7 @@
         <div id="error-shipping-country" class="invalid-feedback"></div>
       </div>
       <div class="form-group col mb-3 required">
-        <label for="input-shipping-zone" class="form-label">{{ entry_zone }}</label> 
-        <select name="shipping_zone_id" id="input-shipping-zone" class="form-select" data-oc-value="{{ shipping_zone_id }}"></select>
+        <label for="input-shipping-zone" class="form-label">{{ entry_zone }}</label> <select name="shipping_zone_id" id="input-shipping-zone" class="form-select" data-oc-value="{{ shipping_zone_id }}"></select>
         <div id="error-shipping-zone" class="invalid-feedback"></div>
       </div>
       {% for custom_field in custom_fields %}
