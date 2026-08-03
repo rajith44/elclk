@@ -563,3 +563,6 @@ Backtrace: 5
 File: C:\xampp\htdocs\elc\index.php
 Line: 20
 Function: require_once
+2026-07-07 05:38:59 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-07-07 16:14:40 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-07-07 21:55:01 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111

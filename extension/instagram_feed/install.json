@@ -1,0 +1,8 @@
+{
+    "name": "Instagram Feed",
+    "codename": "instagram_feed",
+    "description": "Display your latest Instagram posts on your OpenCart storefront using the Instagram Graph API.",
+    "version": "1.0.0",
+    "author": "ELC",
+    "link": ""
+}

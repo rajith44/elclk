@@ -1,0 +1,177 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="button" id="button-test" data-bs-toggle="tooltip" title="{{ button_test }}" class="btn btn-info"><i class="fa-solid fa-plug"></i></button>
+        <button type="button" id="button-clear-cache" data-bs-toggle="tooltip" title="{{ button_clear_cache }}" class="btn btn-warning"><i class="fa-solid fa-rotate"></i></button>
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div id="alert"></div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="fa-solid fa-circle-info"></i> {{ text_setup }}</div>
+      <div class="card-body">
+        <p class="text-muted">{{ help_api }}</p>
+        <p class="text-muted mb-0">{{ help_layout }}</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-brands fa-instagram"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form id="form-module" action="{{ save }}" method="post" data-oc-toggle="ajax">
+          <div class="row mb-3">
+            <label class="col-sm-3 col-form-label">{{ entry_status }}</label>
+            <div class="col-sm-9">
+              <div class="form-check form-switch form-switch-lg">
+                <input type="hidden" name="status" value="0"/>
+                <input type="checkbox" name="status" value="1" class="form-check-input"{% if status %} checked{% endif %}/>
+              </div>
+            </div>
+          </div>
+
+          <fieldset class="mb-4">
+            <legend>{{ text_setup }}</legend>
+            <div class="row mb-3">
+              <label for="input-title" class="col-sm-3 col-form-label">{{ entry_title }}</label>
+              <div class="col-sm-9"><input type="text" name="title" value="{{ title }}" id="input-title" class="form-control"/></div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-username" class="col-sm-3 col-form-label">{{ entry_username }}</label>
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <span class="input-group-text">@</span>
+                  <input type="text" name="username" value="{{ username }}" id="input-username" class="form-control"/>
+                </div>
+                <div class="form-text">{{ help_username }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-user-id" class="col-sm-3 col-form-label">{{ entry_user_id }}</label>
+              <div class="col-sm-9">
+                <input type="text" name="user_id" value="{{ user_id }}" id="input-user-id" class="form-control"/>
+                <div class="form-text">{{ help_user_id }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-access-token" class="col-sm-3 col-form-label">{{ entry_access_token }}</label>
+              <div class="col-sm-9">
+                <textarea name="access_token" rows="3" id="input-access-token" class="form-control">{{ access_token }}</textarea>
+                <div class="form-text">{{ help_access_token }}</div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{{ text_display }}</legend>
+            <div class="row mb-3">
+              <label for="input-limit" class="col-sm-3 col-form-label">{{ entry_limit }}</label>
+              <div class="col-sm-9"><input type="number" name="limit" value="{{ limit }}" min="1" max="12" id="input-limit" class="form-control"/></div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-columns" class="col-sm-3 col-form-label">{{ entry_columns }}</label>
+              <div class="col-sm-9">
+                <select name="columns" id="input-columns" class="form-select">
+                  <option value="2"{% if columns == 2 %} selected{% endif %}>2</option>
+                  <option value="3"{% if columns == 3 %} selected{% endif %}>3</option>
+                  <option value="4"{% if columns == 4 %} selected{% endif %}>4</option>
+                  <option value="6"{% if columns == 6 %} selected{% endif %}>6</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_show_caption }}</label>
+              <div class="col-sm-9">
+                <div class="form-check form-switch">
+                  <input type="hidden" name="show_caption" value="0"/>
+                  <input type="checkbox" name="show_caption" value="1" class="form-check-input"{% if show_caption %} checked{% endif %}/>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_show_stats }}</label>
+              <div class="col-sm-9">
+                <div class="form-check form-switch">
+                  <input type="hidden" name="show_stats" value="0"/>
+                  <input type="checkbox" name="show_stats" value="1" class="form-check-input"{% if show_stats %} checked{% endif %}/>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_show_follow }}</label>
+              <div class="col-sm-9">
+                <div class="form-check form-switch">
+                  <input type="hidden" name="show_follow" value="0"/>
+                  <input type="checkbox" name="show_follow" value="1" class="form-check-input"{% if show_follow %} checked{% endif %}/>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-3 col-form-label">{{ entry_auto_contact }}</label>
+              <div class="col-sm-9">
+                <div class="form-check form-switch">
+                  <input type="hidden" name="auto_contact" value="0"/>
+                  <input type="checkbox" name="auto_contact" value="1" class="form-check-input"{% if auto_contact %} checked{% endif %}/>
+                </div>
+                <div class="form-text">{{ help_auto_contact }}</div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="input-cache-ttl" class="col-sm-3 col-form-label">{{ entry_cache_ttl }}</label>
+              <div class="col-sm-9"><input type="number" name="cache_ttl" value="{{ cache_ttl }}" min="300" id="input-cache-ttl" class="form-control"/></div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$('#button-clear-cache').on('click', function () {
+  $.ajax({
+    url: '{{ clear_cache|escape('js') }}',
+    type: 'post',
+    dataType: 'json',
+    success: function (json) {
+      if (json.error) {
+        $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+      }
+
+      if (json.success) {
+        $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json.success + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+      }
+    }
+  });
+});
+
+$('#button-test').on('click', function () {
+  $.ajax({
+    url: '{{ test|escape('js') }}',
+    type: 'post',
+    dataType: 'json',
+    data: {
+      user_id: $('#input-user-id').val(),
+      access_token: $('#input-access-token').val()
+    },
+    success: function (json) {
+      if (json.error) {
+        $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+      }
+
+      if (json.success) {
+        $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> ' + json.success + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+      }
+    }
+  });
+});
+</script>
+{{ footer }}

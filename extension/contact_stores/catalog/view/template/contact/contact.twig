@@ -1,0 +1,186 @@
+{{ header }}
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
+<link href="{{ asset_base }}extension/contact_stores/catalog/view/stylesheet/contact/contact.css" type="text/css" rel="stylesheet">
+<div id="cs-contact" class="cs-contact">
+  <div class="container" style="display: none;">
+    <ul class="breadcrumb cs-contact__breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <section class="cs-contact__hero" style="display: none;">
+      <p class="cs-contact__eyebrow"><i class="fa fa  fa-headset" aria-hidden="true"></i> {{ heading_title }}</p>
+      <h1 class="cs-contact__title"><i class="fa fa  fa-address-book" aria-hidden="true"></i> {{ heading_title }}</h1>
+      <p class="cs-contact__intro">{{ intro }}</p>
+    </section>
+  </div>
+
+  {% if map_markers %}
+    <section class="cs-contact__map-section" aria-label="{{ text_map_title }}">
+      <div class="cs-contact__map-wrap">
+        <div id="cs-contact-map" class="cs-contact__map"></div>
+      </div>
+      <div class="container">
+        <div class="cs-contact__map-legend">
+          {% for marker in map_markers %}
+            <button type="button" class="cs-contact__map-pill" data-cs-map-focus="{{ marker.code }}">
+              <i class="fa fa  fa-location-dot" aria-hidden="true"></i>
+              <span class="cs-contact__map-pill-code">{{ marker.code|upper }}</span>
+              <span>{{ marker.name }}</span>
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <div class="container">
+    <div class="cs-contact__grid">
+      {% for code, store in stores %}
+        <article class="cs-store-card" id="store-{{ code }}">
+          {% if store.image_thumb %}
+            <div class="cs-store-card__media">
+              <img src="{{ store.image_thumb }}" alt="{{ store.name }}" loading="lazy" width="960" height="540">
+              <span class="cs-store-card__media-badge" aria-hidden="true"><i class="fa  fa-store"></i> {{ store.flag }}</span>
+            </div>
+          {% endif %}
+
+          <div class="cs-store-card__header">
+            {% if not store.image_thumb %}
+              <span class="cs-store-card__flag" aria-hidden="true"><i class="fa  fa-store"></i> {{ store.flag }}</span>
+            {% endif %}
+            <div>
+              <p class="cs-store-card__label"><i class="fa  fa-building" aria-hidden="true"></i> {{ store.label }}</p>
+              <h2 class="cs-store-card__name">{{ store.name }}</h2>
+            </div>
+          </div>
+
+          <div class="cs-store-card__body">
+            {% if store.address %}
+              <div class="cs-store-card__item">
+                <span class="cs-store-card__icon"><i class="fa fa-map-marker"></i></span>
+                <div>
+                  <strong>{{ text_address }}</strong>
+                  <p>{{ store.address_html|raw }}</p>
+                  {% if store.maps_link %}
+                    <a class="cs-store-card__link" href="{{ store.maps_link }}" target="_blank" rel="noopener"><i class="fa  fa-diamond-turn-right" aria-hidden="true"></i> {{ text_get_directions }}</a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if store.telephone %}
+              <div class="cs-store-card__item">
+                <span class="cs-store-card__icon"><i class="fa  fa-phone"></i></span>
+                <div>
+                  <strong>{{ text_telephone }}</strong>
+                  <p><a href="tel:{{ store.telephone|replace({' ': ''}) }}">{{ store.telephone }}</a></p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if store.email %}
+              <div class="cs-store-card__item">
+                <span class="cs-store-card__icon"><i class="fa  fa-envelope"></i></span>
+                <div>
+                  <strong>{{ text_email }}</strong>
+                  <p><a href="mailto:{{ store.email }}">{{ store.email }}</a></p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if store.open %}
+              <div class="cs-store-card__item">
+                <span class="cs-store-card__icon"><i class="fa fa-clock-o"></i></span>
+                <div>
+                  <strong>{{ text_open }}</strong>
+                  <p>{{ store.open_html|raw }}</p>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          <button
+            type="button"
+            class="cs-store-card__btn"
+            data-cs-open-modal
+            data-store="{{ code }}"
+            data-store-name="{{ store.name }}"
+            data-store-label="{{ store.button }}"
+            data-sending-from="{{ store.sending_from }}"
+          >
+            <i class="fa  fa-comments" aria-hidden="true"></i>
+            <span>{{ store.button }}</span>
+          </button>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="cs-modal" id="cs-contact-modal" hidden>
+    <div class="cs-modal__backdrop" data-cs-close-modal></div>
+    <div class="cs-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="cs-modal-title">
+      <button type="button" class="cs-modal__close" data-cs-close-modal aria-label="{{ text_modal_close }}">
+        <i class="fa  fa-xmark"></i>
+      </button>
+
+      <div class="cs-modal__header">
+        <p class="cs-modal__eyebrow" id="cs-modal-eyebrow"><i class="fa  fa-store" aria-hidden="true"></i> <span id="cs-modal-eyebrow-text"></span></p>
+        <h2 class="cs-modal__title" id="cs-modal-title"><i class="fa  fa-envelope-open-text" aria-hidden="true"></i> <span id="cs-modal-title-text"></span></h2>
+      </div>
+
+      <div class="cs-modal__alert" id="cs-modal-alert" hidden></div>
+
+      <form id="cs-contact-form" class="cs-modal__form" novalidate>
+        <input type="hidden" name="store" id="cs-form-store" value="">
+        <input type="hidden" name="sending_from" id="cs-form-sending-from" value="">
+
+        <div class="cs-field">
+          <label for="cs-form-name"><i class="fa  fa-user" aria-hidden="true"></i> {{ entry_name }}</label>
+          <input type="text" name="name" id="cs-form-name" class="form-control" value="{{ name }}" autocomplete="name" required>
+        </div>
+
+        <div class="cs-field">
+          <label for="cs-form-email"><i class="fa  fa-envelope" aria-hidden="true"></i> {{ entry_email }}</label>
+          <input type="email" name="email" id="cs-form-email" class="form-control" value="{{ email }}" autocomplete="email" required>
+        </div>
+
+        <div class="cs-field">
+          <label for="cs-form-telephone"><i class="fa  fa-phone" aria-hidden="true"></i> {{ entry_telephone }}</label>
+          <input type="tel" name="telephone" id="cs-form-telephone" class="form-control" autocomplete="tel">
+        </div>
+
+        <div class="cs-field">
+          <label for="cs-form-enquiry"><i class="fa  fa-comment-dots" aria-hidden="true"></i> {{ entry_enquiry }}</label>
+          <textarea name="enquiry" id="cs-form-enquiry" class="form-control" rows="6" required></textarea>
+        </div>
+
+        {% if captcha %}
+          <div class="cs-field cs-field--captcha">
+            <label><i class="fa  fa-shield-halved" aria-hidden="true"></i> {{ text_captcha }}</label>
+            {{ captcha|raw }}
+          </div>
+        {% endif %}
+
+        <button type="submit" class="cs-modal__submit" id="cs-form-submit">
+          <i class="fa  fa-paper-plane" aria-hidden="true"></i>
+          <span>{{ text_modal_send }}</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+window.csContactConfig = {
+  send: {{ send|json_encode|raw }},
+  success: {{ text_success|json_encode|raw }},
+  markers: {{ map_markers|json_encode|raw }},
+  captchaUrl: {{ captcha_url|json_encode|raw }}
+};
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{{ asset_base }}extension/contact_stores/catalog/view/javascript/contact/contact.js" defer></script>
+
+{{ footer }}

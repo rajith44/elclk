@@ -48,6 +48,8 @@ class StoreSelector extends \Opencart\System\Engine\Controller {
 
 			'extension/store_selector/store/select',
 
+			'extension/contact_stores/contact',
+
 			'common/maintenance',
 
 			'error/not_found'
