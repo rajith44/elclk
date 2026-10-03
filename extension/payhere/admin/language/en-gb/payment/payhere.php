@@ -16,6 +16,9 @@ $_['text_all_zones']              = 'All Zones';
 // Entry
 $_['entry_merchant_id']           = 'Merchant ID';
 $_['entry_secret']                = 'Secret';
+$_['entry_app_id']                = 'App ID';
+$_['entry_app_secret']            = 'App Secret';
+$_['help_app_id']                 = 'Created in PayHere under Settings > API Keys with the Automated Charging API permission. Used by the Retrieval API to confirm each payment and record its payment id. Live use also needs your server IP whitelisted by PayHere.';
 $_['entry_status']                = 'Status';
 $_['entry_onsite_checkout']       = 'On-site Checkout';
 $_['entry_test']                  = 'Sandbox Mode';

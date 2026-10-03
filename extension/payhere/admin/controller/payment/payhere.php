@@ -32,6 +32,8 @@ class Payhere extends \Opencart\System\Engine\Controller {
 		$fields = [
 			'payment_payhere_merchant_id',
 			'payment_payhere_secret',
+			'payment_payhere_app_id',
+			'payment_payhere_app_secret',
 			'payment_payhere_status',
 			'payment_payhere_onsite_checkout',
 			'payment_payhere_test',

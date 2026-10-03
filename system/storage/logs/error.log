@@ -636,3 +636,12 @@ Backtrace: 7
 File: C:\xampp\htdocs\elc\index.php
 Line: 20
 Function: require_once
+2026-10-03 09:22:29 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-10-03 05:11:10 - Order confirmation mail failed for order 194255: Error: No connection could be made because the target machine actively refused it (10061)
+2026-10-03 05:11:12 - Order alert mail failed for order 194255: Error: No connection could be made because the target machine actively refused it (10061)
+2026-10-03 05:12:18 - Order confirmation mail failed for order 194255: Error: Could not load mail adaptor bogus_engine!
+2026-10-03 05:12:18 - Order alert mail failed for order 194255: Error: Could not load mail adaptor bogus_engine!
+2026-10-03 05:12:30 - Order confirmation mail failed for order 194256: Error: No connection could be made because the target machine actively refused it (10061)
+2026-10-03 05:12:32 - Order alert mail failed for order 194256: Error: No connection could be made because the target machine actively refused it (10061)
+2026-10-03 05:34:02 - Order confirmation mail failed for order 194256: Error: No connection could be made because the target machine actively refused it (10061)
+2026-10-03 05:34:04 - Order alert mail failed for order 194256: Error: No connection could be made because the target machine actively refused it (10061)

@@ -140,7 +140,15 @@ class Smtp {
 			$hostname = $this->option['smtp_hostname'];
 		}
 
-		$handle = fsockopen($hostname, $this->option['smtp_port'], $errno, $errstr, $this->option['smtp_timeout']);
+		/*
+		 * Suppressed deliberately: an unreachable host makes fsockopen() raise a PHP
+		 * warning before the exception below is thrown, and with config_error_display
+		 * on that warning is echoed into the response body. On an admin AJAX call it
+		 * corrupts the JSON, so a status change that actually succeeded looks to the
+		 * operator like a button that did nothing. $errno/$errstr still carry the
+		 * reason and the exception is still thrown.
+		 */
+		$handle = @fsockopen($hostname, $this->option['smtp_port'], $errno, $errstr, $this->option['smtp_timeout']);
 
 		if ($handle) {
 			if (substr(PHP_OS, 0, 3) != 'WIN') {

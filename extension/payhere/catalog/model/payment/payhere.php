@@ -41,5 +41,128 @@ class Payhere extends \Opencart\System\Engine\Model {
 
 		return $method_data;
 	}
+
+	/**
+	 * Retrieval API base, which differs between sandbox and live.
+	 *
+	 * @return string
+	 */
+	private function getApiBase(): string {
+		return $this->config->get('payment_payhere_test') ? 'https://sandbox.payhere.lk' : 'https://www.payhere.lk';
+	}
+
+	/**
+	 * Exchange the App ID / App Secret for a short-lived access token.
+	 *
+	 * Tokens last around 10 minutes (expires_in 599) and the /merchant/v1/ endpoints
+	 * are capped at 20 requests per 10 seconds, so the token is cached rather than
+	 * re-fetched per lookup.
+	 *
+	 * @return string  empty when the credentials are missing or the exchange fails
+	 */
+	public function getAccessToken(): string {
+		$app_id = (string)$this->config->get('payment_payhere_app_id');
+		$app_secret = (string)$this->config->get('payment_payhere_app_secret');
+
+		if (!$app_id || !$app_secret) {
+			return '';
+		}
+
+		$cache_key = 'payhere.token.' . md5($app_id . $this->getApiBase());
+
+		$cached = $this->cache->get($cache_key);
+
+		if ($cached) {
+			return (string)$cached;
+		}
+
+		$ch = curl_init($this->getApiBase() . '/merchant/v1/oauth/token');
+
+		curl_setopt_array($ch, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_POST           => true,
+			CURLOPT_POSTFIELDS     => 'grant_type=client_credentials',
+			CURLOPT_HTTPHEADER     => [
+				'Authorization: Basic ' . base64_encode($app_id . ':' . $app_secret),
+				'Content-Type: application/x-www-form-urlencoded'
+			],
+			CURLOPT_TIMEOUT        => 15
+		]);
+
+		$response = curl_exec($ch);
+		$status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$error = curl_error($ch);
+
+		curl_close($ch);
+
+		if ($status !== 200 || !$response) {
+			$this->log->write('PayHere token request failed (HTTP ' . $status . ')' . ($error ? ': ' . $error : ''));
+
+			return '';
+		}
+
+		$data = json_decode($response, true);
+		$token = (string)($data['access_token'] ?? '');
+
+		if ($token) {
+			// Expire our copy well before PayHere does.
+			$this->cache->set($cache_key, $token, max(60, (int)($data['expires_in'] ?? 599) - 60));
+		}
+
+		return $token;
+	}
+
+	/**
+	 * Look a payment up by the order id that was sent to checkout.
+	 *
+	 * Used to confirm and record what PayHere actually holds, rather than trusting
+	 * only the callback POST. Returns [] when it cannot be retrieved — callers must
+	 * treat that as "unknown", never as "not paid".
+	 *
+	 * @param int $order_id
+	 *
+	 * @return array
+	 */
+	public function retrievePayment(int $order_id): array {
+		$token = $this->getAccessToken();
+
+		if (!$token) {
+			return [];
+		}
+
+		$ch = curl_init($this->getApiBase() . '/merchant/v1/payment/search?order_id=' . rawurlencode((string)$order_id));
+
+		curl_setopt_array($ch, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_HTTPHEADER     => [
+				'Authorization: Bearer ' . $token,
+				'Content-Type: application/json'
+			],
+			CURLOPT_TIMEOUT        => 15
+		]);
+
+		$response = curl_exec($ch);
+		$status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$error = curl_error($ch);
+
+		curl_close($ch);
+
+		if ($status !== 200 || !$response) {
+			$this->log->write('PayHere retrieval failed for order_id ' . $order_id . ' (HTTP ' . $status . ')' . ($error ? ': ' . $error : ''));
+
+			return [];
+		}
+
+		$data = json_decode($response, true);
+
+		// Top level status: 1 success, -1 no records, -2 declined.
+		if ((int)($data['status'] ?? 0) !== 1 || empty($data['data'][0])) {
+			$this->log->write('PayHere retrieval returned no payment for order_id ' . $order_id . ' (status ' . ($data['status'] ?? 'n/a') . ')');
+
+			return [];
+		}
+
+		return $data['data'][0];
+	}
 }
 

@@ -348,13 +348,27 @@ class Order extends \Opencart\System\Engine\Controller {
 				'smtp_timeout'  => $this->config->get('config_mail_smtp_timeout')
 			];
 
-			$mail = new \Opencart\System\Library\Mail($this->config->get('config_mail_engine'), $mail_option);
-			$mail->setTo($order_info['email']);
-			$mail->setFrom($from);
-			$mail->setSender($store_name);
-			$mail->setSubject($subject);
-			$mail->setHtml($this->load->view('mail/order_add', $data));
-			$mail->send();
+			/*
+			 * This controller is bound to catalog/model/checkout/order.addHistory/BEFORE,
+			 * so anything thrown here aborts addHistory() before it writes the status and
+			 * the history row — a paid order is then stranded at status 0, hidden from the
+			 * admin order list. An unreachable SMTP host did exactly that on 2026-10-03.
+			 * A failed notification must never cost the order; log it and carry on.
+			 *
+			 * The constructor is inside the try on purpose: an unknown config_mail_engine
+			 * throws there rather than in send(), and that must not cost the order either.
+			 */
+			try {
+				$mail = new \Opencart\System\Library\Mail($this->config->get('config_mail_engine'), $mail_option);
+				$mail->setTo($order_info['email']);
+				$mail->setFrom($from);
+				$mail->setSender($store_name);
+				$mail->setSubject($subject);
+				$mail->setHtml($this->load->view('mail/order_add', $data));
+				$mail->send();
+			} catch (\Throwable $e) {
+				$this->log->write('Order confirmation mail failed for order ' . $order_info['order_id'] . ': ' . $e->getMessage());
+			}
 		}
 	}
 
@@ -457,13 +471,18 @@ class Order extends \Opencart\System\Engine\Controller {
 				'smtp_timeout'  => $this->config->get('config_mail_smtp_timeout')
 			];
 
-			$mail = new \Opencart\System\Library\Mail($this->config->get('config_mail_engine'), $mail_option);
-			$mail->setTo($order_info['email']);
-			$mail->setFrom($from);
-			$mail->setSender($store_name);
-			$mail->setSubject($subject);
-			$mail->setHtml($this->load->view('mail/order_history', $data));
-			$mail->send();
+			// See the note in add(): a mail failure must not abort the status change.
+			try {
+				$mail = new \Opencart\System\Library\Mail($this->config->get('config_mail_engine'), $mail_option);
+				$mail->setTo($order_info['email']);
+				$mail->setFrom($from);
+				$mail->setSender($store_name);
+				$mail->setSubject($subject);
+				$mail->setHtml($this->load->view('mail/order_history', $data));
+				$mail->send();
+			} catch (\Throwable $e) {
+				$this->log->write('Order status mail failed for order ' . $order_info['order_id'] . ': ' . $e->getMessage());
+			}
 		}
 	}
 
@@ -606,22 +625,32 @@ class Order extends \Opencart\System\Engine\Controller {
 					'smtp_timeout'  => $this->config->get('config_mail_smtp_timeout')
 				];
 
-				$mail = new \Opencart\System\Library\Mail($this->config->get('config_mail_engine'), $mail_option);
-				$mail->setTo($this->config->get('config_email'));
-				$mail->setFrom($this->config->get('config_email'));
-				$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
-				$mail->setSubject($subject);
-				$mail->setHtml($this->load->view('mail/order_alert', $data));
-				$mail->send();
+				// See the note in add(): the store's own alert must not cost the order either.
+				try {
+					$mail = new \Opencart\System\Library\Mail($this->config->get('config_mail_engine'), $mail_option);
+					$mail->setTo($this->config->get('config_email'));
+					$mail->setFrom($this->config->get('config_email'));
+					$mail->setSender(html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'));
+					$mail->setSubject($subject);
+					$mail->setHtml($this->load->view('mail/order_alert', $data));
+					$mail->send();
 
-				// Send to additional alert emails
-				$emails = explode(',', (string)$this->config->get('config_mail_alert_email'));
+					// Send to additional alert emails
+					$emails = explode(',', (string)$this->config->get('config_mail_alert_email'));
 
-				foreach ($emails as $email) {
-					if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-						$mail->setTo(trim($email));
-						$mail->send();
+					foreach ($emails as $email) {
+						if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+							$mail->setTo(trim($email));
+
+							try {
+								$mail->send();
+							} catch (\Throwable $e) {
+								$this->log->write('Order alert mail to ' . trim($email) . ' failed for order ' . $order_info['order_id'] . ': ' . $e->getMessage());
+							}
+						}
 					}
+				} catch (\Throwable $e) {
+					$this->log->write('Order alert mail failed for order ' . $order_info['order_id'] . ': ' . $e->getMessage());
 				}
 			}
 		}

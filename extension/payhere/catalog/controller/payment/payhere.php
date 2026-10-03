@@ -229,31 +229,46 @@ class Payhere extends \Opencart\System\Engine\Controller {
 			return;
 		}
 
-		$verified = true;
+		/*
+		 * Default to rejecting. This used to default to true with the signature check
+		 * wrapped in "if ($secret)", so an empty merchant secret — which the admin save
+		 * routine never prevents — let anyone POST order_id + status_code=2 and have the
+		 * shop mark that order paid. An unverifiable callback is not a valid callback.
+		 */
+		$verified = false;
 
 		$secret = $this->config->get('payment_payhere_secret');
 
-		if ($secret) {
-			$hash = $this->request->post['merchant_id'] ?? '';
-			$hash .= $this->request->post['order_id'] ?? '';
-			$hash .= $this->request->post['payhere_amount'] ?? '';
-			$hash .= $this->request->post['payhere_currency'] ?? '';
-			$hash .= $status_code;
-			$hash .= strtoupper(md5($secret));
+		if (!$secret) {
+			$this->log->write('PayHere callback rejected for order_id ' . $order_id . ': payment_payhere_secret is not configured, so the signature cannot be verified.');
 
-			$md5hash = strtoupper(md5($hash));
-			$md5sig = $this->request->post['md5sig'] ?? '';
+			return;
+		}
 
-			if ($is_subscription) {
-				if ($md5hash !== $md5sig || strcasecmp($this->request->post['merchant_id'] ?? '', $this->config->get('payment_payhere_merchant_id')) !== 0) {
-					$verified = false;
-				}
-			} else {
-				$order_total = (float)$this->currency->format((float)$order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
-				if ($md5hash !== $md5sig || strcasecmp($this->request->post['merchant_id'] ?? '', $this->config->get('payment_payhere_merchant_id')) !== 0 || (float)($this->request->post['payhere_amount'] ?? 0) !== $order_total) {
-					$verified = false;
-				}
-			}
+		$hash = $this->request->post['merchant_id'] ?? '';
+		$hash .= $this->request->post['order_id'] ?? '';
+		$hash .= $this->request->post['payhere_amount'] ?? '';
+		$hash .= $this->request->post['payhere_currency'] ?? '';
+		$hash .= $status_code;
+		$hash .= strtoupper(md5($secret));
+
+		$md5hash = strtoupper(md5($hash));
+		$md5sig = $this->request->post['md5sig'] ?? '';
+
+		$merchant_matches = strcasecmp($this->request->post['merchant_id'] ?? '', (string)$this->config->get('payment_payhere_merchant_id')) === 0;
+
+		/*
+		 * Stated positively so verification has to be earned. The conditions are the
+		 * same ones the old code used to clear $verified on; only the direction changed.
+		 * Subscriptions still skip the amount comparison, because a recurring
+		 * installment legitimately differs from the order total.
+		 */
+		if ($is_subscription) {
+			$verified = ($md5hash === $md5sig) && $merchant_matches;
+		} else {
+			$order_total = (float)$this->currency->format((float)$order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+
+			$verified = ($md5hash === $md5sig) && $merchant_matches && ((float)($this->request->post['payhere_amount'] ?? 0) === $order_total);
 		}
 
 		if (!$verified) {
@@ -319,6 +334,53 @@ class Payhere extends \Opencart\System\Engine\Controller {
 					$card_no,
 					$card_expiry
 				);
+			}
+		}
+
+		/*
+		 * A successful callback used to record an empty comment and never stored a
+		 * transaction id, leaving staff nothing to reconcile or refund against — only
+		 * failures carried detail. Ask PayHere what it actually holds for this order
+		 * (Retrieval API) and record that.
+		 *
+		 * This is confirmation, not authorisation: md5sig above is the gate. A lookup
+		 * that fails returns [] and must never be read as "not paid", or a network
+		 * blip would reject a real payment.
+		 */
+		if ($status_code === '2' && !$is_subscription) {
+			$this->load->model('extension/payhere/payment/payhere');
+
+			$payment = $this->model_extension_payhere_payment_payhere->retrievePayment($order_id);
+
+			if ($payment) {
+				$this->model_checkout_order->editTransactionId($order_id, (string)($payment['payment_id'] ?? ''));
+
+				$retrieved_status = (string)($payment['status'] ?? '');
+				$retrieved_amount = (float)($payment['amount'] ?? 0);
+
+				$comment = sprintf(
+					'PayHere payment %s confirmed. Payment ID = %s, Method = %s, Card = %s, Amount = %s %s, Net = %s',
+					$retrieved_status,
+					$payment['payment_id'] ?? '',
+					$payment['payment_method']['method'] ?? '',
+					$payment['payment_method']['card_no'] ?? '',
+					$payment['currency'] ?? '',
+					$retrieved_amount,
+					$payment['amount_detail']['net'] ?? ''
+				);
+
+				// Disagreement is worth shouting about, but the signature already passed.
+				if ($retrieved_status !== 'RECEIVED') {
+					$this->log->write('PayHere retrieval mismatch for order_id ' . $order_id . ': callback said success but PayHere reports "' . $retrieved_status . '"');
+				}
+
+				$order_total = (float)$this->currency->format((float)$order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+
+				if (abs($retrieved_amount - $order_total) > 0.01) {
+					$this->log->write('PayHere retrieval mismatch for order_id ' . $order_id . ': PayHere holds ' . $retrieved_amount . ' but the order total is ' . $order_total);
+				}
+			} else {
+				$comment = 'PayHere payment received (signature verified). Retrieval API returned no detail — check the App ID/Secret and IP whitelisting.';
 			}
 		}
 

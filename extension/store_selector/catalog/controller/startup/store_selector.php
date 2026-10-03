@@ -30,6 +30,25 @@ class StoreSelector extends \Opencart\System\Engine\Controller {
 
 
 
+		/*
+		 * Admin edits an order through a Catalog instance that
+		 * admin/model/setting/store.php builds from inside the Admin application.
+		 * Its startup actions run at step 1, but the api/ route is only assigned at
+		 * step 3 (admin/controller/sale/order.php), so the route check below sees
+		 * action_default instead and answers the admin's order AJAX with a redirect
+		 * to the region gateway — the status change is silently lost.
+		 *
+		 * createStoreInstance() sets the *config* value 'application' to Catalog, so
+		 * only the PHP constant distinguishes the two; it stays Admin for the whole
+		 * admin request. Choosing a region is a storefront concern, so stop here
+		 * unless this process really is serving the storefront.
+		 */
+		if (!defined('APPLICATION') || APPLICATION !== 'Catalog') {
+			return;
+		}
+
+
+
 		$this->load->model('extension/store_selector/module/store_selector');
 
 
