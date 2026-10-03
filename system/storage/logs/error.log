@@ -566,3 +566,73 @@ Function: require_once
 2026-07-07 05:38:59 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
 2026-07-07 16:14:40 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
 2026-07-07 21:55:01 - PHP Unknown:  strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xampp\htdocs\elc\extension\opencart\admin\controller\dashboard\map.php on line 111
+2026-08-21 15:11:17 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/cache.language.4ab6fc1e6e1e7fd0d80be63206cc592f.1787308877): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 64
+2026-08-21 15:11:17 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/cache.currency.c5c18028d03262f0feeb2bf646fb83f1.1787308877): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\cache\file.php on line 64
+2026-08-21 15:11:18 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.variables.all.v3.2.8-dbc52b11.hae867f2691.cache.6a881d3e0b44a4.82535983.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:18 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.variables.all.v3.2.8-dbc52b11.hae867f2691.cache.6a881d3e0b44a4.82535983.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.variables.all.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 15:11:18 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.settings.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d3e194e26.28887770.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:18 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.settings.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d3e194e26.28887770.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.settings.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 15:11:18 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.icons.217f06fdd5.v3.2.8-dbc52b11.hae867f2691.cache.6a881d3e1e9367.54728584.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:18 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.icons.217f06fdd5.v3.2.8-dbc52b11.hae867f2691.cache.6a881d3e1e9367.54728584.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.icons.217f06fdd5.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 15:11:20 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.skin.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d401060e5.91892867.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:20 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.skin.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d401060e5.91892867.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.skin.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 15:11:20 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_exclude_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d401af9c5.60041502.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:20 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_exclude_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d401af9c5.60041502.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_exclude_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 15:11:20 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_extra_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d402221f3.51984890.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:20 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_extra_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d402221f3.51984890.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_extra_button.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 15:11:20 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_label.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d403c5750.85787615.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:20 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_label.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d403c5750.85787615.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.product_label.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 15:11:20 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.layout.1.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d406dc985.76149221.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:20 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.layout.1.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d406dc985.76149221.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.layout.1.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 15:11:20 - PHP Warning:  file_put_contents(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.flyout_menu.879.x0.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d40a70de1.68634804.tmp): Failed to open stream: No such file or directory in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 74
+2026-08-21 15:11:20 - PHP Warning:  rename(C:/xampp/htdocs/elc/system/storage/cache/journal3.module.flyout_menu.879.x0.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache.6a881d40a70de1.68634804.tmp,C:/xampp/htdocs/elc/system/storage/cache/journal3.module.flyout_menu.879.x0.s0.l1.c0.c0.g1.a0.w1.desktop.v3.2.8-dbc52b11.hae867f2691.cache): The system cannot find the path specified (code: 3) in C:\xampp\htdocs\elc\system\library\journal3\cache.php on line 75
+2026-08-21 09:52:03 - Error: Error: Table 'elc.oc_store' doesn't exist<br/>Error No: 1146<br/>SELECT * FROM `oc_store` WHERE REPLACE(`url`, 'www.', '') = 'http://elc.local/'
+File: C:\xampp\htdocs\elc\system\library\db\mysqli.php
+Line: 122
+
+Backtrace: 0
+File: C:\xampp\htdocs\elc\system\library\db.php
+Line: 54
+Class: Opencart\System\Library\DB\MySQLi
+Function: query
+
+Backtrace: 1
+File: C:\xampp\htdocs\elc\catalog\model\setting\store.php
+Line: 46
+Class: Opencart\System\Library\DB
+Function: query
+
+Backtrace: 2
+File: C:\xampp\htdocs\elc\system\engine\loader.php
+Line: 343
+Class: Opencart\Catalog\Model\Setting\Store
+Function: getStoreByHostname
+
+Backtrace: 3
+File: C:\xampp\htdocs\elc\system\engine\proxy.php
+Line: 87
+Class: Opencart\System\Engine\Loader
+Function: Opencart\System\Engine\{closure}
+
+Backtrace: 4
+File: C:\xampp\htdocs\elc\catalog\controller\startup\setting.php
+Line: 20
+Class: Opencart\System\Engine\Proxy
+Function: __call
+
+Backtrace: 5
+File: C:\xampp\htdocs\elc\system\engine\action.php
+Line: 96
+Class: Opencart\Catalog\Controller\Startup\Setting
+Function: index
+
+Backtrace: 6
+File: C:\xampp\htdocs\elc\system\framework.php
+Line: 270
+Class: Opencart\System\Engine\Action
+Function: execute
+
+Backtrace: 7
+File: C:\xampp\htdocs\elc\index.php
+Line: 20
+Function: require_once

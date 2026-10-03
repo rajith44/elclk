@@ -300,10 +300,19 @@ html.cs-modal-open {
   display: none !important;
 }
 
+/*
+ * Must sit above every bottom-fixed overlay on the storefront, or the dialog
+ * opens underneath them. Measured on the contact page:
+ *   15000  Journal notification / cookie bar (.notification-wrapper-bottom)
+ *   99990  store region switcher pill (#ss-switcher)
+ *   99999  chatbot bubble (#chatbot)
+ * Kept below the global toast container (#alert, 999999) so OpenCart alerts
+ * stay visible while the dialog is open.
+ */
 .cs-modal {
   position: fixed;
   inset: 0;
-  z-index: 10050;
+  z-index: 200000;
   display: grid;
   place-items: end center;
   padding: 1rem;

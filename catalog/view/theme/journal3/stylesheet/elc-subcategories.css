@@ -1,0 +1,189 @@
+/*
+ * ELC — category page subcategory strip
+ *
+ * Restyles Journal 3's ".refine-categories" block on the category page into a
+ * circular thumbnail strip, so subcategories read as navigation rather than as
+ * more product cards.
+ *
+ * Markup this targets (catalog/view/theme/journal3/template/product/category.twig):
+ *   .refine-categories.refine-grid
+ *     h3.refine-title
+ *     .refine-items.auto-grid > .auto-grid-items > .refine-item > a > img + span.refine-name
+ *
+ * Requires "Subcategories" to be enabled in Journal (subcategoriesStatus) —
+ * without it the block is not rendered at all.
+ */
+
+/* Section band — separates the strip from the white product area */
+.refine-categories {
+	background: #fbf7f7;
+	border: 1px solid #f1e7e8;
+	border-radius: 14px;
+	padding: 20px 22px 22px;
+	margin-bottom: 28px;
+}
+
+.refine-categories .refine-title {
+	font-size: 16px;
+	line-height: 1.2;
+	margin: 0 0 16px;
+	padding: 0;
+	border: 0;
+	color: #1c2021;
+}
+
+/*
+ * Lay the items out as an even strip.
+ *
+ * Journal ships ".refine-categories .auto-grid .auto-grid-items { overflow: initial }"
+ * at specificity (0,3,0), so these rules qualify the .refine-items class to reach
+ * (0,4,0) and win. Media queries do not raise specificity — dropping a class here
+ * silently reverts the mobile scroll behaviour below.
+ */
+.refine-categories .refine-items.auto-grid .auto-grid-items,
+.refine-categories .refine-items:not(.auto-grid) {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 18px 14px;
+	justify-content: flex-start;
+}
+
+.refine-categories .refine-item {
+	flex: 0 0 auto;
+	width: calc((100% - 5 * 14px) / 6);
+	min-width: 84px;
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: 0;
+}
+
+.refine-categories .refine-item > a {
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	padding: 0;
+	border-radius: 12px;
+	transition: transform 0.18s ease;
+}
+
+/* Circular thumbnail — the cue that says "category, not product" */
+.refine-categories .refine-item img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 2px solid #ffffff;
+	box-shadow: 0 0 0 1px #ece1e2;
+	transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.refine-categories .refine-name {
+	display: block;
+	margin-top: 10px;
+	font-size: 12.5px;
+	line-height: 1.35;
+	color: #2e292b;
+	word-break: break-word;
+}
+
+/*
+ * Journal already emits the product count as its own .count-badge span, but
+ * leaves both spans inline — which renders as "Airbrush Colors3". Splitting
+ * them onto separate lines is what makes the count readable.
+ */
+.refine-categories .refine-name .links-text {
+	display: block;
+}
+
+.refine-categories .refine-name .count-badge {
+	display: block;
+	margin-top: 3px;
+	font-size: 11px;
+	line-height: 1.2;
+	color: #6e7275;
+	background: none;
+	padding: 0;
+}
+
+/* Hover / focus — lift plus a brand-coloured ring */
+.refine-categories .refine-item > a:hover {
+	transform: translateY(-3px);
+}
+
+.refine-categories .refine-item > a:hover img {
+	box-shadow: 0 0 0 2px #f16272;
+}
+
+.refine-categories .refine-item > a:hover .refine-name {
+	color: #f16272;
+}
+
+.refine-categories .refine-item > a:focus-visible {
+	outline: 2px solid #f16272;
+	outline-offset: 3px;
+}
+
+/* Tablet — five across */
+@media (max-width: 1200px) {
+	.refine-categories .refine-item {
+		width: calc((100% - 4 * 14px) / 5);
+	}
+}
+
+/* Small tablet — four across */
+@media (max-width: 900px) {
+	.refine-categories {
+		padding: 16px 18px 18px;
+	}
+
+	.refine-categories .refine-item {
+		width: calc((100% - 3 * 14px) / 4);
+	}
+}
+
+/*
+ * Phone — one scrolling row with a peek at the next item, so it stays a strip
+ * instead of turning into a tall wall of circles.
+ */
+@media (max-width: 500px) {
+	.refine-categories {
+		padding: 16px 0 18px 16px;
+		border-radius: 12px;
+	}
+
+	.refine-categories .refine-title {
+		margin-bottom: 12px;
+	}
+
+	.refine-categories .refine-items.auto-grid .auto-grid-items,
+	.refine-categories .refine-items:not(.auto-grid) {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		overflow-y: hidden;
+		scroll-snap-type: x proximity;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: 4px;
+		padding-right: 16px;
+	}
+
+	.refine-categories .refine-items.auto-grid .auto-grid-items::-webkit-scrollbar,
+	.refine-categories .refine-items:not(.auto-grid)::-webkit-scrollbar {
+		display: none;
+	}
+
+	.refine-categories .refine-item {
+		width: 27vw;
+		min-width: 0;
+		max-width: 116px;
+		scroll-snap-align: start;
+	}
+}
+
+/* Journal's auto-carousel arrows are redundant once the strip wraps */
+.refine-categories .auto-carousel-buttons {
+	display: none;
+}

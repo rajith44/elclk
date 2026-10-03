@@ -18,6 +18,17 @@
     return;
   }
 
+  /*
+   * Journal's bottom-fixed overlays — the notification bar, the chat bubble and
+   * the store region switcher — are direct children of <body>. While this dialog
+   * stays nested inside the page wrapper it is painted underneath them whatever
+   * z-index it carries (measured: still behind at 999999999), so move it out to
+   * <body> once. Together with the z-index in contact.css this puts it on top.
+   */
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
+
   function refreshCaptcha() {
     var captchaInput = form.querySelector('input[name="captcha"]');
     var captchaImg = form.querySelector('#captcha img');
